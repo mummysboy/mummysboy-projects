@@ -1,0 +1,11 @@
+# os
+.DS_Store
+
+# editor
+*.swp
+
+# netlify
+.netlify
+
+# local env files
+.env*.local

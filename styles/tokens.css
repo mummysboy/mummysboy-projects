@@ -1,0 +1,23 @@
+:root {
+  /* Base — rich near-black, never pure #000 */
+  --ink: #0b0b0d; /* page background */
+  --surface: #141417; /* cards / panels */
+  --surface-hi: #1c1c20; /* hover / elevated */
+
+  /* Silver — treated as a material */
+  --silver: #a8aeb8; /* secondary text, borders */
+  --silver-bright: #e7e9ed; /* primary text */
+  --hairline: #2a2a30; /* 1px rules */
+
+  /* Accent — electric green, use once per view */
+  --volt: #2df58a; /* primary accent / active */
+  --volt-dim: #16a35c; /* pressed / muted accent */
+
+  /* Secondary — steel for links & quiet states */
+  --steel: #6b7785;
+
+  /* Type — loaded via Google Fonts <link> in each page's <head> */
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
