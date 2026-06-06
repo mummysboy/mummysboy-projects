@@ -10,7 +10,7 @@ Instructions for Claude when working in this repo. Read this fully before writin
 
 The app is **built and serving clean** as a **no-build static site** — plain HTML, CSS, and ES-module JavaScript. There is **no framework, no bundler, no build step, and no dependencies**. The structure below exists on disk: `data/projects.js` (the registry, an ES module), `styles/`, `scripts/`, `index.html`, and the `/gig/` + `/qrewards/` route folders.
 
-- **Deploy target is Netlify**, which publishes the repo root as-is (`netlify.toml`, `publish = "."`, no build command). Pretty URLs come from folder-`index.html` files (`/gig/` → `gig/index.html`).
+- **Deploy target is Netlify**, which publishes the repo root as-is (`netlify.toml`, `publish = "."`, no build command). Pretty URLs come from folder-`index.html` files (`/gig/` → `gig/index.html`). `netlify.toml` also sets security response headers (`X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`) — don't drop them when editing that file.
 - **The registry is loaded directly in the browser** via `<script type="module">` importing `data/projects.js`. The homepage grid is rendered client-side from it; project pages read their slug from `<body data-project="…">`.
 - **Fonts** load via a Google Fonts `<link>` in each page's `<head>`: **Space Grotesk** (display), **Inter** (body), **JetBrains Mono** (mono). Family stacks live in CSS vars `--font-display`, `--font-sans`, `--font-mono` in `styles/tokens.css`.
 - This was a deliberate pivot away from an earlier Next.js/TypeScript/Tailwind scaffold. Do not reintroduce a framework or build tooling without asking.

@@ -15,7 +15,7 @@ export const projects = [
   {
     slug: "gig",
     name: "Gig",
-    blurb: "A commission-free services marketplace, local to global.",
+    blurb: "A commission-free marketplace for services, both locally and across the globe.",
     status: "live",
     tags: [],
   },

@@ -768,6 +768,18 @@ ul {
   font-weight: 500;
 }
 
+.spec__link {
+  color: var(--silver-bright);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--hairline);
+  transition: text-decoration-color 160ms ease;
+}
+
+.spec__link:hover {
+  text-decoration-color: var(--silver);
+}
+
 .facts {
   display: flex;
   flex-wrap: wrap;

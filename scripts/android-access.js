@@ -7,7 +7,7 @@ const BACKEND = "https://backend-production-9a98f.up.railway.app";
 const overlay = document.getElementById("afOverlay");
 
 if (overlay) {
-  const openBtn = document.getElementById("androidBtn");
+  const openEls = document.querySelectorAll("#androidBtn, .js-android-open");
   const closeBtn = document.getElementById("afClose");
   const form = document.getElementById("afForm");
   const success = document.getElementById("afSuccess");
@@ -56,7 +56,12 @@ if (overlay) {
     setTimeout(reset, 220); // after the fade-out transition
   };
 
-  openBtn.addEventListener("click", open);
+  openEls.forEach((el) =>
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      open();
+    }),
+  );
   closeBtn.addEventListener("click", close);
   overlay.addEventListener("click", (e) => {
     if (e.target === overlay) close();

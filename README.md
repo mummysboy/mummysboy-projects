@@ -7,7 +7,7 @@
 ![Deploy](https://img.shields.io/badge/deploy-Netlify-00c7b7)
 ![License](https://img.shields.io/badge/license-personal-lightgrey)
 
-> **Status: 🟢 Built.** A no-build static site — plain HTML, CSS, and ES-module JavaScript, no framework or dependencies. Homepage, registry-driven grid, and the `/gig/` + `/qrewards/` routes. Serve it with `python3 -m http.server` (see [Getting started](#getting-started)).
+> **Status: 🟢 Live.** A no-build static site — plain HTML, CSS, and ES-module JavaScript, no framework or dependencies. Homepage, registry-driven grid, and the `/gig/` + `/qrewards/` routes. Serve it with `python3 -m http.server` (see [Getting started](#getting-started)).
 
 `mummysboy` is the homepage and hub for my projects. It lives at the root, explains what this place is, and links out to each project living under its own path:
 
@@ -48,16 +48,16 @@ This repo is **only the hub** — the homepage, the design system, and the proje
 1. **Link out** to their own deployment (e.g. `gig.mummysboy.com` or an external URL), or
 2. **Nest as a route** under this app (`/gig`, `/qrewards`).
 
-Either way, every project is described in one place (`data/projects.ts`) so the homepage always stays in sync. Add an entry, and a new card appears with correct links, status, and tags.
+Either way, every project is described in one place (`data/projects.js`) so the homepage always stays in sync. Add an entry, and a new card appears with correct links, status, and tags.
 
 ---
 
 ## Preview
 
-<!-- Drop a screenshot or GIF of the homepage here once it's built: -->
+<!-- Drop a screenshot or GIF of the homepage here: -->
 <!-- ![Homepage preview](docs/preview.png) -->
 
-_Coming soon — the homepage isn't built yet._
+_The hub is live — a homepage with the registry-driven project grid, plus the `/gig/` and `/qrewards/` routes._
 
 ---
 
@@ -163,9 +163,9 @@ export const projects = [
   {
     slug: "gig",
     name: "Gig",
-    blurb: "Commission-free booking for freelancers.",
-    status: "building",
-    tags: ["marketplace", "two-sided"],
+    blurb: "A commission-free services marketplace, local to global.",
+    status: "live",
+    tags: [],
   },
   {
     slug: "qrewards",
@@ -187,18 +187,22 @@ export const projects = [
 ```
 mummysboy/
 ├── index.html            # homepage — intent + project grid (filled by JS)
-├── gig/index.html        # nested route (<body data-project="gig">)
-├── qrewards/index.html
+├── gig/
+│   ├── index.html        # bespoke Gig route (<body data-project="gig">)
+│   └── shots/            # Gig screenshots + the real App Store icon
+├── qrewards/index.html   # registry-driven placeholder route
 ├── scripts/
 │   ├── main.js           # renders the homepage grid from the registry
-│   └── project.js        # fills a project page header from the registry
+│   ├── project.js        # fills a project page header from the registry
+│   └── android-access.js # Gig Android beta-invite modal → Gig backend
 ├── data/
 │   └── projects.js       # the single source of truth (ES module)
 ├── styles/
 │   ├── tokens.css        # color + type variables
 │   └── styles.css        # component styles
 ├── favicon.svg
-├── netlify.toml          # static deploy config
+├── netlify.toml          # static deploy config + security headers
+├── CLAUDE.md             # guidance for Claude Code
 └── README.md
 ```
 
@@ -228,7 +232,8 @@ Netlify publishes the repo root as-is — no build command (`netlify.toml` sets 
 - [x] Homepage shell + tokens wired in
 - [x] Project card grid driven by registry
 - [x] Nested project routes (`/gig/`, `/qrewards/`)
-- [ ] Deployed to Netlify + custom domain live
+- [x] Bespoke Gig page — download CTAs, Android beta-invite modal, screenshots
+- [x] Deployed to Netlify + custom domain live
 - [ ] `DESIGN.md` with full component specs
 
 ---
