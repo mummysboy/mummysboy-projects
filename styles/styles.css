@@ -512,8 +512,12 @@ ul {
 
 .af-close {
   position: absolute;
-  top: 0.7rem;
-  right: 0.9rem;
+  top: 0.35rem;
+  right: 0.45rem;
+  display: grid;
+  place-items: center;
+  width: 2.75rem; /* ≥24px tap target (WCAG 2.5.8) around the glyph */
+  height: 2.75rem;
   background: none;
   border: 0;
   font-size: 1.4rem;
@@ -842,6 +846,7 @@ ul {
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 471 / 1024; /* reserve height so the lazy filmstrip can't reflow */
   border: 1px solid var(--hairline);
   border-radius: 12px;
   background: var(--surface);

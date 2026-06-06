@@ -83,6 +83,7 @@ These are not suggestions. Most "AI slop" comes from violating them.
 6. **Honest motion.** Transitions 120–200ms, physical and short. No parallax, no floating cards, no decorative motion.
 7. **Base is near-black, never pure `#000`.**
 8. **Mobile is a prerequisite, not an afterthought.** Every change must look and work right on a phone before it's considered done. See the [Mobile](#mobile-prerequisite) section.
+9. **WCAG 2.1 Level AA is a prerequisite, not an afterthought.** The whole site must always meet Level AA. No change is done until it does. See the [Accessibility](#accessibility-prerequisite) section.
 
 If a request would break one of these rules, flag it and propose an alternative rather than silently complying.
 
@@ -99,6 +100,21 @@ The hub is viewed on phones first. No work is complete until it holds up at **37
 - **Respect `prefers-reduced-motion`** for any animation beyond a simple transition.
 - Verify by narrowing the browser to a phone width (or device toolbar) and walking every page: home grid, `/gig` (icon, buttons, the Android modal + its success state, the screenshot filmstrip), `/qrewards`, and the footer social row.
 
+### Accessibility (prerequisite)
+
+**The entire site must always conform to WCAG 2.1 Level AA** — the standard most businesses and government bodies require. This is non-negotiable and applies to every page and every change, including new projects. Before calling any work done, confirm it still holds:
+
+- **Color contrast (1.4.3 / 1.4.11).** Normal text ≥ **4.5:1** against its background; large text (≥24px, or ≥18.7px bold) and UI/graphical indicators (focus rings, status dots, icon glyphs, input borders) ≥ **3:1**. Check against *both* `--ink` and `--surface` — `--steel` (`#798593`) is the lightest text color that clears 4.5:1 on both; **do not darken it**, and contrast-test any new color before adding it. When in doubt, compute it (a tiny Node snippet works) rather than eyeballing.
+- **Don't signal with color alone (1.4.1).** Pair any color cue with text, shape, weight, underline, or an `aria-*` state. In-body text links carry an underline (see `.spec__link`); the status chip pairs its dot with a text label; the modal's SMS/WhatsApp toggle uses brightness *and* `aria-pressed`.
+- **Keyboard (2.1.1 / 2.1.2 / 2.4.7).** Everything interactive is reachable and operable by keyboard, with a visible focus indicator (the global `:focus-visible` volt ring — its one allowed second job). No keyboard traps.
+- **Dialogs.** The Android modal is the reference: `role="dialog"` + `aria-modal="true"` + `aria-labelledby`, Esc + overlay-click to close, focus moves in on open and **returns to the trigger** on close, the rest of the page is `inert` while it's open, and body scroll is locked. Any future modal must do the same.
+- **Names, roles, labels (1.3.1 / 3.3.2 / 4.1.2).** Every input has a `<label>`; grouped controls get a group label; icon-only controls get `aria-label`; decorative SVG/icons are `aria-hidden="true"`. Status/error messages live in a `role="status"` (or `aria-live`) region so they're announced.
+- **Images (1.1.1).** Meaningful images have descriptive `alt`; purely decorative ones use empty `alt`/`aria-hidden`. Don't use images of text — the metal headline is real text, keep it that way.
+- **Target size (2.5.8).** Interactive targets are ≥ 24×24px (we generally aim for ~38–44px; see `.social a`, `.af-close`), or spaced so a 24px circle on each doesn't overlap a neighbor.
+- **Structure & motion.** One `<h1>` per page with a sensible heading order; landmark elements (`<header>`/`<main>`/`<footer>`/`<nav>`) for bypass (2.4.1); `lang` on `<html>`; reflow with no horizontal page scroll to 320px (1.4.10, shared with [Mobile](#mobile-prerequisite)); honor `prefers-reduced-motion` (2.3.3) and avoid anything that flashes (2.3.1).
+
+If a request would push the site below AA, flag it and propose an accessible alternative rather than shipping it.
+
 ### Tokens (defined in `styles/tokens.css`)
 
 ```css
@@ -114,7 +130,7 @@ The hub is viewed on phones first. No work is complete until it holds up at **37
   --volt:          #2DF58A;  /* accent — use once per view */
   --volt-dim:      #16A35C;  /* pressed / muted */
 
-  --steel:         #6B7785;  /* links, quiet states */
+  --steel:         #798593;  /* links, quiet states — AA-tuned (4.5:1 on ink & surface) */
 }
 ```
 
@@ -185,7 +201,7 @@ When QRewards (or any project) earns a real page, follow this pattern: registry 
 - Style with the token CSS vars only — no inline hex, no magic numbers for the palette. New rules go in `styles/styles.css`.
 - Use semantic class names (`.card`, `.chip`, `.chip__dot--live`); keep them descriptive, not utility-soup.
 - Copy is plain and confident. No exclamation marks, no "Welcome to", no filler adjectives. One sentence per project blurb.
-- Accessibility: visible focus states (the `:focus-visible` rule uses `--volt` — that's its allowed second job), semantic HTML, contrast-checked text.
+- Accessibility: the site must always meet **WCAG 2.1 AA** — visible focus states (the `:focus-visible` rule uses `--volt` — that's its allowed second job), semantic HTML, contrast-checked text. See the [Accessibility](#accessibility-prerequisite) hard-constraint section for the full checklist.
 
 ---
 

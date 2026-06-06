@@ -20,13 +20,25 @@ if (overlay) {
 
   let method = "sms";
   let dismissTimer = null;
+  let lastFocused = null;
+
+  // Everything behind the dialog — made inert while it's open so keyboard and
+  // screen-reader focus stay trapped inside the modal.
+  const pageRegions = document.querySelectorAll(
+    "body > header, body > main, body > footer",
+  );
+
+  const setMethod = (opt) => {
+    methodBtns.forEach((o) => {
+      const on = o === opt;
+      o.classList.toggle("selected", on);
+      o.setAttribute("aria-pressed", String(on));
+    });
+    method = opt.dataset.method;
+  };
 
   methodBtns.forEach((opt) => {
-    opt.addEventListener("click", () => {
-      methodBtns.forEach((o) => o.classList.remove("selected"));
-      opt.classList.add("selected");
-      method = opt.dataset.method;
-    });
+    opt.addEventListener("click", () => setMethod(opt));
   });
 
   const reset = () => {
@@ -39,13 +51,14 @@ if (overlay) {
     msg.className = "af-msg";
     emailEl.value = "";
     phoneEl.value = "";
-    method = "sms";
-    methodBtns.forEach((o) =>
-      o.classList.toggle("selected", o.dataset.method === "sms"),
-    );
+    const smsBtn = [...methodBtns].find((o) => o.dataset.method === "sms");
+    if (smsBtn) setMethod(smsBtn);
   };
 
   const open = () => {
+    lastFocused = document.activeElement;
+    pageRegions.forEach((el) => el.setAttribute("inert", ""));
+    document.body.style.overflow = "hidden"; // lock the page behind the modal
     overlay.classList.add("open");
     setTimeout(() => emailEl.focus(), 50);
   };
@@ -53,6 +66,11 @@ if (overlay) {
   const close = () => {
     clearTimeout(dismissTimer);
     overlay.classList.remove("open");
+    pageRegions.forEach((el) => el.removeAttribute("inert"));
+    document.body.style.overflow = "";
+    if (lastFocused && typeof lastFocused.focus === "function") {
+      lastFocused.focus(); // return focus to whatever opened the modal
+    }
     setTimeout(reset, 220); // after the fade-out transition
   };
 

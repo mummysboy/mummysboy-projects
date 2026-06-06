@@ -13,8 +13,9 @@
   --volt: #2df58a; /* primary accent / active */
   --volt-dim: #16a35c; /* pressed / muted accent */
 
-  /* Secondary — steel for links & quiet states */
-  --steel: #6b7785;
+  /* Secondary — steel for links & quiet states.
+     Tuned to clear WCAG AA (4.5:1) on both --ink and --surface. */
+  --steel: #798593;
 
   /* Type — loaded via Google Fonts <link> in each page's <head> */
   --font-display: "Space Grotesk", system-ui, sans-serif;
