@@ -214,7 +214,7 @@ python3 -m http.server 4321   # then open http://localhost:4321
 # or: npx serve .
 ```
 
-After any change, serve the site and confirm the homepage grid renders and both project routes resolve before reporting the task complete — **and check it at a phone width (375px)**, per the [Mobile](#mobile-prerequisite) rule. Quick non-browser sanity check: `node --check scripts/*.js` and import `data/projects.js` to confirm it parses.
+After any change, serve the site and confirm the homepage grid renders and both project routes resolve before reporting the task complete — **and check it at a phone width (375px)**, per the [Mobile](#mobile-prerequisite) rule. Quick non-browser sanity check: `node --check scripts/*.js data/projects.js` to confirm everything parses.
 
 ---
 

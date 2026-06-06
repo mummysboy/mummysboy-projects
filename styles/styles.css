@@ -934,3 +934,424 @@ button {
     gap: 0.75rem 1.25rem;
   }
 }
+
+/* ==== Blog ============================================================ */
+
+/* ---- Breadcrumb ----------------------------------------------------- */
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+}
+
+.crumbs li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.crumbs li + li::before {
+  content: "/";
+  color: var(--hairline);
+}
+
+.crumbs a {
+  color: var(--steel);
+  transition: color 160ms ease;
+}
+
+.crumbs a:hover {
+  color: var(--silver-bright);
+}
+
+.crumbs [aria-current="page"] {
+  color: var(--silver);
+}
+
+/* ---- Blog index header --------------------------------------------- */
+.blog-head {
+  margin-top: 2rem;
+  max-width: 44rem;
+}
+
+.blog-head__count {
+  margin-top: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--steel);
+}
+
+/* ---- Post grid ------------------------------------------------------ */
+.post-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .post-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+.post-card__link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.post-card__media {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  background: var(--surface);
+  transition: border-color 160ms ease;
+}
+
+.post-card__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  transition: transform 200ms ease;
+}
+
+.post-card__link:hover .post-card__media {
+  border-color: #34343c;
+}
+
+.post-card__link:hover .post-card__media img {
+  transform: scale(1.02);
+}
+
+.post-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-top: 1.1rem;
+}
+
+.post-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+}
+
+.post-card__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.3rem;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--silver-bright);
+}
+
+.post-card__excerpt {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--silver);
+}
+
+.post-card .tags {
+  margin-top: 0.25rem;
+}
+
+/* ---- "Get the app" rail (index) ------------------------------------ */
+.get-app {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 3.5rem;
+  padding: 1.75rem;
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.get-app__kicker {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--steel);
+  margin-bottom: 0.5rem;
+}
+
+.get-app__line {
+  max-width: 32rem;
+  font-size: 1rem;
+  color: var(--silver);
+}
+
+@media (min-width: 640px) {
+  .get-app {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+}
+
+/* ---- Article -------------------------------------------------------- */
+.article {
+  max-width: 44rem;
+  margin: 2rem auto 0;
+}
+
+.article__head {
+  max-width: 40rem;
+}
+
+.article__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2rem, 5.5vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  margin-top: 1.25rem;
+  color: var(--silver-bright);
+  overflow-wrap: break-word;
+}
+
+.article__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--steel);
+}
+
+.article__dek {
+  margin-top: 1.5rem;
+  font-size: 1.1875rem;
+  line-height: 1.55;
+  color: var(--silver);
+}
+
+.article__hero,
+.article__figure {
+  margin: 2.5rem 0;
+}
+
+.article__hero img,
+.article__figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.article__hero figcaption,
+.article__figure figcaption {
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--steel);
+}
+
+/* ---- Prose ---------------------------------------------------------- */
+.prose {
+  max-width: 40rem;
+}
+
+.prose p {
+  margin-top: 1.25rem;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--silver);
+}
+
+.prose p:first-child {
+  margin-top: 0;
+}
+
+.prose h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--silver-bright);
+  margin-top: 2.75rem;
+}
+
+.prose strong {
+  color: var(--silver-bright);
+  font-weight: 500;
+}
+
+.prose__link {
+  color: var(--silver-bright);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--steel);
+  transition: text-decoration-color 160ms ease;
+}
+
+.prose__link:hover {
+  text-decoration-color: var(--silver-bright);
+}
+
+.pullquote {
+  margin: 2.5rem 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--hairline);
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--silver-bright);
+}
+
+/* ---- In-article CTA callout (the page's one volt accent) ----------- */
+.cta-callout {
+  margin: 2.75rem 0;
+  padding: 1.75rem;
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.cta-callout__kicker {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--steel);
+}
+
+.cta-callout__line {
+  max-width: 30rem;
+  margin: 0.6rem 0 1.25rem;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--silver);
+}
+
+.article__foot {
+  margin-top: 3rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--hairline);
+}
+
+/* ---- "More from the journal" --------------------------------------- */
+.more {
+  max-width: 44rem;
+  margin: 3.5rem auto 0;
+  padding-top: 2rem;
+  border-top: 1px solid var(--hairline);
+}
+
+.more__head {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--steel);
+}
+
+.more__list {
+  display: grid;
+  gap: 1px;
+  margin-top: 1.5rem;
+  list-style: none;
+}
+
+.more__link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.more__list li:last-child .more__link {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.more__kicker {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--steel);
+}
+
+.more__title {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  color: var(--silver-bright);
+}
+
+.more__arrow {
+  color: var(--steel);
+  transition: transform 160ms ease;
+}
+
+.more__link:hover .more__arrow {
+  transform: translateX(4px);
+}
+
+.more__all {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+  transition: color 160ms ease;
+}
+
+.more__all:hover {
+  color: var(--silver-bright);
+}
+
+@media (min-width: 640px) {
+  .more__link {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .more__kicker {
+    flex: 0 0 9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post-card__media img,
+  .post-card__link:hover .post-card__media img,
+  .more__arrow {
+    transition: none;
+    transform: none;
+  }
+}

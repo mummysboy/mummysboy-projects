@@ -93,8 +93,8 @@ A near-black base, a metallic silver range, and a single electric-green accent. 
   --volt:          #2DF58A;   /* primary accent / active */
   --volt-dim:      #16A35C;   /* pressed / muted accent */
 
-  /* Secondary — steel for links & quiet states */
-  --steel:         #6B7785;
+  /* Secondary — steel for links & quiet states (AA-tuned: 4.5:1 on --ink & --surface) */
+  --steel:         #798593;
 }
 ```
 
