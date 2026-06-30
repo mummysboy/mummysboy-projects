@@ -1,39 +1,70 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-variant="v2">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Gig — mummysboy</title>
+
+    <!-- Benefit-led title (was "Gig — mummysboy"): lead with what it is, not the parent brand. -->
+    <title>Gig — Commission-Free Local Services Marketplace | Find or Offer Help</title>
     <meta
       name="description"
-      content="Gig — a commission-free marketplace for services, local and across the globe, with natural-language search. Live on iOS & Android."
+      content="Just say what you need — Gig surfaces the best local or global help, ranked by rating and distance. No commissions, no fees. Keep 100% of what you earn. Free on iOS; Android beta."
     />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-    <!-- Link previews (iMessage, WhatsApp, Slack, Facebook, X, etc.) -->
+    <!-- iOS Safari Smart App Banner: a native one-tap GET bar for the highest-intent segment. -->
+    <meta name="apple-itunes-app" content="app-id=6758136203" />
+
+    <!-- Link previews (iMessage, WhatsApp, Slack, Facebook, X, etc.) — large card + benefit copy. -->
     <link rel="canonical" href="https://mummysboy.com/gig/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="mummysboy" />
     <meta property="og:url" content="https://mummysboy.com/gig/" />
-    <meta property="og:title" content="Gig — commission-free services marketplace" />
+    <meta property="og:title" content="Gig — Commission-Free Local Services Marketplace" />
     <meta
       property="og:description"
-      content="Gig — a commission-free marketplace for services, local and across the globe, with natural-language search. Live on iOS & Android."
+      content="Say what you need — the best-matched local pro shows up, ranked by rating and distance. No commissions, ever. Free on iOS; Android beta."
     />
-    <meta property="og:image" content="https://mummysboy.com/gig/shots/app-icon.jpg" />
-    <meta property="og:image:secure_url" content="https://mummysboy.com/gig/shots/app-icon.jpg" />
-    <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:width" content="512" />
-    <meta property="og:image:height" content="512" />
-    <meta property="og:image:alt" content="Gig app icon" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Gig — commission-free services marketplace" />
+    <!-- 1200×630 share card (see README → assets). Falls back to the icon until built. -->
+    <meta property="og:image" content="https://mummysboy.com/gig/share-card.png" />
+    <meta property="og:image:secure_url" content="https://mummysboy.com/gig/share-card.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Gig — commission-free services marketplace. Just say what you need." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Gig — Commission-Free Local Services Marketplace" />
     <meta
       name="twitter:description"
-      content="Gig — a commission-free marketplace for services, local and across the globe, with natural-language search. Live on iOS & Android."
+      content="Say what you need — the best-matched local pro shows up, ranked by rating and distance. No commissions, ever. Free on iOS; Android beta."
     />
-    <meta name="twitter:image" content="https://mummysboy.com/gig/shots/app-icon.jpg" />
-    <meta name="twitter:image:alt" content="Gig app icon" />
+    <meta name="twitter:image" content="https://mummysboy.com/gig/share-card.png" />
+    <meta name="twitter:image:alt" content="Gig — commission-free services marketplace." />
+
+    <!-- Disambiguates the very generic entity "Gig" for search + answer engines. No faked rating. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "MobileApplication",
+        "name": "Gig",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "iOS",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "url": "https://apps.apple.com/app/id6758136203",
+        "description": "Commission-free local & global services marketplace with natural-language search. Hire help or get hired from one profile."
+      }
+    </script>
+
+    <!-- OS class set before paint so the device-matched CTA leads with no flash. -->
+    <script>
+      (function () {
+        var ua = navigator.userAgent || "";
+        var cls = "is-desktop";
+        if (/iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) cls = "is-ios";
+        else if (/Android/i.test(ua)) cls = "is-android";
+        document.documentElement.classList.add(cls);
+      })();
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -42,136 +73,129 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/styles/styles.css" />
+    <!-- Redesign additions (see README → styles). Append into styles.css, or keep separate. -->
+    <link rel="stylesheet" href="/styles/gig-additions.css" />
   </head>
   <body data-project="gig">
     <header class="masthead">
       <div class="bar">
-        <a class="mark" href="/">mummysboy</a>
+        <a class="mark" href="/" data-exit="wordmark">mummysboy</a>
         <span class="bar__meta">est. 1990</span>
       </div>
     </header>
 
     <main class="wrap">
-      <article class="project">
-        <div class="project__head">
+      <!-- ===================== HERO (above the fold) ===================== -->
+      <article class="hero" data-section="hero">
+        <div class="hero__copy">
+          <div class="project__head">
+            <img class="app-icon" src="/gig/shots/app-icon.jpg" alt="Gig app icon" width="104" height="104" />
+          </div>
+
+          <p class="eyebrow">/ gig · commission-free local + global services · live on iOS, Android in beta</p>
+
+          <!-- Benefit H1 + a STATIC lede (no longer JS-gated, so crawlers/no-JS/slow visitors get the pitch). -->
+          <h1 class="title metal" data-name>Say what you need. The right local pro shows up — commission-free.</h1>
+          <p class="lede" data-blurb>
+            Describe a job in plain language — &ldquo;fix my leaking sink,&rdquo; &ldquo;tutor for 8th-grade math&rdquo; — and the
+            best-matched providers surface, ranked by rating and distance. One profile works both sides: hire help or get hired.
+            No commissions, no fees, ever.
+          </p>
+
+          <div class="cta-row" data-pos="hero">
+            <!-- iOS: official App Store badge (see README → assets; swap in Apple's exact file). -->
+            <a
+              class="store-badge cta-ios-primary"
+              id="iosCta"
+              href="https://apps.apple.com/app/id6758136203"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
+            </a>
+            <!-- Android: honest beta framing (NOT "Download"); opens the invite modal. -->
+            <button class="cta cta--ghost cta-android-primary js-android-open" type="button" id="androidBtn">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.46 11.46 0 00-8.94 0L5.65 5.67c-.19-.29-.57-.38-.85-.22-.3.16-.42.54-.26.85L6.4 9.48A10.78 10.78 0 001 18h22a10.78 10.78 0 00-5.4-8.52M7 15.25a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5m10 0a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5"
+                />
+              </svg>
+              Join the Android beta
+            </button>
+
+            <!-- OS-demoted alternates: shown only on the non-matching device (CSS in gig-additions.css). -->
+            <a class="cta-alt cta-ios-alt" id="iosAlt" href="https://apps.apple.com/app/id6758136203" target="_blank" rel="noopener noreferrer">
+              On iPhone? Download on the App Store →
+            </a>
+            <button class="cta-alt cta-android-alt js-android-open" type="button">On Android? Join the beta →</button>
+          </div>
+
+          <p class="proof" data-proof>New on the App Store — early reviews coming in.</p>
+        </div>
+
+        <!-- The natural-language "magic moment" — shown beside the copy on wider screens. -->
+        <div class="hero__media">
           <img
-            class="app-icon"
-            src="/gig/shots/app-icon.jpg"
-            alt="Gig app icon"
-            width="104"
-            height="104"
+            class="phone"
+            src="/gig/shots/search.jpg"
+            alt="Gig search — a plain-language request over nearby providers ranked by rating and distance."
+            width="471"
+            height="1024"
           />
-          <ul class="social project__social">
-            <li>
-              <a
-                href="https://www.tiktok.com/@mummysboy348"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="TikTok"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path
-                    d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"
-                  />
-                </svg>
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.instagram.com/gigbymummysboy"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path
-                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-                  />
-                </svg>
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.facebook.com/profile.php?id=61589961461573"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path
-                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
-                  />
-                </svg>
-              </a>
-            </li>
-          </ul>
         </div>
-        <p class="eyebrow">/ gig · live on iOS &amp; Android</p>
-        <h1 class="title metal" data-name>Gig</h1>
-        <p class="lede" data-blurb></p>
+      </article>
 
-        <div class="cta-row">
-          <a
-            class="cta cta--ios"
-            href="https://apps.apple.com/app/id6758136203"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path
-                d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"
-              />
-            </svg>
-            Download on iOS
-          </a>
-          <button class="cta cta--ghost" type="button" id="androidBtn">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path
-                d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.46 11.46 0 00-8.94 0L5.65 5.67c-.19-.29-.57-.38-.85-.22-.3.16-.42.54-.26.85L6.4 9.48A10.78 10.78 0 001 18h22a10.78 10.78 0 00-5.4-8.52M7 15.25a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5m10 0a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5"
-              />
-            </svg>
-            Download on Android
-          </button>
-        </div>
+      <hr class="hairline spacer" />
 
-        <hr class="hairline spacer" />
-
+      <!-- ===================== SPEC + TRUST ===================== -->
+      <section data-section="spec">
         <dl class="spec">
           <div class="spec__row">
             <dt class="spec__key">What it is</dt>
             <dd class="spec__val">
-              A commission-free services marketplace. One profile works both
-              sides — offer your skills or find who you need.
+              A services marketplace that takes <strong>zero commission</strong> — providers keep 100%, hirers pay no platform
+              markup. One profile works both sides: offer your skills or find who you need.
             </dd>
           </div>
 
           <div class="spec__row">
             <dt class="spec__key">How it works</dt>
             <dd class="spec__val">
-              State a need in plain language; the strongest matches surface,
-              ranked by relevance, rating, and proximity. Message, agree, rate.
+              Say what you need in plain words; the strongest matches surface, ranked by relevance, rating, and distance.
+              Message, agree, rate.
+            </dd>
+          </div>
+
+          <!-- Trust row: real shipped features only — turns the "is it safe?" fear into a feature. -->
+          <div class="spec__row">
+            <dt class="spec__key">Built to feel safe</dt>
+            <dd class="spec__val">
+              Verified sign-in with Apple, Google, or phone — we never see your password. Two-way ratings on every job.
+              Message in-app; block or report anytime.
             </dd>
           </div>
 
           <div class="spec__row">
             <dt class="spec__key">Status</dt>
             <dd class="spec__val">
-              Early stage. The network compounds with every user — sign up on
+              Growing fast. Every new member means more people to hire and more who can hire you — be one of the first in your
+              area. Start on
               <a
                 class="spec__link"
                 href="https://apps.apple.com/app/id6758136203"
                 target="_blank"
                 rel="noopener noreferrer"
+                data-pos="status"
                 >iOS</a
               >
-              or
-              <a class="spec__link js-android-open" href="#">Android</a> today!
+              or <a class="spec__link js-android-open" href="#" data-pos="status">join the Android beta</a>.
             </dd>
           </div>
         </dl>
-      </article>
+      </section>
 
-      <section class="shots-section" aria-label="A walk-through">
+      <!-- ===================== SCREENSHOT FLOW ===================== -->
+      <section class="shots-section" aria-label="A walk-through" data-section="flow">
         <div class="section-label">
           <span>The flow</span>
           <span>Start → finish</span>
@@ -186,7 +210,7 @@
             />
             <div class="shot__cap">
               <span class="shot__step"><b>01</b> &nbsp;Sign in</span>
-              <span class="shot__text">Apple, Google, or email.</span>
+              <span class="shot__text">Apple, Google, or email — we never see your password.</span>
             </div>
           </li>
           <li class="shot">
@@ -197,9 +221,7 @@
             />
             <div class="shot__cap">
               <span class="shot__step"><b>02</b> &nbsp;Search</span>
-              <span class="shot__text"
-                >Matched to providers and priced up front.</span
-              >
+              <span class="shot__text">Type it in plain words; the best-matched pros show up, priced up front.</span>
             </div>
           </li>
           <li class="shot">
@@ -210,20 +232,20 @@
             />
             <div class="shot__cap">
               <span class="shot__step"><b>03</b> &nbsp;Set your range</span>
-              <span class="shot__text">A search radius you control.</span>
+              <span class="shot__text">See only help close enough to actually show up.</span>
             </div>
           </li>
           <li class="shot">
             <img
               src="/gig/shots/services.jpg"
-              alt="Service management — GigFlex mode and per-service on/off toggles."
+              alt="Service management — per-service on/off toggles."
               loading="lazy"
             />
             <div class="shot__cap">
               <span class="shot__step"><b>04</b> &nbsp;Offer</span>
               <span class="shot__text"
-                >Same account, other side — list services, toggle visibility,
-                switch on GigFlex for every category.</span
+                >Flip to the other side of the same account: list what you do and show up in searches everywhere, not just
+                nearby.</span
               >
             </div>
           </li>
@@ -235,42 +257,99 @@
             />
             <div class="shot__cap">
               <span class="shot__step"><b>05</b> &nbsp;Profile</span>
-              <span class="shot__text"
-                >One profile — locations, services, ratings.</span
-              >
+              <span class="shot__text">One profile — locations, services, ratings.</span>
             </div>
           </li>
         </ol>
       </section>
+
+      <!-- ===================== CLOSING CTA (peak intent) ===================== -->
+      <aside class="get-app" data-section="closing">
+        <div>
+          <p class="get-app__kicker">Ready when you are</p>
+          <p class="get-app__line">
+            Be one of the first in your area — describe a need or list a skill in under a minute.
+          </p>
+        </div>
+        <div class="cta-row" data-pos="closing">
+          <a
+            class="store-badge cta-ios-primary"
+            href="https://apps.apple.com/app/id6758136203"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
+          </a>
+          <button class="cta cta--ghost cta-android-primary js-android-open" type="button">Join the Android beta</button>
+          <a class="cta-alt cta-ios-alt" href="https://apps.apple.com/app/id6758136203" target="_blank" rel="noopener noreferrer">
+            On iPhone? Download on the App Store →
+          </a>
+          <button class="cta-alt cta-android-alt js-android-open" type="button">On Android? Join the beta →</button>
+        </div>
+      </aside>
+
+      <!-- Borrowed credibility for an early app — honest, signed. -->
+      <aside class="note">
+        &ldquo;We built Gig because hiring local help shouldn&rsquo;t cost a 20% cut or a dozen tabs. It&rsquo;s early — you&rsquo;d
+        be one of the first — and a real person reads every message.&rdquo; — Gig, by Right Image Digital, an independent studio
+        since 1990.
+      </aside>
 
       <nav class="project-nav">
         <a class="next" data-next href="/"></a>
       </nav>
     </main>
 
-    <footer class="footer">
+    <footer class="footer" data-section="footer">
       <div class="bar">
         <span class="bar__meta">© 1990</span>
-        <a class="mark" href="/gig/blog/">Blog</a>
+        <nav class="footer-links">
+          <a href="/gig/blog/" data-exit="blog">Blog</a>
+          <a href="https://backend-production-9a98f.up.railway.app/privacy" target="_blank" rel="noopener" data-exit="privacy">Privacy</a>
+          <a href="https://backend-production-9a98f.up.railway.app/terms" target="_blank" rel="noopener" data-exit="terms">Terms</a>
+          <a href="mailto:support@rightimagedigital.com" data-exit="support">Support</a>
+        </nav>
+        <ul class="social" data-exit="social">
+          <li>
+            <a href="https://www.tiktok.com/@mummysboy348" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"
+                />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.instagram.com/gigbymummysboy" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.facebook.com/profile.php?id=61589961461573" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                />
+              </svg>
+            </a>
+          </li>
+        </ul>
       </div>
     </footer>
 
+    <!-- Android early-access modal — single email field + privacy reassurance. -->
     <div class="af-overlay" id="afOverlay">
-      <div
-        class="af-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="afTitle"
-      >
-        <button class="af-close" id="afClose" type="button" aria-label="Close">
-          ×
-        </button>
+      <div class="af-modal" role="dialog" aria-modal="true" aria-labelledby="afTitle">
+        <button class="af-close" id="afClose" type="button" aria-label="Close">×</button>
 
         <div id="afForm">
-          <h2 class="af-title" id="afTitle">Gig for Android — in beta</h2>
+          <h2 class="af-title" id="afTitle">Join the Gig Android beta</h2>
           <p class="af-intro">
-            It's not on the Play Store yet, but the Android beta is live. Leave
-            your details and we'll send you an invite.
+            It&rsquo;s not on the Play Store yet, but the Android beta is live. Enter your email and we&rsquo;ll send your invite.
           </p>
 
           <label class="af-label" for="af-email">Email</label>
@@ -280,13 +359,13 @@
             type="email"
             inputmode="email"
             autocomplete="email"
+            autofocus
             placeholder="you@example.com"
           />
 
-          <button class="af-submit" id="afSubmit" type="button">
-            Request an invite
-          </button>
+          <button class="af-submit" id="afSubmit" type="button">Send my invite</button>
           <p class="af-msg" id="afMsg" role="status"></p>
+          <p class="af-fineprint">We&rsquo;ll only email your invite — no spam, no sharing.</p>
         </div>
 
         <div class="af-success" id="afSuccess" role="status" hidden>

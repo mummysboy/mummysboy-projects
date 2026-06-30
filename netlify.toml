@@ -10,3 +10,10 @@
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Pretty source-tagged links: /gig/id=56 rewrites to the gig page (its JS reads the id from
+# the path). The standard /gig/?id=56 query form needs no rule and keeps working.
+[[redirects]]
+  from = "/gig/id=*"
+  to = "/gig/index.html"
+  status = 200
