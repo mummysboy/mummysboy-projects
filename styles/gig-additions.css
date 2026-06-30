@@ -35,7 +35,8 @@
 
 /* CTA row: align the Apple badge and the ghost button on one baseline. */
 .cta-row { align-items: center; }
-.store-badge { display: inline-flex; align-items: center; }
+/* Store badges — works on both the iOS <a> and the Android <button> (resets button chrome). */
+.store-badge { display: inline-flex; align-items: center; background: none; border: 0; padding: 0; cursor: pointer; }
 .store-badge img { display: block; height: 44px; width: auto; }
 .cta--ghost { min-height: 44px; }
 
