@@ -11,6 +11,26 @@ const PATH = "/gig";
 // before this module runs; otherwise we read <html data-variant> (default "v2").
 const VARIANT = (window.__gigVariant || document.documentElement.dataset.variant || "v2").slice(0, 24);
 
+// Per-link source/campaign id from the URL: ?id= (or ?ref / ?utm_source / ?utm_campaign), or
+// a /gig/id=VALUE path. Sanitized to a short code and persisted for the whole visit (so a tap
+// 30s after landing is still credited to the link the visitor arrived on).
+function readSrcId() {
+  try {
+    const q = new URLSearchParams(location.search);
+    let raw = q.get("id") || q.get("ref") || q.get("utm_source") || q.get("utm_campaign");
+    if (!raw) {
+      const m = location.pathname.match(/\/id=([^/]+)/i); // /gig/id=56
+      if (m) raw = decodeURIComponent(m[1]);
+    }
+    const clean = raw ? raw.replace(/[^A-Za-z0-9._-]/g, "").slice(0, 40) : null;
+    if (clean) sessionStorage.setItem("@gig_src_id", clean);
+    return clean || sessionStorage.getItem("@gig_src_id");
+  } catch {
+    return null;
+  }
+}
+const SRC_ID = readSrcId();
+
 function track(type, label) {
   try {
     const body = JSON.stringify({
@@ -19,6 +39,7 @@ function track(type, label) {
       referrer: document.referrer || "",
       label: label || null,
       variant: VARIANT,
+      srcId: SRC_ID || null,
     });
     // keepalive lets the request survive a navigation (e.g. the iOS link opening the App
     // Store). sendBeacon is the ideal transport but can't set JSON content type, so we use
