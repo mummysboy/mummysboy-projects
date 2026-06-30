@@ -37,11 +37,15 @@ function set(selector, fn) {
 }
 
 if (project) {
-  document.title = `${project.name} — mummysboy`;
+  // A project page may supply its own SEO <title>, benefit headline, and a longer hero
+  // blurb (the hub index card keeps using the short `blurb`). Prefer those richer fields
+  // when present so the static, conversion-tuned hero is reinforced — not overwritten —
+  // once JS runs. Falls back to the original behaviour for every other project.
+  document.title = project.titleTag ?? `${project.name} — mummysboy`;
 
   set("[data-path]", (el) => (el.textContent = `/ ${project.slug}`));
-  set("[data-name]", (el) => (el.textContent = project.name));
-  set("[data-blurb]", (el) => (el.textContent = project.blurb));
+  set("[data-name]", (el) => (el.textContent = project.headline ?? project.name));
+  set("[data-blurb]", (el) => (el.textContent = project.heroBlurb ?? project.blurb));
   set("[data-note]", (el) => (el.textContent = STATUS_NOTES[project.status] ?? ""));
 
   set("[data-chip]", (el) => {

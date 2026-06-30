@@ -1,0 +1,102 @@
+/* ===== Gig landing-page redesign additions =====
+   Append these rules to styles/styles.css (or load this file right after it).
+   Every value uses the existing token palette (var(--ink|surface|hairline|silver|steel|volt))
+   so the dark house style and the "one volt accent per view" rule are preserved. */
+
+/* Hero: copy + one screenshot side-by-side on wider screens; copy-only on phones
+   (a tall phone above the fold would push the CTA out of view on mobile). */
+.hero { margin-top: 1.75rem; }
+.hero__copy { max-width: 40rem; }
+.hero__media { display: none; }
+
+@media (min-width: 760px) {
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+    gap: 3rem;
+    align-items: center;
+    max-width: 62rem;
+    margin-top: 3rem;
+  }
+  .hero__media { display: block; }
+}
+
+.phone {
+  display: block;
+  width: 100%;
+  max-width: 290px;
+  height: auto;
+  aspect-ratio: 471 / 1024;
+  margin-inline: auto;
+  border: 1px solid var(--hairline);
+  border-radius: 22px;
+  background: var(--surface);
+}
+
+/* CTA row: align the Apple badge and the ghost button on one baseline. */
+.cta-row { align-items: center; }
+.store-badge { display: inline-flex; align-items: center; }
+.store-badge img { display: block; height: 44px; width: auto; }
+.cta--ghost { min-height: 44px; }
+
+/* OS-demoted alternates: a quiet text link shown only on the non-matching device. */
+.cta-alt {
+  display: none;
+  align-items: center;
+  padding: 0.5rem 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--steel);
+  transition: color 160ms ease;
+}
+.cta-alt:hover { color: var(--silver-bright); }
+
+/* Desktop (default / .is-desktop): both primaries show, alternates hidden.
+   iOS device: keep the iOS primary, demote Android to a text link — and vice-versa. */
+.is-ios .cta-android-primary { display: none; }
+.is-ios .cta-android-alt { display: inline-flex; }
+.is-android .cta-ios-primary { display: none; }
+.is-android .cta-ios-alt { display: inline-flex; }
+
+/* Honest "new app" proof line under the hero CTA.
+   Swap for a real "★ 4.8 · 120+ ratings on the App Store" once review volume is credible (>=10). */
+.proof {
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+}
+
+/* Founder note breathing room. */
+.note { margin-top: 2.5rem; }
+
+/* Footer: trust links + socials on one bar. */
+.footer .bar { flex-wrap: wrap; gap: 0.75rem 1.25rem; }
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.footer-links a { color: var(--steel); transition: color 160ms ease; }
+.footer-links a:hover { color: var(--silver-bright); }
+.footer .social { margin-inline-start: auto; }
+
+/* Android modal fine print. */
+.af-fineprint {
+  margin-top: 0.7rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--steel);
+}

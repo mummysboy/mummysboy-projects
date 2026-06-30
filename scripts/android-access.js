@@ -1,6 +1,8 @@
-// Android early-access request. Collects an email and POSTs it to the Gig
-// backend endpoint (phone/contact_method sent as defaults to keep the API
-// contract). On success it shows a checkmark, then the modal dismisses itself.
+// Android early-access request. Collects an email and POSTs it to the Gig backend
+// endpoint (phone/contact_method sent as defaults to keep the API contract). On success
+// it shows a checkmark, then the modal dismisses itself. Also records the real Android
+// funnel via window.gigTrack: android_open when the modal opens, android_submit when the
+// invite is actually requested (the TRUE conversion — distinct from a CTA click).
 const BACKEND = "https://backend-production-9a98f.up.railway.app";
 
 const overlay = document.getElementById("afOverlay");
@@ -29,7 +31,7 @@ if (overlay) {
     success.hidden = true;
     submit.style.display = "";
     submit.disabled = false;
-    submit.textContent = "Request an invite";
+    submit.textContent = "Send my invite";
     msg.textContent = "";
     msg.className = "af-msg";
     emailEl.value = "";
@@ -41,6 +43,8 @@ if (overlay) {
     document.body.style.overflow = "hidden"; // lock the page behind the modal
     overlay.classList.add("open");
     setTimeout(() => emailEl.focus(), 50);
+    // The Android funnel's first real step: the visitor opened the invite form.
+    if (window.gigTrack) window.gigTrack("android_open");
   };
 
   const close = () => {
@@ -94,6 +98,8 @@ if (overlay) {
       if (res.ok && data.success) {
         form.hidden = true;
         success.hidden = false; // triggers the checkmark draw-in
+        // The TRUE Android conversion — an invite was actually requested.
+        if (window.gigTrack) window.gigTrack("android_submit");
         dismissTimer = setTimeout(close, 2600); // bow out on its own
       } else {
         msg.className = "af-msg af-msg--err";
