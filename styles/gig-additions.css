@@ -169,6 +169,32 @@ html[data-variant="hire"] .hero .cta-row {
   font-weight: 500;
 }
 
+/* Scroll-reveal (scripts/reveal.js). Honest motion per the house rules: a
+   200ms, 10px physical rise, once per element, tied to real scroll position —
+   no stagger choreography, no parallax. .reveal-ready is only ever added by
+   JS, so no-JS / failed-load visitors see everything immediately; the
+   reduced-motion block is belt-and-suspenders on top of the JS gate. */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+.reveal-ready [data-reveal].reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-ready [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* dual: mid-page CTA rail — hairline above, no box; ends the hero→closing
    CTA desert without floating chrome. */
 .mid-cta {

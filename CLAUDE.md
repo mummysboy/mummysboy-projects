@@ -174,6 +174,7 @@ mummysboy/
 │   ├── project.js        # fills a project page's header from the registry by slug
 │   ├── blog.js           # renders the blog index grid + "more reading" from data/posts.js
 │   ├── gig-analytics.js  # first-party landing-page analytics → POSTs beacons to the Gig backend
+│   ├── reveal.js         # scroll-reveal for [data-reveal] sections (progressive enhancement; hero exempt)
 │   └── android-access.js # Gig Android beta-invite modal → POSTs to the Gig backend
 ├── data/
 │   ├── projects.js       # SINGLE SOURCE OF TRUTH for projects (ES module)
