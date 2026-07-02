@@ -19,12 +19,10 @@ export const projects = [
     slug: "gig",
     name: "Gig",
     blurb: "A commission-free marketplace for services, both locally and across the globe.",
-    // Conversion-tuned fields for the /gig page (the static markup carries the same copy as
-    // a default; these keep it in sync after project.js runs, and are the A/B swap points).
+    // Hero copy now lives ONLY in the landing pages themselves (the campaign variant
+    // system authors it per page — see CLAUDE.md → Gig landing variants), so there are
+    // no headline/heroBlurb swap fields here anymore. titleTag still sets /gig/'s <title>.
     titleTag: "Gig — Commission-Free Local Services Marketplace | Find or Offer Help",
-    headline: "Say what you need. The right local pro shows up — commission-free.",
-    heroBlurb:
-      "Describe a job in plain language — “fix my leaking sink,” “tutor for 8th-grade math” — and the best-matched providers surface, ranked by rating and distance. One profile works both sides: hire help or get hired. No commissions, no fees, ever.",
     status: "live",
     tags: [],
   },

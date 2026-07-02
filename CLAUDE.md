@@ -159,20 +159,33 @@ Tight modular scale (~1.25). Confident H1, fast drop to body. Small mono labels 
 mummysboy/
 ├── index.html            # homepage — intent + empty #project-grid (filled by JS)
 ├── gig/
-│   ├── index.html        # bespoke Gig content page (registry fills name/blurb; rest authored)
-│   └── shots/            # Gig screenshots + the real App Store icon used on the page
+│   ├── index.html        # Gig landing page — the "dual" test arm (authored hero; registry sets <title>)
+│   ├── pro/index.html    # provider-audience campaign variant ("pro" arm; noindexed)
+│   ├── hire/index.html   # customer-audience campaign variant ("hire" arm; noindexed)
+│   ├── blog/
+│   │   ├── index.html    # blog index — empty #post-grid (filled by scripts/blog.js)
+│   │   └── <slug>/index.html  # authored article (static HTML; body is crawlable prose)
+│   ├── assets/           # official App Store + Google Play store badges
+│   ├── shots/            # Gig screenshots + the real App Store icon used on the page
+│   └── share-card.png    # OpenGraph/Twitter share image
 ├── qrewards/index.html   # registry-driven placeholder route
 ├── scripts/
 │   ├── main.js           # renders the homepage grid from the registry
 │   ├── project.js        # fills a project page's header from the registry by slug
+│   ├── blog.js           # renders the blog index grid + "more reading" from data/posts.js
+│   ├── gig-analytics.js  # first-party landing-page analytics → POSTs beacons to the Gig backend
 │   └── android-access.js # Gig Android beta-invite modal → POSTs to the Gig backend
 ├── data/
-│   └── projects.js       # SINGLE SOURCE OF TRUTH (ES module)
+│   ├── projects.js       # SINGLE SOURCE OF TRUTH for projects (ES module)
+│   └── posts.js          # SINGLE SOURCE OF TRUTH for blog posts (ES module)
 ├── styles/
 │   ├── tokens.css        # CSS custom properties: palette + font stacks
-│   └── styles.css        # all component styles (@imports tokens.css)
+│   ├── styles.css        # all component styles (@imports tokens.css)
+│   └── gig-additions.css # Gig landing-page redesign rules (uses the same token palette)
 ├── favicon.svg           # silver dot on near-black
-├── netlify.toml          # static deploy config (publish root, no build)
+├── robots.txt            # allow-all + points at the sitemap
+├── sitemap.xml           # static sitemap (update when adding a route or post)
+├── netlify.toml          # static deploy config (publish root, no build) + security headers
 └── CLAUDE.md
 ```
 
@@ -188,10 +201,37 @@ A nested route's `<body data-project="…">` lets `scripts/project.js` fill whic
 
 - a header row (`.project__head`) — the app icon (`gig/shots/app-icon.jpg`, the real current App Store icon) on the left, social links top-right;
 - two download CTAs — **iOS** (`.cta--ios`, the page's single volt accent, → App Store) and **Android** (`.cta--ghost`, opens the beta-invite modal);
-- the Android modal (`#afOverlay`), wired by `scripts/android-access.js`, which POSTs `{email, phone, contact_method}` to the **external Gig backend** at `https://backend-production-9a98f.up.railway.app/android-access` — the same endpoint and payload as the Gig landing page. On success it draws a checkmark and auto-dismisses. **This is the only place the hub calls an external service**; it depends on that backend's CORS allowing this origin;
-- a `.spec` sheet (What it is / How it works / Status) and a `.shots` screenshot filmstrip with captioned steps.
+- the Android modal (`#afOverlay`), wired by `scripts/android-access.js`, which POSTs `{email, phone, contact_method}` to the **external Gig backend** at `https://backend-production-9a98f.up.railway.app/android-access`. On success it draws a checkmark and auto-dismisses;
+- official **App Store + Google Play badges** from `gig/assets/` (not hand-rolled buttons — use the real vendor artwork);
+- a `.spec` sheet (What it is / How it works / Status) and a `.shots` screenshot filmstrip with captioned steps;
+- first-party analytics via `scripts/gig-analytics.js` (see below).
 
 When QRewards (or any project) earns a real page, follow this pattern: registry for the identity, authored HTML for the substance.
+
+### Analytics & the Gig backend
+
+`scripts/gig-analytics.js` is the Gig pages' first-party analytics. It fire-and-forget POSTs tiny beacons (`view`, `ios`/`android` CTA clicks, `section` scroll-reach, `exit`) to `…/landing-event` on the same Railway backend, each tagged with the page's `variant` (from `<html data-variant>`), a per-link `srcId` (parsed from `?id=`/`?ref`/`?utm_*` or a `/id=VALUE` path and persisted in `sessionStorage`), the device `os` (from the pre-paint `is-ios`/`is-android` class), and the nearest `data-pos`. It exposes `window.gigTrack`, which `android-access.js` uses for the full modal funnel: `android_open` → `android_submit_attempt` → `android_submit` (the true conversion), plus `android_error` (labeled) and `android_abandon` (`typed`/`empty`). `PATH` stays hardcoded to `"/gig"` on every page — `variant` is the splitter, and the backend dashboard filters on that path. The `APPLE_PT` constant in `gig-analytics.js` is empty until the App Store Connect provider token is supplied; once set, every `apps.apple.com` link is tagged `pt`/`ct=<variant>-<srcId>`/`mt=8` for Apple-side install attribution. **Analytics is best-effort and must never throw or block the page** — keep every call wrapped and fire-and-forget. Click/section attribution is driven by HTML hooks (`data-pos`, `data-section`, `data-exit`, `#androidBtn`/`.js-android-open`); preserve those hooks when editing the markup.
+
+The Railway backend (`https://backend-production-9a98f.up.railway.app`) is the **only external service the hub calls** — reached from both `android-access.js` (`/android-access`) and `gig-analytics.js` (`/landing-event`). Both depend on that backend's CORS allowing this origin.
+
+### Gig landing variants (campaign pages)
+
+The Gig landing surface is an audience-segmented test — three arms, one per traffic segment:
+
+| Arm | Path | `<html data-variant>` | Audience |
+|---|---|---|---|
+| dual (control) | `/gig/` | `dual` | both sides (broad/organic) |
+| provider | `/gig/pro/` | `pro` | people offering services |
+| customer | `/gig/hire/` | `hire` | people hiring |
+
+Rules that keep the test valid — do not "fix" these:
+
+- **Variant pages are fully authored HTML.** They deliberately load **no `project.js`** (it would overwrite `<title>` and any `data-name`/`data-blurb` hooks from the registry) and carry **no `.project-nav`** (an exit leak on paid traffic). Hero copy lives only in the page.
+- **`data-variant` is an experiment id.** Iterate copy under a *new* id (`pro-b`), never silently change a page under an existing id — historical rows in the dashboard would be poisoned. (`v2` rows are the pre-test baseline of `/gig/`.)
+- **SEO safety:** variant pages carry `noindex, follow` + `canonical → https://mummysboy.com/gig/`, keep a full OG set with `og:url` pointing at *themselves* (ad link previews work — OG scrapers ignore robots meta), stay **out of `sitemap.xml`**, and must **not** be `Disallow`ed in `robots.txt` (a crawl block would hide the noindex).
+- **Campaign links:** `/gig/pro?id=SRC` (query) or `/gig/pro/id=SRC` (pretty path — `netlify.toml` has a 200 rewrite per variant folder). Add the rewrite when adding a variant.
+- **Cross-arm comparability:** keep `data-section` / `data-pos` hook names consistent across arms (`hero`, `spec`, `flow`, `closing`, `footer`; positions `hero`, `status`, `closing` — dual adds `mid`/`mid-cta`). Variant-scoped styles live in `styles/gig-additions.css` under `html[data-variant="…"]` selectors, token palette only.
+- **Copy honesty is load-bearing:** "Gig takes 0%" / "keep 100%" must stay literally true — if paid placement or fee tiers ever ship, every arm's copy changes the same day. Android is always a beta *invite*, never a download.
 
 ---
 
@@ -214,7 +254,7 @@ python3 -m http.server 4321   # then open http://localhost:4321
 # or: npx serve .
 ```
 
-After any change, serve the site and confirm the homepage grid renders and both project routes resolve before reporting the task complete — **and check it at a phone width (375px)**, per the [Mobile](#mobile-prerequisite) rule. Quick non-browser sanity check: `node --check scripts/*.js data/projects.js` to confirm everything parses.
+After any change, serve the site and confirm the homepage grid renders and both project routes resolve before reporting the task complete — **and check it at a phone width (375px)**, per the [Mobile](#mobile-prerequisite) rule. Quick non-browser sanity check: `node --check scripts/*.js data/*.js` to confirm everything parses.
 
 ---
 
@@ -224,6 +264,17 @@ After any change, serve the site and confirm the homepage grid renders and both 
 2. If it's a nested route (no `href`), create `<slug>/index.html` — copy an existing one and change `<body data-project="…">`, the `<title>`, and the visible fallback name. If it links out, set `href` and you're done.
 3. Confirm the homepage grid picks it up automatically — do not edit `index.html` or `scripts/main.js` to list it.
 4. Serve and eyeball it.
+
+---
+
+## Adding a Gig blog post
+
+The blog is a **second registry-driven system**, mirroring the projects one — `data/posts.js` is its single source of truth, and `scripts/blog.js` renders the `/gig/blog/` index grid (`#post-grid`) and the "more reading" links between articles. The `esc()` helper escapes anything injected with `innerHTML` — keep using it.
+
+1. Add one entry to `data/posts.js` (typed with the `Post` JSDoc typedef).
+2. Create the article at `gig/blog/<slug>/index.html`. The **article body is authored static HTML, not JS** — that's deliberate, so the prose is fully crawlable. Copy the existing post and set `<body data-post="<slug>">` so it's excluded from its own "more reading" list.
+3. Don't hardcode cards in the index — `blog.js` fills the grid from the registry.
+4. Add the new URL to `sitemap.xml` (it's a static file — new routes and posts don't appear until you add them).
 
 ---
 

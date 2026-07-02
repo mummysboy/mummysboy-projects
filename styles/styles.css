@@ -1,4 +1,5 @@
-@import "./tokens.css";
+/* tokens.css is linked directly in each page <head> (before this file) —
+   a nested @import would serialize the two requests on the critical path. */
 
 /* ---- Reset ---------------------------------------------------------- */
 *,

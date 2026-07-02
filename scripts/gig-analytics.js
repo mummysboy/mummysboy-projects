@@ -31,6 +31,38 @@ function readSrcId() {
 }
 const SRC_ID = readSrcId();
 
+// Device split from the pre-paint UA class (set in each page's <head>). The primary
+// metric is iOS badge taps — without this dimension a variant that happens to draw
+// more Android traffic would look artificially weak.
+const OS = document.documentElement.classList.contains("is-ios")
+  ? "ios"
+  : document.documentElement.classList.contains("is-android")
+    ? "android"
+    : "desktop";
+
+// Apple App Analytics campaign attribution. Set APPLE_PT to the account's provider
+// token (App Store Connect → App Analytics → Acquisition → Campaigns → Generate
+// Campaign Link — the pt= value in the generated URL). While it's empty, links are
+// left untouched. With it set, every App Store link is tagged pt/ct/mt so Apple's
+// install numbers line up with the first-party variant × srcId funnel.
+const APPLE_PT = "";
+if (APPLE_PT) {
+  const ct = (VARIANT + (SRC_ID ? `-${SRC_ID}` : ""))
+    .replace(/[^A-Za-z0-9._-]/g, "")
+    .slice(0, 40);
+  document.querySelectorAll('a[href*="apps.apple.com"]').forEach((a) => {
+    try {
+      const url = new URL(a.href);
+      url.searchParams.set("pt", APPLE_PT);
+      url.searchParams.set("ct", ct);
+      url.searchParams.set("mt", "8");
+      a.href = url.toString();
+    } catch {
+      /* leave the link as-is */
+    }
+  });
+}
+
 function track(type, label) {
   try {
     const body = JSON.stringify({
@@ -40,6 +72,7 @@ function track(type, label) {
       label: label || null,
       variant: VARIANT,
       srcId: SRC_ID || null,
+      os: OS,
     });
     // keepalive lets the request survive a navigation (e.g. the iOS link opening the App
     // Store). sendBeacon is the ideal transport but can't set JSON content type, so we use

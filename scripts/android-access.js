@@ -1,8 +1,10 @@
 // Android early-access request. Collects an email and POSTs it to the Gig backend
 // endpoint (phone/contact_method sent as defaults to keep the API contract). On success
-// it shows a checkmark, then the modal dismisses itself. Also records the real Android
-// funnel via window.gigTrack: android_open when the modal opens, android_submit when the
-// invite is actually requested (the TRUE conversion — distinct from a CTA click).
+// it shows a checkmark, then the modal dismisses itself. Also records the full Android
+// funnel via window.gigTrack: android_open (modal opened) → android_submit_attempt
+// (button pressed, pre-validation) → android_submit (the TRUE conversion — an invite was
+// actually requested), plus android_error (labeled invalid_email / server_<status> /
+// network) and android_abandon (labeled typed/empty) so drop-off has a visible cause.
 const BACKEND = "https://backend-production-9a98f.up.railway.app";
 
 const overlay = document.getElementById("afOverlay");
@@ -48,6 +50,12 @@ if (overlay) {
   };
 
   const close = () => {
+    // Abandon = closed while the form was still showing (the post-success
+    // auto-dismiss hides the form first, so it never counts). "typed" vs
+    // "empty" separates form friction from curiosity clicks.
+    if (!form.hidden && overlay.classList.contains("open") && window.gigTrack) {
+      window.gigTrack("android_abandon", emailEl.value.trim() ? "typed" : "empty");
+    }
     clearTimeout(dismissTimer);
     overlay.classList.remove("open");
     pageRegions.forEach((el) => el.removeAttribute("inert"));
@@ -73,9 +81,11 @@ if (overlay) {
   });
 
   submit.addEventListener("click", async () => {
+    if (window.gigTrack) window.gigTrack("android_submit_attempt");
     const email = emailEl.value.trim();
 
     if (!emailRe.test(email)) {
+      if (window.gigTrack) window.gigTrack("android_error", "invalid_email");
       msg.className = "af-msg af-msg--err";
       msg.textContent = "Enter a valid email.";
       return;
@@ -102,12 +112,14 @@ if (overlay) {
         if (window.gigTrack) window.gigTrack("android_submit");
         dismissTimer = setTimeout(close, 2600); // bow out on its own
       } else {
+        if (window.gigTrack) window.gigTrack("android_error", `server_${res.status}`);
         msg.className = "af-msg af-msg--err";
         msg.textContent = data.error || "Something went wrong. Try again.";
         submit.disabled = false;
         submit.textContent = original;
       }
     } catch {
+      if (window.gigTrack) window.gigTrack("android_error", "network");
       msg.className = "af-msg af-msg--err";
       msg.textContent = "Network error. Please try again.";
       submit.disabled = false;

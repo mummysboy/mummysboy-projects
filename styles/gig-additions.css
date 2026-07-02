@@ -101,3 +101,108 @@
   line-height: 1.4;
   color: var(--steel);
 }
+
+/* ===== Campaign variant pages (see CLAUDE.md → Gig landing variants) =====
+   Three arms share this stylesheet: /gig/ (data-variant="dual"), /gig/pro/
+   ("pro"), /gig/hire/ ("hire"). Rules are scoped by <html data-variant> so
+   each page opts into only what it authors. Token palette only. */
+
+/* Smaller hero icon buys back in-app-browser fold: 64px on phones; dual
+   restores the classic 104px where the fold isn't contested. */
+html[data-variant="dual"] .app-icon,
+html[data-variant="pro"] .app-icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 14px;
+}
+
+@media (min-width: 760px) {
+  html[data-variant="dual"] .app-icon {
+    width: 6.5rem;
+    height: 6.5rem;
+    border-radius: 22px;
+  }
+}
+
+/* hire: 56px icon inline with the eyebrow — one identity row, ~70px of fold back. */
+.hero__id {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero__id .app-icon {
+  flex: 0 0 auto;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 12px;
+}
+
+html[data-variant="hire"] .hero .cta-row {
+  margin-top: 1.25rem;
+}
+
+/* dual: the audience couplet — the two-sided story as typography, not a switch.
+   A micro spec-sheet: mono key, plain value, one saccade to self-identify. */
+.couplet {
+  max-width: 36rem;
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.couplet > div {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.couplet dt {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--steel);
+}
+
+.couplet dd {
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--silver);
+}
+
+/* dual: the 0% readout above the badge — the page's single volt accent
+   (volt-on-ink ≈ 13:1; steel carries the rest of the line). */
+.readout {
+  margin-top: 1.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+}
+
+.readout__stat {
+  color: var(--volt);
+  font-weight: 500;
+}
+
+/* dual: mid-page CTA rail — hairline above, no box; ends the hero→closing
+   CTA desert without floating chrome. */
+.mid-cta {
+  margin-top: 2.75rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--hairline);
+}
+
+.mid-cta__line {
+  max-width: 32rem;
+  font-size: 1rem;
+  color: var(--silver);
+}
+
+.mid-cta .cta-row {
+  margin-top: 1.25rem;
+}

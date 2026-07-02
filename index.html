@@ -12,10 +12,20 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fonts load async (display=swap paints fallback text immediately); noscript keeps them for JS-off visitors. -->
     <link
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <link rel="stylesheet" href="/styles/tokens.css" />
     <link rel="stylesheet" href="/styles/styles.css" />
   </head>
   <body>

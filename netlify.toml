@@ -11,9 +11,48 @@
     X-Frame-Options = "DENY"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
+# Caching. Nothing here has a hashed filename, so HTML always revalidates and
+# CSS/JS stay short-TTL (stale styles against fresh HTML would break pages).
+# Images change rarely under stable names — if one is ever replaced, rename it.
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/styles/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300, stale-while-revalidate=86400"
+
+[[headers]]
+  for = "/scripts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300, stale-while-revalidate=86400"
+
+[[headers]]
+  for = "/gig/shots/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
+[[headers]]
+  for = "/gig/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
 # Pretty source-tagged links: /gig/id=56 rewrites to the gig page (its JS reads the id from
 # the path). The standard /gig/?id=56 query form needs no rule and keeps working.
 [[redirects]]
   from = "/gig/id=*"
   to = "/gig/index.html"
+  status = 200
+
+# Same pretty /id= form for the campaign variant pages (see CLAUDE.md → variant pages).
+[[redirects]]
+  from = "/gig/pro/id=*"
+  to = "/gig/pro/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/gig/hire/id=*"
+  to = "/gig/hire/index.html"
   status = 200
