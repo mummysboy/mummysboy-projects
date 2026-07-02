@@ -40,29 +40,9 @@
 .store-badge img { display: block; height: 44px; width: auto; }
 .cta--ghost { min-height: 44px; }
 
-/* OS-demoted alternates: a quiet text link shown only on the non-matching device. */
-.cta-alt {
-  display: none;
-  align-items: center;
-  padding: 0.5rem 0;
-  background: none;
-  border: 0;
-  cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--steel);
-  transition: color 160ms ease;
-}
-.cta-alt:hover { color: var(--silver-bright); }
-
-/* Desktop (default / .is-desktop): both primaries show, alternates hidden.
-   iOS device: keep the iOS primary, demote Android to a text link — and vice-versa. */
-.is-ios .cta-android-primary { display: none; }
-.is-ios .cta-android-alt { display: inline-flex; }
-.is-android .cta-ios-primary { display: none; }
-.is-android .cta-ios-alt { display: inline-flex; }
+/* Both store badges always show, on every device (owner's call). The pre-paint
+   is-ios/is-android class on <html> stays — gig-analytics.js reads it for the
+   beacon's os field. */
 
 /* Honest "new app" proof line under the hero CTA.
    Swap for a real "★ 4.8 · 120+ ratings on the App Store" once review volume is credible (>=10). */

@@ -55,7 +55,7 @@
       }
     </script>
 
-    <!-- OS class set before paint so the device-matched CTA leads with no flash. -->
+    <!-- OS class set before paint — read by gig-analytics.js to tag beacons with the device (os field). -->
     <script>
       (function () {
         var ua = navigator.userAgent || "";
@@ -139,11 +139,6 @@
               <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
             </button>
 
-            <!-- OS-demoted alternates: shown only on the non-matching device (CSS in gig-additions.css). -->
-            <a class="cta-alt cta-ios-alt" id="iosAlt" href="https://apps.apple.com/app/id6758136203" target="_blank" rel="noopener noreferrer">
-              On iPhone? Download on the App Store →
-            </a>
-            <button class="cta-alt cta-android-alt js-android-open" type="button">On Android? Get it on Google Play →</button>
           </div>
 
           <p class="proof">New on the App Store — early reviews coming in.</p>
@@ -208,10 +203,6 @@
           <button class="store-badge cta-android-primary js-android-open" type="button" aria-label="Get Gig on Google Play">
             <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
           </button>
-          <a class="cta-alt cta-ios-alt" href="https://apps.apple.com/app/id6758136203" target="_blank" rel="noopener noreferrer">
-            On iPhone? Download on the App Store →
-          </a>
-          <button class="cta-alt cta-android-alt js-android-open" type="button">On Android? Get it on Google Play →</button>
         </div>
       </section>
 
@@ -303,10 +294,6 @@
           <button class="store-badge cta-android-primary js-android-open" type="button" aria-label="Get Gig on Google Play">
             <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
           </button>
-          <a class="cta-alt cta-ios-alt" href="https://apps.apple.com/app/id6758136203" target="_blank" rel="noopener noreferrer">
-            On iPhone? Download on the App Store →
-          </a>
-          <button class="cta-alt cta-android-alt js-android-open" type="button">On Android? Get it on Google Play →</button>
         </div>
       </aside>
 
