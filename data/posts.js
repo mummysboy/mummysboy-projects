@@ -31,5 +31,18 @@ export const posts = [
       "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&q=70",
     alt: "Shopping bags arranged on a dark background.",
   },
+  {
+    slug: "how-to-make-money-offering-services",
+    title: "How to Make Money Offering Local Services (and Keep 100% of It)",
+    excerpt:
+      "Offer a skill you already have, set up a profile in about a minute, and keep everything you earn. The one number that decides your take-home is the platform's commission — and on Gig it's 0%.",
+    date: "2026-07-13",
+    dateLabel: "July 13, 2026",
+    readMins: "5 min",
+    tags: ["make-money", "how-to", "commission-free"],
+    image:
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=70",
+    alt: "People working together with laptops around a shared table.",
+  },
   // add the next post here ↓
 ];

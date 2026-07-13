@@ -7,8 +7,14 @@
    Because every rule in styles.css / this file paints with these vars, overriding
    them here re-themes the whole surface in one place. Values are AA-checked against
    both the white page (#fff) and the light surface (#f5f5f7). This is a deliberate,
-   scoped departure from the "near-black base" house rule — at the owner's direction. */
-html[data-variant] {
+   scoped departure from the "near-black base" house rule — at the owner's direction.
+
+   `html.gig-light` opts a NON-experiment Gig surface into the same light theme — used
+   by the indexable comparison page (/gig/compare/). It is deliberately NOT a
+   data-variant so it's never mistaken for an A/B arm (those are noindexed and out of
+   the sitemap; the compare page is indexed and in the sitemap). */
+html[data-variant],
+html.gig-light {
   --ink: #ffffff; /* page background — App Store white */
   --surface: #f5f5f7; /* cards / panels — iOS system gray 6 */
   --surface-hi: #ececef; /* hover / elevated */
@@ -35,7 +41,8 @@ html[data-variant] .metal {
 
 /* Text selection: the dark-theme rule (dim-green bg, near-black text) is illegible
    on light — flip to a soft green tint with dark text. */
-html[data-variant] ::selection {
+html[data-variant] ::selection,
+html.gig-light ::selection {
   background: #b7e9cd;
   color: #1d1d1f;
 }
@@ -263,4 +270,154 @@ html[data-variant="hire"] .hero .cta-row {
 
 .mid-cta .cta-row {
   margin-top: 1.25rem;
+}
+
+/* ===== Gig comparison page (/gig/compare/) — indexable marketing surface =====
+   Renders on the light App Store theme (html.gig-light). Every "winner" cue for Gig
+   comes from scale, weight and a surface fill — NEVER a second accent — so the single
+   volt CTA stays the one accent per view. Token palette only; mobile-first. */
+
+/* Hero — stat-led opener */
+.cmp-hero {
+  margin-top: 2rem;
+}
+.cmp-hero__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--steel);
+}
+.cmp-hero__title {
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2rem, 6.5vw, 3.25rem);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: var(--silver-bright);
+  overflow-wrap: break-word;
+}
+.cmp-hero__sub {
+  margin-top: 1.25rem;
+  max-width: 36rem;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--silver);
+}
+.cmp-hero__cta {
+  margin-top: 1.75rem;
+}
+
+@media (min-width: 820px) {
+  .cmp-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 17rem;
+    gap: 3rem;
+    align-items: center;
+    margin-top: 3rem;
+  }
+}
+
+/* The giant "0%" — scale carries it; it is near-black, not the accent. */
+.cmp-stat {
+  margin-top: 2rem;
+  padding: 2rem 1.5rem;
+  border: 1px solid var(--hairline);
+  border-radius: 18px;
+  background: var(--surface);
+  text-align: center;
+}
+.cmp-stat__num {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(3.75rem, 14vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--silver-bright);
+}
+.cmp-stat__label {
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+}
+@media (min-width: 820px) {
+  .cmp-stat {
+    margin-top: 0;
+  }
+}
+
+/* Leaderboard — hairline-separated rows; the winner is a filled card. */
+.board {
+  margin: 2.5rem 0;
+  padding: 0;
+  list-style: none;
+}
+.board__row {
+  display: grid;
+  grid-template-columns: 2.25rem 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 1.15rem 0;
+  border-top: 1px solid var(--hairline);
+}
+.board__row:last-child {
+  border-bottom: 1px solid var(--hairline);
+}
+.board__row--win {
+  padding: 1.5rem;
+  margin-bottom: 0.85rem;
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.board__rank {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--steel);
+  text-align: center;
+}
+.board__row--win .board__rank {
+  font-size: 2.5rem;
+  color: var(--silver-bright);
+}
+.board__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.0625rem;
+  color: var(--silver-bright);
+}
+.board__row--win .board__name {
+  font-size: 1.4375rem;
+}
+.board__tag {
+  display: inline-block;
+  margin-left: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--steel);
+  vertical-align: middle;
+}
+.board__note {
+  margin-top: 0.4rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--silver);
+}
+
+/* Verdict marks in the matrix — symbol + text (never colour alone). */
+.mark {
+  font-weight: 600;
+}
+.mark--no {
+  color: var(--steel);
 }
