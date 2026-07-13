@@ -1,7 +1,59 @@
+/* ===== Gig landing: light "App Store" theme =====
+   The Gig landing surface (and only it) renders light, like an App Store product
+   page. This works by re-declaring the token palette on `html[data-variant]` — a
+   selector that matches exactly the three landing arms (/gig/ = "dual", /gig/pro/,
+   /gig/hire/) and NOTHING else: the homepage, QRewards, and the blog all use a
+   plain <html lang="en"> with no data-variant, so they keep the dark house style.
+   Because every rule in styles.css / this file paints with these vars, overriding
+   them here re-themes the whole surface in one place. Values are AA-checked against
+   both the white page (#fff) and the light surface (#f5f5f7). This is a deliberate,
+   scoped departure from the "near-black base" house rule — at the owner's direction. */
+html[data-variant] {
+  --ink: #ffffff; /* page background — App Store white */
+  --surface: #f5f5f7; /* cards / panels — iOS system gray 6 */
+  --surface-hi: #ececef; /* hover / elevated */
+
+  --silver: #3a3a3c; /* body copy — 11.3:1 on white */
+  --silver-bright: #1d1d1f; /* primary text — Apple near-black */
+  --hairline: #d2d2d7; /* 1px rules — Apple separator */
+
+  /* Accent stays green (brand + "one accent per view"), darkened so it clears AA
+     as text on white (5.4:1) AND carries white text on the modal button (5.4:1). */
+  --volt: #097a42;
+  --volt-dim: #0a6e3c;
+
+  --steel: #57575c; /* quiet labels / links — 7.2:1 on white, 6.6:1 on surface */
+}
+
+/* Hero headline: the .metal silver gradient is built for a dark base and would
+   wash out on white — render it as solid near-black instead. */
+html[data-variant] .metal {
+  background: none;
+  -webkit-text-fill-color: #1d1d1f;
+  color: #1d1d1f;
+}
+
+/* Text selection: the dark-theme rule (dim-green bg, near-black text) is illegible
+   on light — flip to a soft green tint with dark text. */
+html[data-variant] ::selection {
+  background: #b7e9cd;
+  color: #1d1d1f;
+}
+
+/* Hardcoded dark-hover border on the screenshot filmstrip → light equivalent. */
+html[data-variant] .shot:hover img {
+  border-color: #c7c7cc;
+}
+
+/* Error message red: the dark-theme soft red fails on white — use a deeper red. */
+html[data-variant] .af-msg--err {
+  color: #c0392b;
+}
+
 /* ===== Gig landing-page redesign additions =====
    Append these rules to styles/styles.css (or load this file right after it).
    Every value uses the existing token palette (var(--ink|surface|hairline|silver|steel|volt))
-   so the dark house style and the "one volt accent per view" rule are preserved. */
+   so the layout system and the "one accent per view" rule are preserved. */
 
 /* Hero: copy + one screenshot side-by-side on wider screens; copy-only on phones
    (a tall phone above the fold would push the CTA out of view on mobile). */

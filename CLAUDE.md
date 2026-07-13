@@ -10,7 +10,7 @@ Instructions for Claude when working in this repo. Read this fully before writin
 
 The app is **built and serving clean** as a **no-build static site** — plain HTML, CSS, and ES-module JavaScript. There is **no framework, no bundler, no build step, and no dependencies**. The structure below exists on disk: `data/projects.js` (the registry, an ES module), `styles/`, `scripts/`, `index.html`, and the `/gig/` + `/qrewards/` route folders.
 
-- **Deploy target is Netlify**, which publishes the repo root as-is (`netlify.toml`, `publish = "."`, no build command). Pretty URLs come from folder-`index.html` files (`/gig/` → `gig/index.html`). `netlify.toml` also sets security response headers (`X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`) — don't drop them when editing that file.
+- **Deploy target is Netlify**, which publishes the repo root as-is (`netlify.toml`, `publish = "."`, no build command). Pretty URLs come from folder-`index.html` files (`/gig/` → `gig/index.html`). `netlify.toml` also sets security response headers (`X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`) — don't drop them when editing that file. It also sets `Cache-Control` headers (HTML always revalidates; CSS/JS short-TTL; images day-long) — since **nothing has a hashed filename**, images are served under stable names and **must be renamed if their contents ever change**, or clients will serve the stale cached version.
 - **The registry is loaded directly in the browser** via `<script type="module">` importing `data/projects.js`. The homepage grid is rendered client-side from it; project pages read their slug from `<body data-project="…">`.
 - **Fonts** load via a Google Fonts `<link>` in each page's `<head>`: **Space Grotesk** (display), **Inter** (body), **JetBrains Mono** (mono). Family stacks live in CSS vars `--font-display`, `--font-sans`, `--font-mono` in `styles/tokens.css`.
 - This was a deliberate pivot away from an earlier Next.js/TypeScript/Tailwind scaffold. Do not reintroduce a framework or build tooling without asking.
@@ -45,7 +45,10 @@ The site is **registry-driven**. One file is the single source of truth:
  * @property {string} blurb     // one clean sentence, no marketing fluff
  * @property {"live"|"building"|"concept"} status
  * @property {string[]} tags
- * @property {string} [href]    // external link; omit if it's a nested route
+ * @property {string} [href]       // external link; omit if it's a nested route
+ * @property {string} [titleTag]   // optional SEO <title> for the project page (else "{name} — mummysboy")
+ * @property {string} [headline]   // optional benefit H1 for the page (else {name})
+ * @property {string} [heroBlurb]  // optional longer hero lede (else {blurb})
  */
 
 /** @type {Project[]} */
