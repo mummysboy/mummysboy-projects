@@ -142,6 +142,15 @@
           </div>
 
           <p class="proof">New on the App Store — early reviews coming in.</p>
+
+          <!-- Desktop-only bridge to the phone (scripts/gig-qr.js draws the code). -->
+          <div class="scan" data-qr>
+            <div class="scan__code" data-qr-code></div>
+            <div class="scan__copy">
+              <p class="scan__label">On a computer</p>
+              <p class="scan__text">Scan with your phone camera to open this page there — free on iOS, Android by invite.</p>
+            </div>
+          </div>
         </div>
 
         <!-- The natural-language "magic moment" — shown beside the copy on wider screens. -->
@@ -283,18 +292,28 @@
             Be one of the first in your area — describe a need or list a skill in under a minute.
           </p>
         </div>
-        <div class="cta-row" data-pos="closing">
-          <a
-            class="store-badge cta-ios-primary"
-            href="https://apps.apple.com/app/id6758136203"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
-          </a>
-          <button class="store-badge cta-android-primary js-android-open" type="button" aria-label="Get Gig on Google Play">
-            <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
-          </button>
+        <div class="get-app__actions">
+          <div class="cta-row" data-pos="closing">
+            <a
+              class="store-badge cta-ios-primary"
+              href="https://apps.apple.com/app/id6758136203"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
+            </a>
+            <button class="store-badge cta-android-primary js-android-open" type="button" aria-label="Get Gig on Google Play">
+              <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
+            </button>
+          </div>
+
+          <div class="scan" data-qr>
+            <div class="scan__code" data-qr-code></div>
+            <div class="scan__copy">
+              <p class="scan__label">On a computer</p>
+              <p class="scan__text">Scan to pick this up on your phone.</p>
+            </div>
+          </div>
         </div>
       </aside>
 
@@ -385,6 +404,7 @@
     <script type="module" src="/scripts/reveal.js"></script>
     <script type="module" src="/scripts/project.js"></script>
     <script type="module" src="/scripts/android-access.js"></script>
+    <script type="module" src="/scripts/gig-qr.js"></script>
     <script type="module" src="/scripts/gig-analytics.js"></script>
   </body>
 </html>

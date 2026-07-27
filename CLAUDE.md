@@ -177,6 +177,8 @@ mummysboy/
 │   ├── project.js        # fills a project page's header from the registry by slug
 │   ├── blog.js           # renders the blog index grid + "more reading" from data/posts.js
 │   ├── gig-analytics.js  # first-party landing-page analytics → POSTs beacons to the Gig backend
+│   ├── qr.js             # dependency-free QR encoder (byte mode, ECC M, versions 1–10) → SVG string
+│   ├── gig-qr.js         # desktop-only "scan to install" code on the Gig arms (uses qr.js)
 │   ├── reveal.js         # scroll-reveal for [data-reveal] sections (progressive enhancement; hero exempt)
 │   └── android-access.js # Gig Android beta-invite modal → POSTs to the Gig backend
 ├── data/
@@ -215,6 +217,15 @@ When QRewards (or any project) earns a real page, follow this pattern: registry 
 ### Analytics & the Gig backend
 
 `scripts/gig-analytics.js` is the Gig pages' first-party analytics. It fire-and-forget POSTs tiny beacons (`view`, `ios`/`android` CTA clicks, `section` scroll-reach, `exit`) to `…/landing-event` on the same Railway backend, each tagged with the page's `variant` (from `<html data-variant>`), a per-link `srcId` (parsed from `?id=`/`?ref`/`?utm_*` or a `/id=VALUE` path and persisted in `sessionStorage`), the device `os` (from the pre-paint `is-ios`/`is-android` class), and the nearest `data-pos`. It exposes `window.gigTrack`, which `android-access.js` uses for the full modal funnel: `android_open` → `android_submit_attempt` → `android_submit` (the true conversion), plus `android_error` (labeled) and `android_abandon` (`typed`/`empty`). `PATH` stays hardcoded to `"/gig"` on every page — `variant` is the splitter, and the backend dashboard filters on that path. The `APPLE_PT` constant in `gig-analytics.js` is empty until the App Store Connect provider token is supplied; once set, every `apps.apple.com` link is tagged `pt`/`ct=<variant>-<srcId>`/`mt=8` for Apple-side install attribution. **Analytics is best-effort and must never throw or block the page** — keep every call wrapped and fire-and-forget. Click/section attribution is driven by HTML hooks (`data-pos`, `data-section`, `data-exit`, `#androidBtn`/`.js-android-open`); preserve those hooks when editing the markup.
+
+### Desktop scan-to-phone QR
+
+Email campaigns land people on a desktop, where a store badge can't install anything. `scripts/gig-qr.js` fills every `[data-qr]` slot (hero + closing rail on all three arms) with a QR drawn client-side by `scripts/qr.js` — a small byte-mode encoder written here rather than added as a dependency. Two rules keep it honest:
+
+- **It encodes the same arm, with the visitor's own campaign id carried through**: `https://mummysboy.com<same path>/?id=<srcId>-qr` (bare `?id=qr` when there's no campaign, truncated so the `-qr` tag survives the backend's 40-char `srcId` window). So a phone install traces back to the exact email that produced the desktop visit, and the arm's copy stays consistent across the hop. The origin is hardcoded to production on purpose — a code scanned off a localhost or deploy-preview screen still has to resolve on someone's phone.
+- **It only renders on `html.is-desktop`** (the pre-paint UA class) — a phone can't scan its own screen. `.scan` is `display: none` until `gig-qr.js` adds `.scan--ready`, so a JS failure leaves no empty box.
+
+`qr.js` is verified against `node-qrcode`: matrices are bit-identical at the declared mask across versions 1–10, and jsQR decodes the rasterized output back to the exact input. If you change it, re-run that check before shipping — a silently wrong QR looks fine and scans as nothing.
 
 The Railway backend (`https://backend-production-9a98f.up.railway.app`) is the **only external service the hub calls** — reached from both `android-access.js` (`/android-access`) and `gig-analytics.js` (`/landing-event`). Both depend on that backend's CORS allowing this origin.
 

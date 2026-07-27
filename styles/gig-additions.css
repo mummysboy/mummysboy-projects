@@ -272,6 +272,64 @@ html[data-variant="hire"] .hero .cta-row {
   margin-top: 1.25rem;
 }
 
+/* ===== Desktop scan-to-phone bridge =====
+   Email traffic lands on a desktop, where a store badge can't install anything.
+   Hidden by default and shown only once scripts/gig-qr.js has drawn a code AND the
+   pre-paint UA class says desktop — a phone can't scan its own screen. Quiet by
+   construction: a hairline rule and mono label, no second accent, no box. */
+.scan {
+  display: none;
+}
+
+html.is-desktop .scan--ready {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  max-width: 22rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--hairline);
+}
+
+/* The code always renders dark-on-white for scan reliability, so it carries its own
+   plate — the border keeps it from floating on the white App Store theme. */
+.scan__code {
+  flex: none;
+  width: 104px;
+  height: 104px;
+  padding: 5px;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.scan__code svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.scan__label {
+  margin-bottom: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--steel);
+}
+
+.scan__text {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--silver);
+}
+
+/* Closing rail: badges with the code stacked underneath, as one action column. */
+.get-app__actions {
+  display: flex;
+  flex-direction: column;
+}
+
 /* ===== Gig comparison page (/gig/compare/) — indexable marketing surface =====
    Renders on the light App Store theme (html.gig-light). Every "winner" cue for Gig
    comes from scale, weight and a surface fill — NEVER a second accent — so the single
