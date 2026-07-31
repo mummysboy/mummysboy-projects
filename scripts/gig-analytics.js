@@ -99,6 +99,39 @@ window.gigTrack = track;
 // One page view per load (carries the active variant).
 track("view");
 
+// Repeat-tap guard. A CTA that fails to navigate invites frantic re-tapping, and since the
+// handler below never preventDefaults, every one of those taps would beacon as a separate
+// conversion (on 2026-07-30 a single visitor logged 18 "iOS clicks" in 28 seconds against a
+// dead target="_blank" badge, tripling the day's apparent CTR). One tap on one CTA is one
+// intent, so collapse repeats of the same (type,label) inside a short window. Clicks only —
+// the section observer already fires once per page, and the Android funnel in
+// android-access.js calls window.gigTrack directly, so its ordered steps are untouched.
+// The window slides: each tap pushes it out, so an unbroken burst of any length collapses to
+// the single beacon that opened it. A fixed window would still leak one beacon every 3s, which
+// is how the original 28-second burst would have survived as ~10 "conversions" instead of 18.
+const CLICK_DEDUPE_MS = 3000;
+const lastClick = new Map();
+const repeatReported = new Set();
+function trackClick(type, label) {
+  const key = `${type}|${label || ""}`;
+  const now = Date.now();
+  const prev = lastClick.get(key);
+  lastClick.set(key, now);
+  if (prev && now - prev < CLICK_DEDUPE_MS) {
+    // Suppressed as a repeat — but don't just drop it on the floor. Collapsing the burst makes
+    // the conversion metric honest and, on its own, makes a dead CTA look exactly like a
+    // working one. So report the *fact* of repeat-tapping once per CTA per page: nobody taps a
+    // button that visibly worked, and this is the signal that would have surfaced the
+    // target="_blank" breakage on day one instead of via a CTR that looked too good.
+    if (!repeatReported.has(key)) {
+      repeatReported.add(key);
+      track("cta_repeat", label);
+    }
+    return;
+  }
+  track(type, label);
+}
+
 // Click attribution. iOS = any App Store link; Android = the beta-invite triggers; exit =
 // any element marked data-exit (wordmark, blog, social, legal). label = nearest data-pos
 // (hero | closing | status) for store CTAs, or the data-exit value for exits.
@@ -109,12 +142,12 @@ document.addEventListener("click", (e) => {
   const pos = posEl ? posEl.getAttribute("data-pos") : null;
 
   if (el.closest('a[href*="apps.apple.com"]')) {
-    track("ios", pos);
+    trackClick("ios", pos);
   } else if (el.id === "androidBtn" || el.classList.contains("js-android-open")) {
-    track("android", pos);
+    trackClick("android", pos);
   } else {
     const exitEl = el.closest("[data-exit]");
-    if (exitEl) track("exit", exitEl.getAttribute("data-exit"));
+    if (exitEl) trackClick("exit", exitEl.getAttribute("data-exit"));
   }
 });
 
