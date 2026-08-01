@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en" data-site="irl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <title>IRL Admin</title>
+    <!-- Private tool. Keep it out of search, and out of sitemap.xml. It must not
+         be Disallow-ed in robots.txt either — a crawl block would hide this. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- Add to Home Screen: this is meant to live on a phone home screen. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="IRL Admin" />
+    <meta name="theme-color" content="#0b0b0d" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <link rel="stylesheet" href="/styles/tokens.css" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/styles/irl.css" />
+    <link rel="stylesheet" href="/styles/irl-admin.css" />
+  </head>
+  <body class="admin-body">
+    <header class="admin-top">
+      <div class="admin-top__row">
+        <span class="admin-mark"><b>IRL</b> admin</span>
+        <button class="btn btn--quiet" id="signOut" type="button" hidden>Sign out</button>
+      </div>
+    </header>
+
+    <main class="admin-wrap">
+      <!-- ---------- Sign in ---------- -->
+      <section class="signin" id="signinView" hidden>
+        <h1 class="signin__title">Sign in</h1>
+        <p class="signin__text">
+          This is the door people don't see. Your account is the one in Supabase.
+        </p>
+
+        <form id="signinForm" novalidate>
+          <div class="field">
+            <label class="field__label" for="s-email">Email</label>
+            <input
+              class="input"
+              id="s-email"
+              name="email"
+              type="email"
+              inputmode="email"
+              autocomplete="username"
+              required
+            />
+          </div>
+          <div class="field">
+            <label class="field__label" for="s-pass">Password</label>
+            <input
+              class="input"
+              id="s-pass"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <button class="btn btn--solid" id="signinSubmit" type="submit">Sign in</button>
+          <p class="formmsg" id="signinMsg" role="status" aria-live="polite"></p>
+        </form>
+
+        <button class="signin__alt" id="magicBtn" type="button">
+          Email me a sign-in link instead
+        </button>
+      </section>
+
+      <!-- ---------- Console ---------- -->
+      <section id="consoleView" hidden>
+        <h1 class="sr-only">IRL admin console</h1>
+
+        <div class="picker">
+          <label class="sr-only" for="eventPick">Show</label>
+          <select class="select" id="eventPick"></select>
+          <button class="btn btn--accent" id="newEvent" type="button" aria-label="Add a new show">
+            New
+          </button>
+        </div>
+
+        <div class="score" id="score" role="group" aria-label="Counts for the selected show"></div>
+
+        <div class="tabs" role="tablist" aria-label="Sections">
+          <button class="tab" id="tab-lineup" type="button" role="tab" aria-selected="true" aria-controls="panel-lineup">
+            Lineup<span class="tab__badge" id="pendingBadge" hidden></span>
+          </button>
+          <button class="tab" id="tab-seats" type="button" role="tab" aria-selected="false" aria-controls="panel-seats">
+            Seats
+          </button>
+          <button class="tab" id="tab-event" type="button" role="tab" aria-selected="false" aria-controls="panel-event">
+            Show
+          </button>
+        </div>
+
+        <div id="panel-lineup" role="tabpanel" aria-labelledby="tab-lineup" tabindex="0">
+          <div class="filters" id="lineupFilters" role="group" aria-label="Filter applications"></div>
+          <div id="lineupList" role="status" aria-live="polite"></div>
+        </div>
+
+        <div id="panel-seats" role="tabpanel" aria-labelledby="tab-seats" tabindex="0" hidden>
+          <div class="filters" id="seatTools" role="group" aria-label="Seat actions"></div>
+          <div id="seatList" role="status" aria-live="polite"></div>
+        </div>
+
+        <div id="panel-event" role="tabpanel" aria-labelledby="tab-event" tabindex="0" hidden>
+          <form class="editor" id="eventForm" novalidate>
+            <div class="field">
+              <label class="field__label" for="e-title">Show title</label>
+              <input class="input" id="e-title" name="title" type="text" maxlength="120" required />
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label class="field__label" for="e-format">
+                  Format <span class="opt">— optional</span>
+                </label>
+                <input class="input" id="e-format" name="format" type="text" maxlength="60"
+                       placeholder="Blind Table" />
+              </div>
+              <div class="field">
+                <label class="field__label" for="e-status">Status</label>
+                <select class="select" id="e-status" name="status">
+                  <option value="draft">Draft — hidden</option>
+                  <option value="published">Published — public</option>
+                  <option value="cancelled">Cancelled — shown as cancelled</option>
+                  <option value="completed">Completed — archived</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="e-tagline">
+                One-liner <span class="opt">— optional, shown under the venue</span>
+              </label>
+              <textarea class="textarea" id="e-tagline" name="tagline" maxlength="240"></textarea>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="e-venue">Venue</label>
+              <input class="input" id="e-venue" name="venue_name" type="text" maxlength="120" required />
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label class="field__label" for="e-city">City</label>
+                <input class="input" id="e-city" name="city" type="text" maxlength="80" required />
+              </div>
+              <div class="field">
+                <label class="field__label" for="e-address">
+                  Address <span class="opt">— optional</span>
+                </label>
+                <input class="input" id="e-address" name="address" type="text" maxlength="160" />
+              </div>
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label class="field__label" for="e-starts">Show starts</label>
+                <input class="input" id="e-starts" name="starts_at" type="datetime-local" required />
+              </div>
+              <div class="field">
+                <label class="field__label" for="e-ends">
+                  Show ends <span class="opt">— optional</span>
+                </label>
+                <input class="input" id="e-ends" name="ends_at" type="datetime-local" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="e-doors">
+                Doors <span class="opt">— optional, if they open before the show</span>
+              </label>
+              <input class="input" id="e-doors" name="doors_at" type="datetime-local" />
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label class="field__label" for="e-pcap">Lineup size</label>
+                <input class="input" id="e-pcap" name="participant_capacity" type="number"
+                       inputmode="numeric" min="0" max="200" required />
+                <p class="field__hint">How many people are actually in the show.</p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="e-scap">
+                  Seats <span class="opt">— blank for no cap</span>
+                </label>
+                <input class="input" id="e-scap" name="spectator_capacity" type="number"
+                       inputmode="numeric" min="0" max="2000" />
+                <p class="field__hint">Audience capacity at the venue.</p>
+              </div>
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label class="field__label" for="e-age">Minimum age</label>
+                <input class="input" id="e-age" name="min_age" type="number" inputmode="numeric"
+                       min="16" max="99" required />
+              </div>
+              <div class="field">
+                <label class="field__label" for="e-ticket">
+                  Door note <span class="opt">— optional</span>
+                </label>
+                <input class="input" id="e-ticket" name="ticket_note" type="text" maxlength="80"
+                       placeholder="Free entry, cash bar" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="e-notes">
+                Private notes <span class="opt">— never shown publicly</span>
+              </label>
+              <textarea class="textarea" id="e-notes" name="notes" maxlength="2000"></textarea>
+            </div>
+
+            <div class="editor__actions">
+              <button class="btn btn--solid" id="eventSave" type="submit">Save show</button>
+              <button class="btn btn--ghost" id="eventCancel" type="button">Discard changes</button>
+            </div>
+            <p class="formmsg" id="eventMsg" role="status" aria-live="polite"></p>
+
+            <div class="editor__danger" id="deleteWrap">
+              <button class="btn btn--ghost" id="eventDelete" type="button">
+                Delete this show
+              </button>
+              <p class="field__hint">
+                Deletes the show and every signup attached to it. Use “Cancelled” instead if
+                people already have seats.
+              </p>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="/scripts/irl-admin.js"></script>
+  </body>
+</html>

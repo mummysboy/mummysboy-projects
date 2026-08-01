@@ -171,11 +171,18 @@ mummysboy/
 │   ├── assets/           # official App Store + Google Play store badges
 │   ├── shots/            # Gig screenshots + the real App Store icon used on the page
 │   └── share-card.png    # OpenGraph/Twitter share image
+├── irldatingshows/
+│   ├── index.html        # IRL landing page — authored copy + DB-driven event list
+│   └── admin/index.html  # private phone-first ops console (noindex)
 ├── qrewards/index.html   # registry-driven placeholder route
 ├── scripts/
 │   ├── main.js           # renders the homepage grid from the registry
 │   ├── project.js        # fills a project page's header from the registry by slug
 │   ├── blog.js           # renders the blog index grid + "more reading" from data/posts.js
+│   ├── irl-db.js         # tiny Supabase client (PostgREST + auth) — no dependency
+│   ├── irl-events.js     # renders the IRL event listing + wires the signup dialog
+│   ├── irl-signup.js     # the participate/watch dialog (one dialog, two modes)
+│   ├── irl-admin.js      # the IRL admin console
 │   ├── gig-analytics.js  # first-party landing-page analytics → POSTs beacons to the Gig backend
 │   ├── qr.js             # dependency-free QR encoder (byte mode, ECC M, versions 1–10) → SVG string
 │   ├── gig-qr.js         # desktop-only "scan to install" code on the Gig arms (uses qr.js)
@@ -183,11 +190,17 @@ mummysboy/
 │   └── android-access.js # Gig Android beta-invite modal → POSTs to the Gig backend
 ├── data/
 │   ├── projects.js       # SINGLE SOURCE OF TRUTH for projects (ES module)
-│   └── posts.js          # SINGLE SOURCE OF TRUTH for blog posts (ES module)
+│   ├── posts.js          # SINGLE SOURCE OF TRUTH for blog posts (ES module)
+│   └── irl-config.js     # IRL's Supabase URL + public key, and its form options
+├── supabase/
+│   ├── schema.sql        # IRL database: tables, RLS, triggers, grants (idempotent)
+│   └── README.md         # setup order + the security model, read before editing policies
 ├── styles/
 │   ├── tokens.css        # CSS custom properties: palette + font stacks
 │   ├── styles.css        # all component styles (@imports tokens.css)
-│   └── gig-additions.css # Gig landing-page redesign rules (uses the same token palette)
+│   ├── gig-additions.css # Gig landing-page redesign rules (uses the same token palette)
+│   ├── irl.css           # IRL identity: ember accent, listings, dialog, forms
+│   └── irl-admin.css     # IRL admin only — never loaded by the public page
 ├── favicon.svg           # silver dot on near-black
 ├── robots.txt            # allow-all + points at the sitemap
 ├── sitemap.xml           # static sitemap (update when adding a route or post)
@@ -251,6 +264,41 @@ Rules that keep the test valid — do not "fix" these:
 - **Copy honesty is load-bearing:** "Gig takes 0%" / "keep 100%" must stay literally true — if paid placement or fee tiers ever ship, every arm's copy changes the same day. Android is always a beta *invite*, never a download.
 
 ---
+
+## IRL — live dating shows (`/irldatingshows/`)
+
+The one route whose content is **not** in a registry. Shows run at any kind of venue
+— bars, restaurants, clubs, public spaces — and change constantly, so events live in
+Supabase and are edited from a phone at
+`/irldatingshows/admin/` — a git push per event booking was not going to happen.
+The page's prose is still authored static HTML, so what the site *is* stays crawlable;
+only the listings are client-rendered (an `Event` JSON-LD block is injected for them).
+
+- **Still no dependencies.** `scripts/irl-db.js` is a hand-written Supabase client —
+  `fetch` against PostgREST plus enough GoTrue to keep the admin signed in. Do not
+  swap it for `supabase-js`; that is the first thing here that would need a bundler.
+- **The database is the authority, not the JS.** `supabase/schema.sql` is the source
+  of truth and is idempotent — edit it and re-run the whole file. **Read
+  `supabase/README.md` before touching any policy.** The short version: `signups`
+  holds real personal data and has no public read path at all, so the public page
+  gets "seats left" from trigger-maintained counters on `events`. Every column of
+  `events` is public — anything private goes in `event_private`.
+- **`submit_signup()` is the only public write.** A plain insert cannot tell a
+  visitor what happened to them (anon cannot read the row back), so a spectator who
+  gets waitlisted would be told "seats held" and turn up to a full door. The RPC
+  returns the stored status. Keep it that way.
+- **Its own accent.** `--ember` (`#FF6B4A`), scoped to `html[data-site="irl"]` so it
+  never leaks into the hub. Volt belongs to Gig. Ember means one thing here — "this
+  is the action" — filled once in the hero, outlined on each event row. The headline
+  uses the warm `.stage` gradient where the rest of the hub uses `.metal` silver;
+  silver stays the material on the masthead.
+- **Copy honesty.** Participant availability is never a number: applications can
+  exceed places, so the lineup reports open/waitlist and only spectator seats, which
+  really are first-come, show a count. The filming line and the house rules describe
+  a real policy — if the policy changes, the page changes the same day.
+- The admin is `noindex` in both a meta tag and a Netlify header, and stays out of
+  `sitemap.xml`. Do not `Disallow` it in `robots.txt` — a crawl block would hide the
+  noindex.
 
 ## Conventions
 

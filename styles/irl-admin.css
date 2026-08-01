@@ -1,0 +1,422 @@
+/* IRL admin — the phone tool.
+   Loaded after irl.css, so it inherits the ember accent, .btn, and every form
+   control. This file only adds what a one-handed ops screen needs: a sticky
+   header you can reach with a thumb, cards instead of tables, and actions big
+   enough to hit while standing in a bar.
+
+   It is deliberately not linked from the public page — no visitor downloads it. */
+
+/* Give the fixed header room, and keep the sticky action bar off the content. */
+.admin-body {
+  padding-bottom: 1.5rem;
+}
+
+.admin-wrap {
+  flex: 1;
+  width: 100%;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 3rem;
+}
+
+@media (min-width: 640px) {
+  .admin-wrap {
+    padding: 2rem 1.5rem 4rem;
+  }
+}
+
+/* ---- Sticky top bar -------------------------------------------------- */
+.admin-top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(11, 11, 13, 0.94);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.admin-top__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .admin-top__row {
+    padding: 0.85rem 1.5rem;
+  }
+}
+
+.admin-mark {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--steel);
+  white-space: nowrap;
+}
+
+.admin-mark b {
+  color: var(--ember);
+  font-weight: 500;
+}
+
+/* ---- Sign-in --------------------------------------------------------- */
+.signin {
+  max-width: 22rem;
+  margin: 3rem auto 0;
+}
+
+.signin__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+  color: var(--silver-bright);
+}
+
+.signin__text {
+  margin-top: 0.6rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--silver);
+}
+
+.signin .btn {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.signin__alt {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: none;
+  border: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--steel);
+  text-align: center;
+  cursor: pointer;
+}
+
+.signin__alt:hover {
+  color: var(--silver-bright);
+}
+
+/* ---- Event picker ---------------------------------------------------- */
+.picker {
+  display: flex;
+  gap: 0.6rem;
+  align-items: stretch;
+  margin-bottom: 1.25rem;
+}
+
+.picker .select {
+  flex: 1;
+  min-width: 0;
+}
+
+.picker .btn {
+  flex: 0 0 auto;
+  padding-inline: 0.9rem;
+}
+
+/* ---- Scoreboard ------------------------------------------------------ */
+.score {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.score__cell {
+  padding: 0.9rem 0.75rem;
+  background: var(--surface);
+  text-align: center;
+}
+
+.score__n {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  line-height: 1.1;
+  color: var(--silver-bright);
+}
+
+.score__cell--alert .score__n {
+  color: var(--ember);
+}
+
+.score__k {
+  margin-top: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--steel);
+}
+
+/* ---- Tabs ------------------------------------------------------------ */
+.tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin: 1.5rem 0 0.5rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.tab {
+  flex: 1;
+  min-height: 2.75rem;
+  padding: 0.7rem 0.5rem;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.tab[aria-selected="true"] {
+  color: var(--silver-bright);
+  border-bottom-color: var(--ember);
+}
+
+.tab__badge {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 999px;
+  background: var(--ember);
+  color: var(--ink);
+  font-size: 0.625rem;
+}
+
+/* ---- Filter row ------------------------------------------------------ */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 1rem 0;
+}
+
+.filters .choice {
+  min-height: 2.25rem;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.6875rem;
+}
+
+/* ---- Person card ----------------------------------------------------- */
+.person {
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.person__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.person__name {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.125rem;
+  color: var(--silver-bright);
+  overflow-wrap: anywhere;
+}
+
+/* Status is colour + word, never colour alone. */
+.pill {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  color: var(--steel);
+}
+
+.pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.pill--pending {
+  color: #e5a94f;
+}
+
+.pill--approved {
+  color: #7bd88f;
+}
+
+.pill--waitlist {
+  color: var(--silver);
+}
+
+.pill--declined,
+.pill--cancelled {
+  color: var(--steel);
+}
+
+/* The grouping facts, as a dense mono strip — this is what you read when you
+   are building a lineup, so it comes before anything else. */
+.person__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.9rem;
+  margin-top: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--silver);
+}
+
+.person__facts span {
+  white-space: nowrap;
+}
+
+.person__facts b {
+  color: var(--steel);
+  font-weight: 400;
+}
+
+.person__about {
+  margin-top: 0.6rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--silver);
+}
+
+.person__contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.person__contact a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--silver);
+  overflow-wrap: anywhere;
+}
+
+.person__contact a:hover {
+  border-color: var(--steel);
+  color: var(--silver-bright);
+}
+
+.person__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.person__actions .btn {
+  flex: 1 1 auto;
+  min-width: 7rem;
+}
+
+/* ---- Generic states -------------------------------------------------- */
+.admin-state {
+  padding: 2.5rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--silver);
+  text-align: center;
+}
+
+.admin-state strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.0625rem;
+  color: var(--silver-bright);
+}
+
+/* A toast that does not move the layout under a thumb mid-tap. */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translate(-50%, 1rem);
+  z-index: 60;
+  max-width: calc(100vw - 2rem);
+  padding: 0.7rem 1.1rem;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--surface-hi);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--silver-bright);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    transition: none;
+  }
+}
+
+/* ---- Event editor ---------------------------------------------------- */
+.editor {
+  margin-top: 0.5rem;
+}
+
+.editor__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--hairline);
+}
+
+.editor__actions .btn {
+  flex: 1 1 9rem;
+}
+
+.editor__danger {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--hairline);
+}

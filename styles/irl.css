@@ -1,0 +1,877 @@
+/* IRL — live dating shows. Its own identity, built from the hub's token system.
+   Loaded after tokens.css + styles.css, so it inherits the reset, the bars, the
+   modal, and the mono voice, and only changes what makes this brand its own.
+
+   The one substantive departure: the accent. Gig owns volt green; IRL owns
+   --ember, a warm stage-light orange. Both are scoped to html[data-site="irl"]
+   so nothing leaks into the rest of the hub. Contrast, measured against the
+   tokens they sit on:
+
+     --ember      #FF6B4A   6.98:1 on --ink, 6.53:1 on --surface  (AA text)
+                            ink-on-ember 6.98:1 — safe as a filled button
+     --ember-dim  #E04A2B   ink-on-dim 4.85:1 — still AA when pressed
+     stage gradient darkest stop #E0512B  5.04:1 on --ink
+
+   The "one accent per view" rule still holds: ember means exactly one thing on
+   this page — "this is the action." Filled once (the hero CTA), outlined on the
+   per-event primary action, the same way the hub's .cta--ios does it. */
+
+html[data-site="irl"] {
+  --ember: #ff6b4a; /* accent — the action color */
+  --ember-dim: #e04a2b; /* pressed / muted accent */
+}
+
+/* The `hidden` attribute has to beat the component display rules below — the
+   UA sheet's [hidden]{display:none} loses to .btn{display:inline-flex}, which
+   is how a "hidden" sign-out button ends up on the sign-in screen. */
+html[data-site="irl"] [hidden] {
+  display: none !important;
+}
+
+/* Focus ring follows the brand. Volt would be a stranger on this page. */
+html[data-site="irl"] :focus-visible {
+  outline-color: var(--ember);
+}
+
+/* The shared section label is space-between with no gap; IRL's labels are long
+   enough to touch on a phone. Scoped so the Gig test arms render unchanged. */
+html[data-site="irl"] .section-label {
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+}
+
+/* Each section label is a real <h2> so the page outline reads h1 → h2 → h3
+   rather than skipping a level. It should look exactly like the span did. */
+html[data-site="irl"] .section-label h2 {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+html[data-site="irl"] ::selection {
+  background: var(--ember-dim);
+  color: var(--silver-bright);
+}
+
+/* ---- Stage: the warm counterpart to .metal -------------------------- */
+/* Silver stays the hub's material (masthead wordmark keeps it). The show's
+   own headline gets lit instead — same technique, warm light. */
+.stage {
+  background: linear-gradient(180deg, #ffe3d2 0%, #ff9269 52%, #e0512b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---- Hero ----------------------------------------------------------- */
+.irl-hero {
+  max-width: 46rem;
+  margin-top: 1.75rem;
+}
+
+.irl-hero .title {
+  font-size: clamp(2.6rem, 8.5vw, 4.6rem);
+  letter-spacing: -0.035em;
+}
+
+.irl-hero__lede {
+  max-width: 34rem;
+  margin-top: 1.5rem;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--silver);
+}
+
+/* The page's single filled accent. */
+.irl-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2.25rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem; /* ≥44px tap target */
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--silver-bright);
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.btn:disabled {
+  color: var(--steel);
+  cursor: default;
+}
+
+.btn--solid {
+  background: var(--ember);
+  border-color: var(--ember);
+  color: var(--ink);
+}
+
+.btn--solid:hover:not(:disabled) {
+  background: var(--ember-dim);
+  border-color: var(--ember-dim);
+}
+
+.btn--accent {
+  border-color: var(--ember);
+  color: var(--ember);
+}
+
+.btn--accent:hover:not(:disabled) {
+  background: var(--ember);
+  color: var(--ink);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  border-color: var(--steel);
+}
+
+.btn--quiet {
+  padding: 0.5rem 0.75rem;
+  min-height: 2.25rem;
+  font-size: 0.6875rem;
+  color: var(--steel);
+}
+
+.btn--quiet:hover:not(:disabled) {
+  color: var(--silver-bright);
+  border-color: var(--steel);
+}
+
+/* ---- The three-beat explainer --------------------------------------- */
+/* An <ol> because the beats are ordered — the global reset only clears <ul>. */
+.beats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin-top: 1rem;
+  list-style: none;
+}
+
+@media (min-width: 760px) {
+  .beats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 2.5rem;
+  }
+}
+
+.beat {
+  padding: 1.75rem 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.beats .beat:last-child {
+  border-bottom: 1px solid var(--hairline);
+}
+
+@media (min-width: 760px) {
+  .beats .beat:last-child {
+    border-bottom: 0;
+  }
+}
+
+.beat__num {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  color: var(--steel);
+}
+
+.beat__title {
+  margin-top: 0.75rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.25rem;
+  letter-spacing: -0.015em;
+  color: var(--silver-bright);
+}
+
+.beat__text {
+  margin-top: 0.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--silver);
+}
+
+/* ---- Event listings -------------------------------------------------- */
+/* A venue's listing board, not a grid of boxes: hairline rules, a mono date
+   column doing the structural work, details set in type. */
+.events {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--hairline);
+}
+
+.event {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+@media (min-width: 720px) {
+  .event {
+    grid-template-columns: 7rem 1fr;
+    gap: 2rem;
+  }
+}
+
+/* Date block — big mono numerals, the systemy voice doing real work. */
+.event__when {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  color: var(--steel);
+}
+
+@media (min-width: 720px) {
+  .event__when {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+    padding-top: 0.25rem;
+  }
+}
+
+.event__dow {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.event__day {
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--silver-bright);
+}
+
+.event__month {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.event__time {
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+.event__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--silver-bright);
+  overflow-wrap: break-word;
+}
+
+.event__format {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--steel);
+}
+
+.event__where {
+  margin-top: 0.5rem;
+  font-size: 0.9375rem;
+  color: var(--silver);
+}
+
+.event__tagline {
+  max-width: 34rem;
+  margin-top: 0.6rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--silver);
+}
+
+.event__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+  margin-top: 1rem;
+}
+
+/* Availability — colour is never the only cue; every state carries a word. */
+.avail {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--silver);
+}
+
+.avail__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--silver);
+  flex: 0 0 auto;
+}
+
+.avail--open .avail__dot {
+  background: var(--ember);
+}
+
+.avail--tight .avail__dot {
+  background: var(--silver);
+}
+
+.avail--full .avail__dot,
+.avail--closed .avail__dot {
+  background: var(--steel);
+}
+
+.avail--full,
+.avail--closed {
+  color: var(--steel);
+}
+
+.event__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 460px) {
+  .event__actions .btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* Cancelled / past listings recede but stay legible. */
+.event--muted .event__title,
+.event--muted .event__day {
+  color: var(--silver);
+}
+
+.event__strike {
+  display: inline-block;
+  margin-left: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--steel);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 0.15rem 0.45rem;
+  vertical-align: middle;
+}
+
+/* Empty + loading states for the JS-rendered list. */
+.events__state {
+  padding: 2.5rem 0;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 0.9375rem;
+  color: var(--silver);
+}
+
+.events__state strong {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.125rem;
+  color: var(--silver-bright);
+}
+
+/* ---- Forms (shared by the signup dialogs and the admin) ------------- */
+.field {
+  margin-top: 1.1rem;
+}
+
+/* Choice groups are real <fieldset>s so the legend names the group for screen
+   readers. The global reset clears spacing but not the UA border and legend
+   inset, and a fieldset defaults to min-content width, which breaks it inside
+   a grid. */
+fieldset.field {
+  border: 0;
+  min-width: 0;
+}
+
+fieldset.field > legend {
+  padding: 0;
+}
+
+.field__label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--steel);
+}
+
+.field__label .opt {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.field__hint {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--steel);
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  background: var(--ink);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  color: var(--silver-bright);
+  font-family: var(--font-sans);
+  font-size: 1rem; /* ≥16px so iOS Safari doesn't zoom on focus */
+  line-height: 1.4;
+}
+
+.textarea {
+  min-height: 5.5rem;
+  resize: vertical;
+}
+
+.select {
+  appearance: none;
+  background-image: linear-gradient(
+      45deg,
+      transparent 50%,
+      var(--steel) 50%
+    ),
+    linear-gradient(135deg, var(--steel) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.05rem) calc(50% + 1px),
+    calc(100% - 0.7rem) calc(50% + 1px);
+  background-size:
+    6px 6px,
+    6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 2.25rem;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--steel);
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--ember);
+}
+
+.input[aria-invalid="true"],
+.select[aria-invalid="true"],
+.textarea[aria-invalid="true"] {
+  border-color: #e88b8b;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 0.75rem;
+}
+
+@media (min-width: 480px) {
+  .row2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Choice chips — used for "who do you want to meet" (multi) and single-picks.
+   Selection is carried by border + fill + aria-pressed, never colour alone. */
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.choice {
+  min-height: 2.5rem;
+  padding: 0.55rem 0.85rem;
+  background: transparent;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  color: var(--silver);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.choice:hover {
+  border-color: var(--steel);
+  color: var(--silver-bright);
+}
+
+.choice[aria-pressed="true"] {
+  background: var(--ember);
+  border-color: var(--ember);
+  color: var(--ink);
+}
+
+/* Consent checkboxes — real inputs, comfortable targets. */
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin-top: 0.9rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--silver);
+  cursor: pointer;
+}
+
+.check input {
+  flex: 0 0 auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.15rem;
+  accent-color: var(--ember);
+}
+
+.check a {
+  color: var(--silver-bright);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--steel);
+}
+
+/* Form-level status line. */
+.formmsg {
+  min-height: 1.2rem;
+  margin-top: 0.85rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.formmsg--err {
+  color: #e88b8b;
+}
+
+.formmsg--ok {
+  color: var(--ember);
+}
+
+/* ---- Dialog --------------------------------------------------------- */
+/* Same behaviour contract as the Gig modal (role=dialog, Esc, overlay click,
+   focus return, inert background) — restyled and sized for a long form. */
+.dlg-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 0;
+  background: rgba(11, 11, 13, 0.78);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 200ms ease,
+    visibility 200ms ease;
+}
+
+@media (min-width: 640px) {
+  .dlg-overlay {
+    align-items: center;
+    padding: 1.5rem;
+  }
+}
+
+.dlg-overlay.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.dlg {
+  position: relative;
+  width: 100%;
+  max-width: 30rem;
+  max-height: 92vh;
+  max-height: 92dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.75rem 1.25rem 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 16px 16px 0 0;
+  transform: translateY(1.5rem);
+  transition: transform 200ms ease;
+}
+
+@media (min-width: 640px) {
+  .dlg {
+    padding: 2rem 1.75rem 1.75rem;
+    border-radius: 16px;
+    max-height: calc(100vh - 3rem);
+    transform: scale(0.97);
+  }
+}
+
+.dlg-overlay.open .dlg {
+  transform: none;
+}
+
+.dlg__close {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.5rem;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  background: none;
+  border: 0;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--steel);
+  cursor: pointer;
+}
+
+.dlg__close:hover {
+  color: var(--silver-bright);
+}
+
+.dlg__kicker {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--steel);
+}
+
+.dlg__title {
+  margin-top: 0.5rem;
+  padding-right: 2rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--silver-bright);
+}
+
+.dlg__intro {
+  margin-top: 0.6rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--silver);
+}
+
+.dlg__submit {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.dlg__fine {
+  margin-top: 0.9rem;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--steel);
+}
+
+.dlg__group {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--hairline);
+}
+
+.dlg__grouphead {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--steel);
+}
+
+/* Success state — the checkmark draws itself in, matching the Gig modal. */
+.dlg__done {
+  text-align: center;
+  padding: 1.5rem 0 0.5rem;
+  animation: dlg-pop 240ms ease both;
+}
+
+.dlg__check {
+  display: block;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1.25rem;
+}
+
+.dlg__check circle,
+.dlg__check path {
+  fill: none;
+  stroke: var(--ember);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dlg__check circle {
+  stroke-width: 2;
+  stroke-dasharray: 151;
+  stroke-dashoffset: 151;
+  animation: dlg-draw 500ms ease forwards;
+}
+
+.dlg__check path {
+  stroke-width: 3;
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: dlg-draw 360ms 440ms ease forwards;
+}
+
+.dlg__donetitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.25rem;
+  color: var(--silver-bright);
+}
+
+.dlg__donetext {
+  max-width: 22rem;
+  margin: 0.6rem auto 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--silver);
+}
+
+@keyframes dlg-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes dlg-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dlg-overlay,
+  .dlg,
+  .dlg__done,
+  .dlg__check circle,
+  .dlg__check path {
+    transition: none;
+    animation: none;
+  }
+
+  .dlg__check circle,
+  .dlg__check path {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---- FAQ ------------------------------------------------------------- */
+.qa {
+  border-top: 1px solid var(--hairline);
+}
+
+.qa__item {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.qa__q {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.0625rem;
+  line-height: 1.35;
+  color: var(--silver-bright);
+}
+
+.qa__a {
+  max-width: 40rem;
+  margin-top: 0.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--silver);
+}
+
+/* ---- Closing rail ---------------------------------------------------- */
+.rail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 3.5rem;
+  padding: 1.75rem;
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+@media (min-width: 700px) {
+  .rail {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+}
+
+.rail__kicker {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--steel);
+}
+
+.rail__line {
+  max-width: 32rem;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--silver);
+}
+
+.rail__actions {
+  flex: 0 0 auto;
+}

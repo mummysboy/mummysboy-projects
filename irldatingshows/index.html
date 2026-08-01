@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en" data-site="irl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>IRL — Live Dating Shows at Real Venues | Play or Watch</title>
+    <meta
+      name="description"
+      content="Live dating shows hosted at real venues — bars, restaurants, clubs, public spaces. Apply to play in the show, or reserve a seat and watch. Upcoming dates and sign-up."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <link rel="canonical" href="https://mummysboy.com/irldatingshows/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="mummysboy" />
+    <meta property="og:url" content="https://mummysboy.com/irldatingshows/" />
+    <meta property="og:title" content="IRL — Live Dating Shows at Real Venues" />
+    <meta
+      property="og:description"
+      content="A dating show you can walk into. Hosted rounds, a real venue, an audience on your side. Apply to play or reserve a seat."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="IRL — Live Dating Shows at Real Venues" />
+    <meta
+      name="twitter:description"
+      content="A dating show you can walk into. Hosted rounds, a real venue, an audience on your side. Apply to play or reserve a seat."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <link rel="stylesheet" href="/styles/tokens.css" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/styles/irl.css" />
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="bar">
+        <a class="mark" href="/">mummysboy</a>
+        <span class="bar__meta">est. 1990</span>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <a class="back" href="/">← Index</a>
+
+      <!-- ===================== HERO ===================== -->
+      <article class="irl-hero">
+        <p class="eyebrow">/ irl · live dating shows · real venues</p>
+
+        <h1 class="title stage">A dating show you can walk into.</h1>
+
+        <p class="irl-hero__lede">
+          We run live dating shows at real venues — bars, restaurants, clubs, public
+          spaces. A host, a set of rounds, and an audience that is genuinely rooting for
+          you. Get on the lineup, or take a seat and watch it happen.
+        </p>
+
+        <div class="irl-cta-row">
+          <!-- The page's single filled accent. Both routes go to the same list;
+               the dialogs open from a specific event, because a signup without a
+               date is a lead, not an RSVP. -->
+          <a class="btn btn--solid" href="#dates">See upcoming dates</a>
+          <a class="btn btn--ghost" href="#how">How a night works</a>
+        </div>
+      </article>
+
+      <hr class="hairline spacer" />
+
+      <!-- ===================== HOW IT WORKS ===================== -->
+      <section id="how" aria-labelledby="how-h">
+        <div class="section-label">
+          <h2 id="how-h">How a night works</h2>
+          <span>Apply → lineup → show</span>
+        </div>
+
+        <ol class="beats">
+          <li class="beat">
+            <p class="beat__num">01</p>
+            <h3 class="beat__title">Apply to play</h3>
+            <p class="beat__text">
+              Tell us who you are and who you are hoping to meet. Every application is
+              read by a person — we build each lineup by hand so the room actually makes
+              sense.
+            </p>
+          </li>
+          <li class="beat">
+            <p class="beat__num">02</p>
+            <h3 class="beat__title">Get your spot</h3>
+            <p class="beat__text">
+              If you are on the lineup we email you the venue, the start time, and what
+              your round looks like. There is nothing to prepare and nothing to memorize.
+            </p>
+          </li>
+          <li class="beat">
+            <p class="beat__num">03</p>
+            <h3 class="beat__title">Play it out</h3>
+            <p class="beat__text">
+              Hosted rounds, in front of an audience that wants it to go well. Afterwards
+              everyone sticks around, which is where most of the actual numbers get
+              swapped.
+            </p>
+          </li>
+        </ol>
+
+        <dl class="spec">
+          <div class="spec__row">
+            <dt class="spec__key">If you play</dt>
+            <dd class="spec__val">
+              You are on stage for one round, not the whole night. You will know the
+              format before you arrive, and you can pull out any time up to the day of
+              the show — <strong>just tell us</strong> so we can give the seat to someone
+              on the waitlist.
+            </dd>
+          </div>
+          <div class="spec__row">
+            <dt class="spec__key">If you watch</dt>
+            <dd class="spec__val">
+              Reserve a seat and turn up. Bring people. Watching is the low-stakes way in
+              — a good share of players first came as someone's plus-one.
+            </dd>
+          </div>
+          <div class="spec__row">
+            <dt class="spec__key">House rules</dt>
+            <dd class="spec__val">
+              Everyone is here by choice and leaves that way. No means no, on stage and
+              off it. Anyone who makes the room unsafe is out, that night and every
+              night after.
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- ===================== EVENTS ===================== -->
+      <section id="dates" aria-labelledby="dates-h">
+        <div class="section-label">
+          <h2 id="dates-h">Upcoming shows</h2>
+          <span data-event-count>Loading</span>
+        </div>
+
+        <!-- Filled by scripts/irl-events.js from Supabase. The status region
+             announces load failures and the empty state to screen readers. -->
+        <div class="events" id="eventList" role="status" aria-live="polite" aria-busy="true">
+          <p class="events__state">
+            <strong>Loading dates</strong>
+            One moment.
+          </p>
+        </div>
+
+        <noscript>
+          <p class="events__state">
+            <strong>Dates load in your browser</strong>
+            Turn JavaScript on to see upcoming shows, or email
+            <a class="spec__link" href="mailto:support@rightimagedigital.com">support@rightimagedigital.com</a>
+            and we will send you the schedule.
+          </p>
+        </noscript>
+      </section>
+
+      <!-- ===================== FAQ ===================== -->
+      <section aria-labelledby="faq-h">
+        <div class="section-label">
+          <h2 id="faq-h">Questions</h2>
+          <span>Before you sign up</span>
+        </div>
+
+        <div class="qa">
+          <div class="qa__item">
+            <h3 class="qa__q">Do I have to be single to play?</h3>
+            <p class="qa__a">
+              To be on the lineup, yes. To watch, no — bring whoever you like.
+            </p>
+          </div>
+          <div class="qa__item">
+            <h3 class="qa__q">What happens to what I put in the form?</h3>
+            <p class="qa__a">
+              It is used to build the lineup and to contact you about the show, and
+              nothing else. It is not published, not shown to other players, and not sold
+              or shared. Ask us to delete it at any time and we will.
+            </p>
+          </div>
+          <div class="qa__item">
+            <h3 class="qa__q">Is it filmed?</h3>
+            <p class="qa__a">
+              Some nights we film for social. The application has a box for whether you
+              are happy to be on camera, and we honour it — if you say no, you are not in
+              the footage. Audience members are told at the door on nights we are
+              recording.
+            </p>
+          </div>
+          <div class="qa__item">
+            <h3 class="qa__q">I applied and haven't heard back.</h3>
+            <p class="qa__a">
+              Lineups are usually set about a week out. If a show fills before we get to
+              you, you stay on the list for the next one — you do not need to apply again.
+            </p>
+          </div>
+          <div class="qa__item">
+            <h3 class="qa__q">Can I bring friends if I'm playing?</h3>
+            <p class="qa__a">
+              Please do. Reserve them seats the same way anyone else watches. A friendly
+              section helps.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== CLOSING RAIL ===================== -->
+      <aside class="rail">
+        <div>
+          <p class="rail__kicker">Nothing on the calendar yet?</p>
+          <p class="rail__line">
+            Shows get announced a few weeks out and the lineups fill quickly. Applications
+            carry over, so getting one in early is the whole trick.
+          </p>
+        </div>
+        <div class="rail__actions">
+          <a class="btn btn--accent" href="#dates">See upcoming dates</a>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <div class="bar">
+        <span class="bar__meta">© 1990</span>
+        <nav class="footer-links">
+          <a href="mailto:support@rightimagedigital.com">Contact</a>
+        </nav>
+        <ul class="social">
+          <li>
+            <a
+              href="https://www.tiktok.com/@mummysboy348"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="TikTok"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"
+                />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.instagram.com/gigbymummysboy"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.facebook.com/profile.php?id=61589961461573"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                />
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- ===================== SIGN-UP DIALOG ===================== -->
+    <!-- One dialog, two modes. Its body is written by scripts/irl-signup.js for
+         whichever event and role the visitor picked; the shell keeps the a11y
+         contract in the markup where it can be checked. -->
+    <div class="dlg-overlay" id="dlgOverlay">
+      <div
+        class="dlg"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="dlgTitle"
+        id="dlg"
+      >
+        <button class="dlg__close" id="dlgClose" type="button" aria-label="Close">×</button>
+
+        <form id="dlgForm" novalidate>
+          <p class="dlg__kicker" id="dlgKicker"></p>
+          <h2 class="dlg__title" id="dlgTitle"></h2>
+          <p class="dlg__intro" id="dlgIntro"></p>
+
+          <div id="dlgFields"></div>
+
+          <button class="btn btn--solid dlg__submit" id="dlgSubmit" type="submit">
+            Submit
+          </button>
+          <p class="formmsg" id="dlgMsg" role="status" aria-live="polite"></p>
+          <p class="dlg__fine" id="dlgFine"></p>
+        </form>
+
+        <div class="dlg__done" id="dlgDone" role="status" hidden>
+          <svg class="dlg__check" viewBox="0 0 52 52" aria-hidden="true">
+            <circle cx="26" cy="26" r="24" />
+            <path d="M14 27l8 8 16-16" />
+          </svg>
+          <p class="dlg__donetitle" id="dlgDoneTitle"></p>
+          <p class="dlg__donetext" id="dlgDoneText"></p>
+          <button class="btn btn--ghost dlg__submit" id="dlgDoneClose" type="button">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/scripts/irl-events.js"></script>
+  </body>
+</html>

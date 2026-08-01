@@ -27,6 +27,14 @@ export const projects = [
     tags: [],
   },
   {
+    slug: "irldatingshows",
+    name: "IRL",
+    blurb: "Live dating shows, hosted at real venues.",
+    titleTag: "IRL — Live Dating Shows at Real Venues | Play or Watch",
+    status: "building",
+    tags: ["events", "nightlife"],
+  },
+  {
     slug: "qrewards",
     name: "QRewards",
     blurb: "QR-based loyalty, minus the punch card.",
