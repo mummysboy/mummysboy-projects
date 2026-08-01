@@ -39,6 +39,13 @@
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 
+# The IRL share card. Link scrapers cache aggressively anyway; rename the file
+# if the artwork changes, since nothing here has a hashed filename.
+[[headers]]
+  for = "/irldatingshows/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
 # The IRL admin is a private tool. It already carries a noindex meta tag; this
 # says the same thing in a header, which is the version crawlers see first.
 [[headers]]
