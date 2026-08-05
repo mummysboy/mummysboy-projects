@@ -44,5 +44,44 @@ export const posts = [
       "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=70",
     alt: "People working together with laptops around a shared table.",
   },
+  {
+    slug: "find-local-help-near-you",
+    title: "How to Find Local Help Near You (Without Paying Booking Fees)",
+    excerpt:
+      "What to actually type, the four signals that predict a good job, and why the fee sitting on top of your quote is worth paying attention to. Gig adds no booking fee.",
+    date: "2026-08-04",
+    dateLabel: "August 4, 2026",
+    readMins: "7 min",
+    tags: ["hire-local", "how-to", "no-fees"],
+    image:
+      "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&q=70",
+    alt: "Two people shaking hands across a table in an office.",
+  },
+  {
+    slug: "local-service-side-hustle-ideas",
+    title: "21 Local Service Side Hustles You Can Start This Week",
+    excerpt:
+      "No inventory, no website, no startup capital. Twenty-one services built on things you can already do — and the honest version of what each one takes.",
+    date: "2026-08-04",
+    dateLabel: "August 4, 2026",
+    readMins: "8 min",
+    tags: ["side-hustle", "ideas", "make-money"],
+    image:
+      "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=70",
+    alt: "A person in yellow rubber gloves and a face mask cleaning a window shutter.",
+  },
+  {
+    slug: "how-to-price-your-services",
+    title: "How to Price Your Local Services (Without Undercharging)",
+    excerpt:
+      "Find the floor below which you lose money, check what your area really pays, and see how much a 20% commission forces you to add. Worked example included.",
+    date: "2026-08-04",
+    dateLabel: "August 4, 2026",
+    readMins: "7 min",
+    tags: ["pricing", "how-to", "make-money"],
+    image:
+      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=70",
+    alt: "Tax forms, a calculator and a pen laid out on a white table.",
+  },
   // add the next post here ↓
 ];
