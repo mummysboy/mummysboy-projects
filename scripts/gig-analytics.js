@@ -132,7 +132,7 @@ function trackClick(type, label) {
   track(type, label);
 }
 
-// Click attribution. iOS = any App Store link; Android = the beta-invite triggers; exit =
+// Click attribution. iOS = any App Store link; Android = any Play Store link; exit =
 // any element marked data-exit (wordmark, blog, social, legal). label = nearest data-pos
 // (hero | closing | status) for store CTAs, or the data-exit value for exits.
 document.addEventListener("click", (e) => {
@@ -143,7 +143,7 @@ document.addEventListener("click", (e) => {
 
   if (el.closest('a[href*="apps.apple.com"]')) {
     trackClick("ios", pos);
-  } else if (el.id === "androidBtn" || el.classList.contains("js-android-open")) {
+  } else if (el.closest('a[href*="play.google.com"]')) {
     trackClick("android", pos);
   } else {
     const exitEl = el.closest("[data-exit]");

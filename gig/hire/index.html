@@ -9,7 +9,7 @@
     <title>Gig — Just Say What You Need | Rated Local Pros, Prices Up Front</title>
     <meta
       name="description"
-      content="Type what you need in your own words — rated local pros show up, ranked by rating and distance, priced up front. Gig adds zero markup. Free on iOS; Android beta."
+      content="Type what you need in your own words — rated local pros show up, ranked by rating and distance, priced up front. Gig adds zero markup. Free on iOS and Android."
     />
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href="https://mummysboy.com/gig/" />
@@ -26,7 +26,7 @@
     <meta property="og:title" content="Gig — Just Say What You Need" />
     <meta
       property="og:description"
-      content="Type what you need in your own words — rated local pros show up, priced up front, with zero markup from Gig. Free on iOS; Android beta."
+      content="Type what you need in your own words — rated local pros show up, priced up front, with zero markup from Gig. Free on iOS and Android."
     />
     <meta property="og:image" content="https://mummysboy.com/gig/share-card.png" />
     <meta property="og:image:secure_url" content="https://mummysboy.com/gig/share-card.png" />
@@ -38,7 +38,7 @@
     <meta name="twitter:title" content="Gig — Just Say What You Need" />
     <meta
       name="twitter:description"
-      content="Type what you need in your own words — rated local pros show up, priced up front, with zero markup from Gig. Free on iOS; Android beta."
+      content="Type what you need in your own words — rated local pros show up, priced up front, with zero markup from Gig. Free on iOS and Android."
     />
     <meta name="twitter:image" content="https://mummysboy.com/gig/share-card.png" />
     <meta name="twitter:image:alt" content="Gig — commission-free services marketplace." />
@@ -109,9 +109,9 @@
               <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
             </a>
             <!-- Android: honest beta framing (NOT "Download"); opens the invite modal. -->
-            <button class="store-badge cta-android-primary js-android-open" type="button" id="androidBtn" aria-label="Get Gig on Google Play">
+            <a class="store-badge cta-android-primary" id="androidBtn" href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig">
               <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
-            </button>
+            </a>
 
           </div>
 
@@ -121,8 +121,8 @@
           <div class="scan" data-qr>
             <div class="scan__code" data-qr-code></div>
             <div class="scan__copy">
-              <p class="scan__label">On a computer</p>
-              <p class="scan__text">Scan with your phone camera to open this page there — free on iOS, Android by invite.</p>
+              <p class="scan__label">On a computer?</p>
+              <p class="scan__text">Scan with your phone camera to open this page there — free on iOS and Android.</p>
             </div>
           </div>
         </div>
@@ -223,7 +223,7 @@
                 data-pos="status"
                 >iOS</a
               >
-              or <a class="spec__link js-android-open" href="#" data-pos="status">join the Android beta</a>.
+              or <a class="spec__link" href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig" data-pos="status">get it on Google Play</a>.
             </dd>
           </div>
         </dl>
@@ -245,15 +245,15 @@
             >
               <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
             </a>
-            <button class="store-badge cta-android-primary js-android-open" type="button" aria-label="Get Gig on Google Play">
+            <a class="store-badge cta-android-primary" href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig">
               <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
-            </button>
+            </a>
           </div>
 
           <div class="scan" data-qr>
             <div class="scan__code" data-qr-code></div>
             <div class="scan__copy">
-              <p class="scan__label">On a computer</p>
+              <p class="scan__label">On a computer?</p>
               <p class="scan__text">Scan to pick this up on your phone.</p>
             </div>
           </div>
@@ -304,47 +304,8 @@
       </div>
     </footer>
 
-    <!-- Android early-access modal — single email field + privacy reassurance. -->
-    <div class="af-overlay" id="afOverlay">
-      <div class="af-modal" role="dialog" aria-modal="true" aria-labelledby="afTitle">
-        <button class="af-close" id="afClose" type="button" aria-label="Close">×</button>
-
-        <div id="afForm">
-          <h2 class="af-title" id="afTitle">Join the Gig Android beta</h2>
-          <p class="af-intro">
-            It&rsquo;s not on the Play Store yet, but the Android beta is live. Enter your email and we&rsquo;ll send your invite.
-          </p>
-
-          <label class="af-label" for="af-email">Email</label>
-          <input
-            class="af-input"
-            id="af-email"
-            type="email"
-            inputmode="email"
-            autocomplete="email"
-            autofocus
-            placeholder="you@example.com"
-          />
-
-          <button class="af-submit" id="afSubmit" type="button">Send my invite</button>
-          <p class="af-msg" id="afMsg" role="status"></p>
-          <p class="af-fineprint">We&rsquo;ll only email your invite — no spam, no sharing.</p>
-        </div>
-
-        <div class="af-success" id="afSuccess" role="status" hidden>
-          <svg class="af-check" viewBox="0 0 52 52" aria-hidden="true">
-            <circle class="af-check__circle" cx="26" cy="26" r="24" />
-            <path class="af-check__tick" d="M14 27l8 8 16-16" />
-          </svg>
-          <p class="af-success__text">Invite on its way.</p>
-          <p class="af-success__sub">Watch your inbox</p>
-        </div>
-      </div>
-    </div>
-
     <!-- No project.js here: variant pages own their copy and <title> (see CLAUDE.md). -->
     <script type="module" src="/scripts/reveal.js"></script>
-    <script type="module" src="/scripts/android-access.js"></script>
     <script type="module" src="/scripts/gig-analytics.js"></script>
     <script type="module" src="/scripts/gig-qr.js"></script>
   </body>
