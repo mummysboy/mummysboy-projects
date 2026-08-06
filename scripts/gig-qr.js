@@ -48,6 +48,9 @@ if (slots.length && document.documentElement.classList.contains("is-desktop")) {
   const pretty = url.replace(/^https:\/\//, "").replace(/\?.*$/, "");
   try {
     const svg = qrSvg(url, {
+      // Sized here, not in CSS: the code carries its own width/height so it renders
+      // correctly even against a stale stylesheet (styles/ is served short-TTL).
+      size: 72,
       label: `QR code — opens ${pretty} on your phone`,
       // Fixed near-black on white regardless of theme: scanners want maximum contrast,
       // and the landing arms already render on an App Store white page.

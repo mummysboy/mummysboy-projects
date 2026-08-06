@@ -292,21 +292,27 @@ html.is-desktop .scan--ready {
 }
 
 /* The code always renders dark-on-white for scan reliability, so it carries its own
-   plate — the border keeps it from floating on the white App Store theme. */
+   plate — the border keeps it from floating on the white App Store theme. The plate
+   is sized by the SVG's own width/height (see gig-qr.js) rather than by a CSS width,
+   so a stale stylesheet can't resize the code. The min-* pair below covers the other
+   direction: styles/ and scripts/ are both served max-age=300 + SWR=24h and
+   revalidate independently, so a fresh stylesheet can meet a stale gig-qr.js/qr.js
+   that emits no width/height — and an attribute-less SVG in a flex row collapses to
+   0×0 rather than falling back to 300px, leaving the scan copy beside an empty box.
+   The floor keeps it scannable in every cache combination. */
 .scan__code {
   flex: none;
-  width: 104px;
-  height: 104px;
   padding: 5px;
   border: 1px solid var(--hairline);
   border-radius: 10px;
   background: #fff;
+  line-height: 0;
 }
 
 .scan__code svg {
   display: block;
-  width: 100%;
-  height: 100%;
+  min-width: 72px;
+  min-height: 72px;
 }
 
 .scan__label {

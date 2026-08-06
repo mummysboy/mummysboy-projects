@@ -347,12 +347,14 @@ export function qrMatrix(text) {
 
 /**
  * Encode text as a standalone SVG string (dark modules on a light plate).
+ * `size` is written as width/height attributes so the code has an intrinsic
+ * size — a stale or missing stylesheet can't blow it up to the container width.
  * @param {string} text
- * @param {{ quiet?: number, dark?: string, light?: string, label?: string }} [opts]
+ * @param {{ size?: number, quiet?: number, dark?: string, light?: string, label?: string }} [opts]
  * @returns {string}
  */
 export function qrSvg(text, opts = {}) {
-  const { quiet = 2, dark = "#0b0b0d", light = "#ffffff", label = "" } = opts;
+  const { size: px = 0, quiet = 2, dark = "#0b0b0d", light = "#ffffff", label = "" } = opts;
   const { size, modules } = qrMatrix(text);
   const total = size + quiet * 2;
 
@@ -373,8 +375,9 @@ export function qrSvg(text, opts = {}) {
   }
 
   const naming = label ? ` role="img" aria-label="${label.replace(/[<>&"]/g, "")}"` : ' aria-hidden="true"';
+  const dims = px ? ` width="${px}" height="${px}"` : "";
   return (
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${total} ${total}" shape-rendering="crispEdges"${naming}>` +
+    `<svg xmlns="http://www.w3.org/2000/svg"${dims} viewBox="0 0 ${total} ${total}" shape-rendering="crispEdges"${naming}>` +
     `<rect width="${total}" height="${total}" fill="${light}"/>` +
     `<path d="${path}" fill="${dark}"/>` +
     `</svg>`
