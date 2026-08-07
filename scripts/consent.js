@@ -22,7 +22,11 @@
   "use strict";
 
   var KEY = "mb.consent.v1";
-  var PRIVACY_URL = "https://backend-production-9a98f.up.railway.app/privacy";
+  // The WEBSITE's notice, not the app's. The Gig app privacy policy on the Railway backend
+  // covers the app and says — correctly — that it shares nothing for advertising. This page
+  // is where the pixel, the analytics, and the IRL sign-up form are actually disclosed, and
+  // it is what the banner has to point at for the disclosure to mean anything.
+  var PRIVACY_URL = "/privacy/";
 
   // ---- Region -------------------------------------------------------------------
   // Two signals, in order of trust:
@@ -320,9 +324,7 @@
     text.textContent = copy().text + " ";
     var a = document.createElement("a");
     a.href = PRIVACY_URL;
-    a.target = "_blank";
-    a.rel = "noopener";
-    a.textContent = "Privacy policy";
+    a.textContent = "Privacy notice";
     text.appendChild(a);
     body.appendChild(label);
     body.appendChild(text);

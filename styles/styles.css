@@ -1191,6 +1191,14 @@ button {
   margin-top: 0;
 }
 
+/* A page with no hero image between the header and the body — the privacy
+   notice — would otherwise run the dek straight into the first paragraph,
+   because .prose p:first-child zeroes its own margin. Blog posts have a
+   figure in between, so this selector never fires there. */
+.article__head + .prose {
+  margin-top: 2.25rem;
+}
+
 .prose h2 {
   font-family: var(--font-display);
   font-weight: 500;
@@ -1594,10 +1602,20 @@ body.has-consent {
   }
 }
 
-/* The permanent re-open control. Styled to stand alone, because it lands in
-   the Gig pages' .footer-links nav but also in bare footers that never load
-   gig-additions.css. */
-.privacy-choices {
+/* The footer gains two legal items on every page — an authored link to the
+   privacy notice and the JS-injected re-open control — so it has to be able to
+   wrap. The Gig pages restate this with their own spacing in
+   gig-additions.css, which loads later and wins there. */
+.footer .bar {
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+/* The permanent re-open control, and the privacy-notice link beside it. Styled
+   to stand alone, because they land in the Gig pages' .footer-links nav but
+   also in bare footers that never load gig-additions.css. */
+.privacy-choices,
+.footer-legal {
   display: inline-flex;
   align-items: center;
   padding: 0.4rem 0;
@@ -1612,6 +1630,7 @@ body.has-consent {
   transition: color 160ms ease;
 }
 
-.privacy-choices:hover {
+.privacy-choices:hover,
+.footer-legal:hover {
   color: var(--silver-bright);
 }

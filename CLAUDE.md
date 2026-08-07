@@ -174,6 +174,7 @@ mummysboy/
 ├── irldatingshows/
 │   ├── index.html        # IRL landing page — authored copy + DB-driven event list
 │   └── admin/index.html  # private phone-first ops console (noindex)
+├── privacy/index.html    # the WEBSITE's privacy notice (pixel, analytics, IRL sign-ups)
 ├── qrewards/index.html   # registry-driven placeholder route
 ├── scripts/
 │   ├── main.js           # renders the homepage grid from the registry
@@ -250,7 +251,7 @@ Two shared classic scripts load in the `<head>` of **every public page** (not `/
 - **The banner spends no volt.** PECR requires accept and reject to be *equally prominent*, so a highlighted Accept is not available here. Its buttons use `--steel` borders, not `--hairline` (hairline is 1.29:1 on `--surface` and cannot be what identifies a control — 1.4.11 wants 3:1). Check any change to it against **both** the dark house palette and the light Gig arms.
 - **Store CTAs must never be delayed to fit tracking in.** The backup conversion pixel uses `fetch(keepalive)`, which outlives the document; repeat taps collapse on a 3s sliding window so a slow badge cannot inflate the campaign's lead count. Same reasoning as the `target="_blank"` rule above.
 
-The privacy policy the banner links to lives on the Railway backend (`/privacy`), not in this repo — if what the pixel shares ever changes, that page changes the same day.
+**The site's notice and the app's policy are two different documents.** `/privacy/` (in this repo) covers the *website*: the MediaGo pixel, the first-party analytics beacons, the browser storage keys, and the IRL show sign-up form. The Gig app policy on the Railway backend covers the *app*, which carries no advertising trackers — do not merge them, and do not point the banner at the app policy. The Gig arms' footers link both ("Privacy" → `/privacy/`, "App privacy" → backend). If what the site collects changes, `/privacy/` changes the same day, including its `Last updated` date.
 
 ### Analytics & the Gig backend
 
