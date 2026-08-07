@@ -161,6 +161,12 @@
         ]
       }
     </script>
+    <!-- Advertising: consent gate first (it defines window.mbConsent), then the mediago
+         pixel, which stays silent until the gate says yes. Both are shared classic
+         scripts — there is no build step, so this is how they stay identical on every
+         page. Order matters; do not swap these two lines. -->
+    <script src="/scripts/consent.js"></script>
+    <script src="/scripts/mediago.js"></script>
   </head>
   <body data-post="local-service-side-hustle-ideas">
     <header class="masthead">

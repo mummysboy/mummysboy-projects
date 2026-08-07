@@ -1477,3 +1477,141 @@ button {
     transform: none;
   }
 }
+
+/* ---- Consent banner --------------------------------------------------
+   Injected by scripts/consent.js. Fixed to the bottom, separated by a
+   hairline — no shadow, no glow, no panel-in-a-panel.
+
+   Deliberately spends no volt. Under UK PECR the accept and reject
+   controls have to be equally prominent, so a highlighted "Accept" is
+   not an option here — which conveniently leaves the page's single
+   accent where it belongs, on the CTA. The one green that does appear
+   is the global :focus-visible ring.
+
+   --steel on the button borders, not --hairline: hairline is 1.29:1 on
+   --surface, so it cannot be the thing that identifies a control
+   (WCAG 1.4.11 wants 3:1). --steel is 4.9:1. */
+.consent {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40; /* under the modals at 50 — a dialog must still cover this */
+  background: var(--surface);
+  border-top: 1px solid var(--hairline);
+  max-height: 80vh;
+  overflow-y: auto;
+  transform: translateY(101%);
+  transition: transform 180ms ease;
+}
+
+.consent--in {
+  transform: none;
+}
+
+.consent__inner {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1.1rem 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.consent__label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--steel);
+  margin-bottom: 0.45rem;
+}
+
+.consent__text {
+  max-width: 64ch;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--silver);
+}
+
+/* Underlined, per the "never signal with colour alone" rule. */
+.consent__text a {
+  color: var(--silver-bright);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.consent__actions {
+  display: flex;
+  gap: 0.6rem;
+  flex: 0 0 auto;
+}
+
+.consent__btn {
+  flex: 1 1 0;
+  min-height: 44px;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--steel);
+  border-radius: 8px;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--silver-bright);
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.consent__btn:hover {
+  background: var(--surface-hi);
+  border-color: var(--silver-bright);
+}
+
+/* Keeps the fixed banner from covering the footer while it is open.
+   --consent-h is measured and set by consent.js. */
+body.has-consent {
+  padding-bottom: var(--consent-h, 0px);
+}
+
+@media (min-width: 760px) {
+  .consent__inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .consent__btn {
+    flex: 0 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .consent {
+    transition: none;
+  }
+}
+
+/* The permanent re-open control. Styled to stand alone, because it lands in
+   the Gig pages' .footer-links nav but also in bare footers that never load
+   gig-additions.css. */
+.privacy-choices {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--steel);
+  cursor: pointer;
+  transition: color 160ms ease;
+}
+
+.privacy-choices:hover {
+  color: var(--silver-bright);
+}
