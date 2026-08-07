@@ -25,11 +25,37 @@
   var PRIVACY_URL = "https://backend-production-9a98f.up.railway.app/privacy";
 
   // ---- Region -------------------------------------------------------------------
-  // Timezone is the only region signal available to a static site — Netlify publishes the
-  // repo as-is, so there is no server to read a geo header and no geo-IP lookup that would
-  // not itself be a third-party call needing consent. It is an inference, not a fact: a
-  // British visitor with their laptop clock on New York time is read as US. That is the
-  // known limit of doing this without a backend.
+  // Two signals, in order of trust:
+  //
+  //   1. /edge/geo — a Netlify edge function returning the country it resolved for this
+  //      request. Authoritative, first-party, no third party involved.
+  //   2. The browser timezone — an inference, and a wrong one for a British visitor whose
+  //      laptop clock is set to New York. Used only until (1) answers, and as the fallback
+  //      if it never does.
+  //
+  // The lookup only runs for a visitor who has not decided yet and whose country we have
+  // not already cached, so returning visitors pay nothing for it.
+  var GEO_KEY = "mb.geo.v1";
+  var GEO_TIMEOUT_MS = 1500;
+
+  // UK, EEA and Switzerland: consent must come first (UK GDPR / GDPR + PECR / ePrivacy).
+  var STRICT_COUNTRIES = [
+    "GB", "CH", "IS", "LI", "NO",
+    "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE",
+    "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE",
+  ];
+  // The US and its territories: notice and opt-out.
+  var US_COUNTRIES = ["US", "PR", "GU", "VI", "MP", "AS"];
+
+  // Returns null for a country we have no rule for, so the caller keeps its stricter answer.
+  function regimeForCountry(cc) {
+    if (!cc) return null;
+    cc = String(cc).toUpperCase();
+    if (US_COUNTRIES.indexOf(cc) !== -1) return "us";
+    if (STRICT_COUNTRIES.indexOf(cc) !== -1) return "strict";
+    return null; // anywhere else falls through to strict, same as before
+  }
+
   var US_ZONES = [
     "America/New_York", "America/Detroit", "America/Chicago", "America/Denver",
     "America/Phoenix", "America/Los_Angeles", "America/Anchorage", "America/Adak",
@@ -40,7 +66,7 @@
   // Indiana, Kentucky and North Dakota split into per-county zones.
   var US_PREFIXES = ["America/Indiana/", "America/Kentucky/", "America/North_Dakota/"];
 
-  function detectRegime() {
+  function detectRegimeFromTimezone() {
     var tz = "";
     try {
       tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || "").trim();
@@ -54,8 +80,68 @@
     return "strict";
   }
 
-  var REGIME = detectRegime();
+  var REGIME = detectRegimeFromTimezone();
   var GPC = navigator.globalPrivacyControl === true;
+
+  var stored = read();
+
+  function cachedCountry() {
+    try {
+      return localStorage.getItem(GEO_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function cacheCountry(cc) {
+    try {
+      localStorage.setItem(GEO_KEY, cc);
+    } catch (e) {
+      /* storage disabled — we just look it up again next visit */
+    }
+  }
+
+  // Settle REGIME, then hand control back. Nothing that depends on the regime — the gate's
+  // answer, the banner, the pixel — may run before this calls back, or a UK visitor read as
+  // US by their clock would be tracked in the window before the real answer landed.
+  function resolveRegion(done) {
+    var cc = cachedCountry();
+    if (cc) {
+      REGIME = regimeForCountry(cc) || "strict";
+      return done();
+    }
+
+    // A visitor who has already answered is governed by that answer, not by where they are;
+    // the regime only picks wording from here on. Not worth a request.
+    if (stored || GPC) return done();
+
+    if (!window.fetch) return done(); // timezone answer stands
+
+    var finished = false;
+    var finish = function () {
+      if (finished) return;
+      finished = true;
+      done();
+    };
+    // Hard ceiling: a hanging edge function must not mean a banner that never appears.
+    // Timezone's answer is already in REGIME, and it errs strict.
+    setTimeout(finish, GEO_TIMEOUT_MS);
+
+    fetch("/edge/geo", { cache: "no-store", credentials: "omit" })
+      .then(function (r) {
+        return r.ok ? r.json() : null;
+      })
+      .then(function (o) {
+        if (o && o.country) {
+          cacheCountry(o.country);
+          REGIME = regimeForCountry(o.country) || "strict";
+        }
+      })
+      .catch(function () {
+        /* offline, blocked, or not deployed — keep the timezone answer */
+      })
+      .then(finish);
+  }
 
   // ---- Stored decision ----------------------------------------------------------
   // src distinguishes a deliberate click ("user") from one we inferred ("gpc"), which is
@@ -82,8 +168,6 @@
     }
   }
 
-  var stored = read();
-
   // The decision that actually applies right now. GPC sets the default, an explicit click
   // beats it — CPRA wants the signal honoured, not a visitor's own later choice discarded.
   function decision() {
@@ -102,8 +186,13 @@
     return REGIME === "us";
   }
 
+  // Subscribers are held until the region is settled. mediago.js subscribes while the page
+  // is still parsing, long before /edge/geo answers — firing then would hand it the
+  // timezone's guess, which is the one thing this whole path exists to stop relying on.
+  var resolved = false;
   var listeners = [];
   function notify() {
+    if (!resolved) return;
     var v = allowed();
     for (var i = 0; i < listeners.length; i++) {
       try {
@@ -133,7 +222,10 @@
       link: "Your privacy choices",
     },
   };
-  var copy = COPY[REGIME];
+  // A function, not a value: REGIME is not final until resolveRegion() has called back.
+  function copy() {
+    return COPY[REGIME];
+  }
 
   // ---- Banner -------------------------------------------------------------------
   var banner = null;
@@ -225,7 +317,7 @@
     label.textContent = "Privacy";
     var text = document.createElement("p");
     text.className = "consent__text";
-    text.textContent = copy.text + " ";
+    text.textContent = copy().text + " ";
     var a = document.createElement("a");
     a.href = PRIVACY_URL;
     a.target = "_blank";
@@ -240,14 +332,14 @@
     var yes = document.createElement("button");
     yes.type = "button";
     yes.className = "consent__btn";
-    yes.textContent = copy.yes;
+    yes.textContent = copy().yes;
     yes.addEventListener("click", function () {
       choose("granted");
     });
     var no = document.createElement("button");
     no.type = "button";
     no.className = "consent__btn";
-    no.textContent = copy.no;
+    no.textContent = copy().no;
     no.addEventListener("click", function () {
       choose("denied");
     });
@@ -286,7 +378,7 @@
     var d = decision();
     footerLink.setAttribute(
       "aria-label",
-      copy.link + " — advertising cookies are currently " + (allowed() ? "on" : "off") + (d === null ? " (no choice made)" : "")
+      copy().link + " — advertising cookies are currently " + (allowed() ? "on" : "off") + (d === null ? " (no choice made)" : "")
     );
   }
 
@@ -297,7 +389,7 @@
     var link = document.createElement("button");
     link.type = "button";
     link.className = "privacy-choices";
-    link.textContent = copy.link;
+    link.textContent = copy().link;
     link.addEventListener("click", function () {
       trigger = link;
       show();
@@ -320,10 +412,17 @@
 
   // ---- Boot ---------------------------------------------------------------------
   function boot() {
-    addLink();
-    // Undecided means the visitor has been told nothing yet — a notice under CPRA, a real
-    // question under PECR. A GPC signal counts as an answer, so those visitors see nothing.
-    if (decision() === null) show();
+    // Everything below reads REGIME, so nothing below may run before it is settled.
+    resolveRegion(function () {
+      resolved = true;
+      addLink();
+      // Undecided means the visitor has been told nothing yet — a notice under CPRA, a real
+      // question under PECR. A GPC signal counts as an answer, so those visitors see nothing.
+      if (decision() === null) show();
+      // Releases every subscriber queued while the region was in flight — this is what
+      // actually starts (or does not start) the pixel.
+      notify();
+    });
     window.addEventListener("resize", measure);
     // The banner is measured at DOMContentLoaded, before the web fonts land — and a
     // re-flowed line of copy changes its height, which is the number holding the footer
@@ -340,15 +439,25 @@
 
   // ---- Public API ---------------------------------------------------------------
   window.mbConsent = {
-    regime: REGIME,
-    gpc: GPC,
+    // Getters, not snapshots: REGIME is still in flight when this object is created.
+    get regime() {
+      return REGIME;
+    },
+    get gpc() {
+      return GPC;
+    },
+    get resolved() {
+      return resolved;
+    },
     allowed: allowed,
     decision: decision,
-    // Fires immediately with the current answer, then again on every change, so a
-    // subscriber only ever needs this one hook.
+    // Fires once the region is settled, then again on every change, so a subscriber only
+    // ever needs this one hook. It does NOT fire synchronously on subscribe — an answer
+    // given before the region is known is the guess this endpoint exists to replace.
     onChange: function (fn) {
       if (typeof fn !== "function") return;
       listeners.push(fn);
+      if (!resolved) return;
       try {
         fn(allowed());
       } catch (e) {

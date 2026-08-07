@@ -187,7 +187,9 @@ mummysboy/
 │   ├── qr.js             # dependency-free QR encoder (byte mode, ECC M, versions 1–10) → SVG string
 │   ├── gig-qr.js         # desktop-only "scan to install" code on the Gig arms (uses qr.js)
 │   ├── reveal.js         # scroll-reveal for [data-reveal] sections (progressive enhancement; hero exempt)
-│   └── android-access.js # Gig Android beta-invite modal → POSTs to the Gig backend
+│   ├── android-access.js # Gig Android beta-invite modal → POSTs to the Gig backend
+│   ├── consent.js        # privacy gate: picks the regime, draws the banner, owns window.mbConsent
+│   └── mediago.js        # MediaGo ad pixel + store-CTA conversion — silent until consent.js says yes
 ├── data/
 │   ├── projects.js       # SINGLE SOURCE OF TRUTH for projects (ES module)
 │   ├── posts.js          # SINGLE SOURCE OF TRUTH for blog posts (ES module)
@@ -204,6 +206,9 @@ mummysboy/
 ├── favicon.svg           # silver dot on near-black
 ├── robots.txt            # allow-all + points at the sitemap
 ├── sitemap.xml           # static sitemap (update when adding a route or post)
+├── netlify/
+│   └── edge-functions/
+│       └── geo.js        # returns the visitor's country so consent.js can pick a regime
 ├── netlify.toml          # static deploy config (publish root, no build) + security headers
 └── CLAUDE.md
 ```
@@ -226,6 +231,26 @@ A nested route's `<body data-project="…">` lets `scripts/project.js` fill whic
 - first-party analytics via `scripts/gig-analytics.js` (see below).
 
 When QRewards (or any project) earns a real page, follow this pattern: registry for the identity, authored HTML for the substance.
+
+### Advertising pixel & the consent gate
+
+Two shared classic scripts load in the `<head>` of **every public page** (not `/irldatingshows/admin/`), in this order — **do not swap them**:
+
+```html
+<script src="/scripts/consent.js"></script>
+<script src="/scripts/mediago.js"></script>
+```
+
+`scripts/mediago.js` is the MediaGo ad pixel (acid `32781`) plus conversion tracking on the App Store and Play CTAs. `scripts/consent.js` is the gate that decides whether it may run at all. Rules that are load-bearing:
+
+- **The gate is the only way the pixel starts.** `mediago.js` subscribes via `window.mbConsent.onChange(fn)` and touches the network only when it is told yes. If `consent.js` fails to load, nothing fires — a broken gate must never become an open one. `fireConversion()` re-checks at click time, so withdrawal takes effect mid-visit.
+- **Two regimes.** `strict` (UK/EEA/CH — UK GDPR + PECR) is **opt-in**: nothing loads until Accept. `us` (CPRA and the state laws modelled on it) is **notice + opt-out**, and honours Global Privacy Control as a valid opt-out. Anywhere else falls back to `strict`. A stored explicit click beats GPC; GPC beats the default.
+- **Region comes from `/edge/geo`** (`netlify/edge-functions/geo.js`, the one non-static thing in the repo), with the browser timezone as fallback and a 1500ms ceiling. `onChange` deliberately does **not** fire synchronously on subscribe — an answer given before the country is known is the guess the endpoint exists to replace. The country is cached in `localStorage`, so only undecided first-time visitors cost a request.
+- **No `<noscript>` tracking pixels.** An image tag cannot be consent-gated, which is exactly the pre-consent tracking PECR prohibits. Do not add one back.
+- **The banner spends no volt.** PECR requires accept and reject to be *equally prominent*, so a highlighted Accept is not available here. Its buttons use `--steel` borders, not `--hairline` (hairline is 1.29:1 on `--surface` and cannot be what identifies a control — 1.4.11 wants 3:1). Check any change to it against **both** the dark house palette and the light Gig arms.
+- **Store CTAs must never be delayed to fit tracking in.** The backup conversion pixel uses `fetch(keepalive)`, which outlives the document; repeat taps collapse on a 3s sliding window so a slow badge cannot inflate the campaign's lead count. Same reasoning as the `target="_blank"` rule above.
+
+The privacy policy the banner links to lives on the Railway backend (`/privacy`), not in this repo — if what the pixel shares ever changes, that page changes the same day.
 
 ### Analytics & the Gig backend
 

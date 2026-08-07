@@ -38,14 +38,15 @@
   // --- Consent gate ----------------------------------------------------------------
   // scripts/consent.js decides whether advertising tech may run at all: opt-in in the
   // UK/EEA, opt-out (plus Global Privacy Control) in the US. Nothing below touches the
-  // network until it says yes.
+  // network until it says yes — and it does not say anything until it knows which country
+  // the visitor is in, so expect the first callback a tick or two after page load.
   var granted = false;
 
   // --- Base pixel -----------------------------------------------------------------
   var started = false;
 
   function startPixel() {
-    if (started) return; // onChange fires immediately and again on every change
+    if (started) return; // onChange fires once the region settles, then on every change
     started = true;
     try {
       var q = queue();
@@ -77,7 +78,8 @@
         // Withdrawal has to actually stop the tracking, and a third-party script cannot be
         // unloaded once it is running. Reloading is the only honest way to end it on the
         // page the visitor opted out from; the gate keeps it out on every load after this.
-        // Guarded on `started`, so the immediate first onChange never triggers it.
+        // Guarded on `started`, so the first onChange after the region settles — which is a
+        // "no" for every undecided UK visitor — never reloads a page that loaded nothing.
         location.reload();
       }
     });
