@@ -72,6 +72,12 @@
     <link rel="stylesheet" href="/styles/tokens.css" />
     <link rel="stylesheet" href="/styles/styles.css" />
     <link rel="stylesheet" href="/styles/gig-additions.css" />
+    <!-- Advertising: consent gate first (it defines window.mbConsent), then the mediago
+         pixel, which stays silent until the gate says yes. Both are shared classic
+         scripts — there is no build step, so this is how they stay identical on every
+         page. Order matters; do not swap these two lines. -->
+    <script src="/scripts/consent.js"></script>
+    <script src="/scripts/mediago.js"></script>
   </head>
   <body>
     <header class="masthead">
@@ -288,7 +294,8 @@
         <span class="bar__meta">© 1990</span>
         <nav class="footer-links">
           <a href="/gig/blog/" data-exit="blog">Blog</a>
-          <a href="https://backend-production-9a98f.up.railway.app/privacy" target="_blank" rel="noopener" data-exit="privacy">Privacy</a>
+          <a href="/privacy/" data-exit="privacy">Privacy</a>
+          <a href="https://backend-production-9a98f.up.railway.app/privacy" target="_blank" rel="noopener" data-exit="app-privacy">App privacy</a>
           <a href="https://backend-production-9a98f.up.railway.app/terms" target="_blank" rel="noopener" data-exit="terms">Terms</a>
           <a href="mailto:support@rightimagedigital.com" data-exit="support">Support</a>
         </nav>

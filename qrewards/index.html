@@ -23,6 +23,12 @@
     </noscript>
     <link rel="stylesheet" href="/styles/tokens.css" />
     <link rel="stylesheet" href="/styles/styles.css" />
+    <!-- Advertising: consent gate first (it defines window.mbConsent), then the mediago
+         pixel, which stays silent until the gate says yes. Both are shared classic
+         scripts — there is no build step, so this is how they stay identical on every
+         page. Order matters; do not swap these two lines. -->
+    <script src="/scripts/consent.js"></script>
+    <script src="/scripts/mediago.js"></script>
   </head>
   <body data-project="qrewards">
     <header class="masthead">
@@ -56,6 +62,7 @@
 
     <footer class="footer">
       <div class="bar">
+        <a class="footer-legal" href="/privacy/">Privacy</a>
         <ul class="social">
           <li>
             <a

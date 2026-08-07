@@ -1,5 +1,11 @@
 # Static site — no build step. Netlify publishes the repo root as-is and
 # serves /gig/ from /gig/index.html automatically.
+#
+# One exception to "everything here is static": netlify/edge-functions/geo.js, which
+# answers /edge/geo with the visitor's country so the consent banner can pick the right
+# privacy regime. It declares its own path via `export const config`, so there is no
+# [[edge_functions]] block here — keep the path in the function file, in one place. It is
+# still buildless: Deno runs the file as written, no dependencies.
 [build]
   publish = "."
   command = ""
