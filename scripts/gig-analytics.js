@@ -88,6 +88,37 @@ function readClickId() {
 }
 const CLICK_ID = readClickId();
 
+// Session id — one random value shared by every beacon this page load emits, so a visit can
+// be read as a visit. Without it each row is independent and the only way to ask "did THIS
+// visitor scroll?" is to correlate on timestamps, which answers for a population and not for
+// anyone in particular: we can say iOS traffic reaches the footer 4.7% of the time, but not
+// that a given click id's session stopped at the hero. That second question is the one an ad
+// network asks when it wants to trace a specific placement.
+//
+// Deliberately per-PAGE-LOAD and deliberately NOT persisted — no cookie, no sessionStorage.
+// Module scope already lives exactly as long as the document, so a store tap 30s after
+// landing shares the id while a second page load gets a fresh one. Persisting it would merge
+// two loads into one funnel and hide the double-render pattern that is the whole reason this
+// exists, and it would quietly turn an analytics field into a durable visitor identifier.
+// Keep it ephemeral.
+const SESSION_ID = (() => {
+  try {
+    if (window.crypto && typeof window.crypto.randomUUID === "function") {
+      return window.crypto.randomUUID();
+    }
+    if (window.crypto && typeof window.crypto.getRandomValues === "function") {
+      const b = new Uint8Array(16);
+      window.crypto.getRandomValues(b);
+      return Array.from(b, (x) => x.toString(16).padStart(2, "0")).join("");
+    }
+  } catch {
+    /* fall through to the non-crypto id below */
+  }
+  // Last resort for old browsers. Uniqueness here only has to hold within a day's traffic,
+  // not cryptographically — a collision costs one mis-grouped funnel, nothing more.
+  return `f${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
+})();
+
 // Device split from the pre-paint UA class (set in each page's <head>). The primary
 // metric is iOS badge taps — without this dimension a variant that happens to draw
 // more Android traffic would look artificially weak.
@@ -131,6 +162,7 @@ function track(type, label) {
       srcId: SRC_ID || null,
       os: OS,
       clickId: CLICK_ID || null,
+      sessionId: SESSION_ID,
     });
     // keepalive lets the request survive a navigation (e.g. the iOS link opening the App
     // Store). sendBeacon is the ideal transport but can't set JSON content type, so we use
