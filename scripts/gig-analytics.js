@@ -64,12 +64,24 @@ function readClickId() {
       const m = document.referrer.match(/[?&]trackingid=([A-Za-z0-9._~=-]+)/);
       if (m) raw = m[1];
     }
-    // An unfilled macro arrives literally (e.g. "{CLICK_ID}" or "__CLICKID__") — storing that
-    // would silently pass a placeholder off as a real id, which is worse than storing nothing.
-    if (!raw || /^[{[]|^__|^%7B/i.test(raw)) return sessionStorage.getItem("@gig_click_id");
-    const clean = raw.replace(/[^A-Za-z0-9._~=-]/g, "").slice(0, 128);
-    if (clean) sessionStorage.setItem("@gig_click_id", clean);
-    return clean || sessionStorage.getItem("@gig_click_id");
+    if (!raw) return sessionStorage.getItem("@gig_click_id");
+    // A macro the network never filled in arrives literally, and storing one would be worse
+    // than storing nothing: the SAME fake id would land on every visit, reading back as the
+    // most extreme fan-out imaginable. Delimiters vary by network — MediaGo's is
+    // ${TRACKING_ID}, others use {CLICK_ID}, [CLICKID] or __CLICKID__ — and any of them can
+    // arrive percent-encoded, so decode before looking. Note '$' is why this check cannot
+    // just test the first character.
+    let val = raw;
+    try { val = decodeURIComponent(raw); } catch { /* not valid encoding — judge the raw value */ }
+    if (/[{}$[\]]/.test(val) || /^__/.test(val)) return sessionStorage.getItem("@gig_click_id");
+    const clean = val.replace(/[^A-Za-z0-9._~=-]/g, "").slice(0, 128);
+    // Belt and braces: some networks drop the delimiters and send the bare macro name, which
+    // would otherwise survive sanitizing as a perfectly valid-looking id.
+    if (!clean || /^(tracking_?id|click_?id|cid|clickid|clicktrackingid)$/i.test(clean)) {
+      return sessionStorage.getItem("@gig_click_id");
+    }
+    sessionStorage.setItem("@gig_click_id", clean);
+    return clean;
   } catch {
     return null;
   }
