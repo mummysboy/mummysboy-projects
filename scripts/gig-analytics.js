@@ -31,6 +31,51 @@ function readSrcId() {
 }
 const SRC_ID = readSrcId();
 
+// Advertising click id — the network's own per-click key, and the only field that lets their
+// serving log and ours be compared row for row. Without it a paid campaign can only be argued
+// about in aggregates: on 2026-08-10 MediaGo answered a location complaint by pointing out that
+// ad-request geo and observed IP geo legitimately disagree (VPNs, carrier routing, differing
+// GeoIP databases), which is true and unfalsifiable from view counts alone. The click id is what
+// settles it — the same id arriving on several loads from different DEVICE CLASSES is a fan-out,
+// and device class is read from the User-Agent, so no IP argument touches it.
+//
+// Two sources, in order:
+//   1. A `clickid`-style query param, once the network is asked to append its macro to the
+//      destination URL (the reliable path — every visit carries one).
+//   2. Failing that, `trackingid=` parsed out of document.referrer. Click trackers pass their
+//      own URL as the referrer, so this recovers an id with no cooperation from the network at
+//      all — it is how the 2026-08-10 samples were obtained, and it keeps working for any
+//      network that hasn't been asked for a macro yet. Partial coverage by nature: the referrer
+//      survives only some redirect chains.
+// Persisted for the visit like SRC_ID, so a store tap 30s after landing still carries it.
+function readClickId() {
+  try {
+    const q = new URLSearchParams(location.search);
+    // Common macro names across networks; ours is `clickid`, the rest cost nothing to accept.
+    let raw =
+      q.get("clickid") ||
+      q.get("click_id") ||
+      q.get("trackingid") ||
+      q.get("gclid") ||
+      q.get("msclkid") ||
+      q.get("ttclid") ||
+      q.get("fbclid");
+    if (!raw && document.referrer) {
+      const m = document.referrer.match(/[?&]trackingid=([A-Za-z0-9._~=-]+)/);
+      if (m) raw = m[1];
+    }
+    // An unfilled macro arrives literally (e.g. "{CLICK_ID}" or "__CLICKID__") — storing that
+    // would silently pass a placeholder off as a real id, which is worse than storing nothing.
+    if (!raw || /^[{[]|^__|^%7B/i.test(raw)) return sessionStorage.getItem("@gig_click_id");
+    const clean = raw.replace(/[^A-Za-z0-9._~=-]/g, "").slice(0, 128);
+    if (clean) sessionStorage.setItem("@gig_click_id", clean);
+    return clean || sessionStorage.getItem("@gig_click_id");
+  } catch {
+    return null;
+  }
+}
+const CLICK_ID = readClickId();
+
 // Device split from the pre-paint UA class (set in each page's <head>). The primary
 // metric is iOS badge taps — without this dimension a variant that happens to draw
 // more Android traffic would look artificially weak.
@@ -73,6 +118,7 @@ function track(type, label) {
       variant: VARIANT,
       srcId: SRC_ID || null,
       os: OS,
+      clickId: CLICK_ID || null,
     });
     // keepalive lets the request survive a navigation (e.g. the iOS link opening the App
     // Store). sendBeacon is the ideal transport but can't set JSON content type, so we use
