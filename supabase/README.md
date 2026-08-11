@@ -201,7 +201,5 @@ thing and the form another.
 - **A timezone column on `events`.** The confirmation email formats the start
   time in `America/Los_Angeles`, hardcoded in the edge function. The first show
   outside Pacific time will announce itself in the wrong timezone.
-- **Status-change emails.** A signup only emails on insert. Approving a
-  participant, or promoting a spectator off the waitlist, still means writing to
-  them by hand — the `signups_notify` trigger is `after insert` only, on purpose,
-  so admin edits in the console do not spray mail at people.
+- **Whole-event emails.** Cancelling or moving a show tells nobody who signed
+  up; `events` has no notify trigger. That is the next real gap.

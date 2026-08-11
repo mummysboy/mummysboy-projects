@@ -267,6 +267,146 @@ function alertFor(s: Signup, ev: EventRow) {
   };
 }
 
+/** The event facts, identical in both directions, so a later email never
+ *  contradicts the confirmation someone already has in their inbox. */
+function eventLines(ev: EventRow): { text: string; html: string } {
+  const when = whenLabel(ev);
+  const where = whereLabel(ev);
+  return {
+    text: `${ev.title}\n${when}\n${where}\n` + (ev.ticket_note ? `${ev.ticket_note}\n` : ""),
+    html:
+      `<p style="margin:1.2em 0"><strong>${esc(ev.title)}</strong><br>${esc(when)}<br>${esc(where)}` +
+      (ev.ticket_note ? `<br>${esc(ev.ticket_note)}` : "") +
+      `</p>`,
+  };
+}
+
+const closer = {
+  text: `\nWant your details deleted? Reply to this email and ask.\n`,
+  html: `<p style="margin:1.2em 0;color:#4a5260">Want your details deleted? Reply to this email and ask.</p>`,
+};
+
+/**
+ * What we send when an admin changes someone's status. Returns null for the
+ * statuses that have nothing to say — the trigger already filters those, this
+ * is the second half of the same decision kept next to the copy.
+ *
+ * The decline wording has to match the FAQ on the page ("you stay on the list
+ * for the next one — you do not need to apply again"), because a person who
+ * reads both must not find two different policies.
+ */
+function statusFor(s: Signup, ev: EventRow) {
+  const ev_ = eventLines(ev);
+  const seats = s.party_size === 1 ? "1 seat" : `${s.party_size} seats`;
+  const body = (intro: string, extra: string[], extraText: string) => ({
+    text: `${intro}\n\n${ev_.text}${extraText}${closer.text}`,
+    html: wrap([
+      `<p style="margin:0 0 1.2em">${intro.replace(/&/g, "&amp;")}</p>`,
+      ev_.html,
+      ...extra,
+      closer.html,
+    ]),
+  });
+
+  if (s.status === "approved") {
+    if (s.role === "participant") {
+      return {
+        subject: `You are on the lineup — ${ev.title}`,
+        ...body(
+          `${esc(s.name)} — you are on the lineup.`,
+          [
+            ev.format
+              ? `<p style="margin:1.2em 0">Format: ${esc(ev.format)}.</p>`
+              : "",
+            `<p style="margin:1.2em 0">You are on stage for one round, not the whole night. There is nothing to prepare and nothing to memorise. Turn up, give your name at the door, and the host will find you.</p>`,
+            `<p style="margin:1.2em 0">If you can no longer make it, <strong>reply and tell us</strong> — someone on the waitlist takes the spot.</p>`,
+          ],
+          (ev.format ? `\nFormat: ${ev.format}.\n` : "") +
+            `\nYou are on stage for one round, not the whole night. There is nothing to prepare and nothing to memorise. Turn up, give your name at the door, and the host will find you.\n` +
+            `\nIf you can no longer make it, reply and tell us so we can give the spot to someone on the waitlist.\n`,
+        ),
+      };
+    }
+    return {
+      subject: `${seats} confirmed — ${ev.title}`,
+      ...body(
+        `${esc(s.name)} — ${esc(seats)} are confirmed and held under your name at the door.`,
+        [
+          `<p style="margin:1.2em 0">You must be ${esc(ev.min_age)} or over and bring ID. If you cannot make it, reply and tell us so the seats go to someone else.</p>`,
+        ],
+        `\nYou must be ${ev.min_age} or over and bring ID. If you cannot make it, reply and tell us so the seats go to someone else.\n`,
+      ),
+    };
+  }
+
+  if (s.status === "waitlist") {
+    return {
+      subject: `You are on the waitlist — ${ev.title}`,
+      ...body(
+        s.role === "participant"
+          ? `${esc(s.name)} — the lineup for this one is full, so you are on the waitlist.`
+          : `${esc(s.name)} — this show is full, so your ${esc(seats)} are on the waitlist.`,
+        [
+          `<p style="margin:1.2em 0">We will email you if a place opens up. <strong>Please do not travel for this one unless you hear from us.</strong></p>`,
+        ],
+        `\nWe will email you if a place opens up. Please do not travel for this one unless you hear from us.\n`,
+      ),
+    };
+  }
+
+  if (s.status === "declined") {
+    return {
+      subject: `Not this time — ${ev.title}`,
+      ...body(
+        s.role === "participant"
+          ? `${esc(s.name)} — we have built the lineup for this one and you are not on it.`
+          : `${esc(s.name)} — we could not hold seats for you at this one.`,
+        [
+          `<p style="margin:1.2em 0">That is not a no forever. You stay on the list for the next show and <strong>you do not need to apply again</strong> — we will be in touch when the next date is set.</p>`,
+        ],
+        `\nThat is not a no forever. You stay on the list for the next show and you do not need to apply again — we will be in touch when the next date is set.\n`,
+      ),
+    };
+  }
+
+  if (s.status === "cancelled") {
+    return {
+      subject: `Cancelled — ${ev.title}`,
+      ...body(
+        s.role === "participant"
+          ? `${esc(s.name)} — your application for this show is cancelled.`
+          : `${esc(s.name)} — your booking for this show is cancelled.`,
+        [
+          `<p style="margin:1.2em 0">If that is not what you expected, reply and we will sort it out.</p>`,
+        ],
+        `\nIf that is not what you expected, reply and we will sort it out.\n`,
+      ),
+    };
+  }
+
+  return null;
+}
+
+/** Record what we actually told them, so the same message cannot go twice.
+ *  Writing this column does not change `status`, so the update trigger's own
+ *  guard stops it from firing again — no recursion. */
+async function markNotified(id: string, status: string, base: string, key: string) {
+  try {
+    await fetch(`${base}/rest/v1/signups?id=eq.${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      headers: {
+        apikey: key,
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify({ notified_status: status }),
+    });
+  } catch (err) {
+    console.error("markNotified failed", err);
+  }
+}
+
 async function send(payload: Record<string, unknown>): Promise<void> {
   const res = await fetch(RESEND_ENDPOINT, {
     method: "POST",
@@ -297,7 +437,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { signup_id } = await req.json();
+    const { signup_id, kind } = await req.json();
     if (!signup_id) return new Response("ok", { status: 200 });
 
     const sRes = await fetch(
@@ -325,6 +465,23 @@ Deno.serve(async (req) => {
     const replyTo = env("IRL_MAIL_REPLY_TO");
     const alertTo = env("IRL_ALERT_TO");
 
+    // A status change is a message to the applicant only — the admin is the one
+    // who just made it, and does not need telling what they did.
+    if (kind === "status") {
+      const update = statusFor(signup, event);
+      if (!update) return new Response("ok", { status: 200 });
+      await send({
+        from,
+        to: [signup.email],
+        reply_to: replyTo,
+        subject: update.subject,
+        text: update.text,
+        html: update.html,
+      });
+      await markNotified(signup.id, signup.status, base, key);
+      return new Response("ok", { status: 200 });
+    }
+
     const confirmation = confirmationFor(signup, event);
     const alert = alertFor(signup, event);
 
@@ -349,6 +506,10 @@ Deno.serve(async (req) => {
           })
         : Promise.resolve(),
     ]);
+
+    // The confirmation already stated a status, so record it — otherwise an
+    // admin re-saving that same status would repeat it back to the applicant.
+    await markNotified(signup.id, signup.status, base, key);
 
     return new Response("ok", { status: 200 });
   } catch (err) {

@@ -329,8 +329,10 @@ only the listings are client-rendered (an `Event` JSON-LD block is injected for 
   pg_net's queue as a second copy of someone's personal data) to the
   `signup-email` edge function, which sends the applicant a confirmation and us
   an alert via Resend. The trigger swallows every error and the function always
-  answers 200: **a sign-up must never fail because a mailer did.** It fires on
-  insert only, so admin edits in the console don't spray mail at people. The
+  answers 200: **a sign-up must never fail because a mailer did.** A second
+  trigger emails the applicant when an admin changes their status (approved,
+  waitlist, declined, cancelled), guarded by `signups.notified_status` so a
+  re-saved row cannot repeat a message someone already got. The
   confirmation copy carries the same honesty rule as the page — a participant is
   told their application is in, *not* that they have a place, and a waitlisted
   spectator is told plainly not to travel. Setup lives in `supabase/README.md`;

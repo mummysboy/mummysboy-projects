@@ -196,6 +196,11 @@ create table if not exists public.signups (
   group_label      text check (group_label is null or char_length(group_label) <= 40),
   admin_note       text check (admin_note is null or char_length(admin_note) <= 500),
 
+  -- The last status we actually emailed this person, written by the edge
+  -- function after a send succeeds. It is what stops a re-saved row from
+  -- repeating the same message.
+  notified_status  text,
+
   created_at       timestamptz not null default now(),
   updated_at       timestamptz not null default now(),
 
@@ -590,3 +595,66 @@ drop trigger if exists signups_notify on public.signups;
 create trigger signups_notify
   after insert on public.signups
   for each row execute function private.notify_signup();
+
+-- The table above declares notified_status, but this file is re-run against a
+-- database that already exists, where `create table if not exists` is a no-op.
+alter table public.signups add column if not exists notified_status text;
+
+-- Tell the applicant when an admin changes their status. Guarded twice: the
+-- status must have actually changed, and it must differ from the last one we
+-- emailed — so re-saving a row, or flipping a status back and forth, cannot
+-- send the same person the same message twice.
+--
+-- 'pending' is where a row starts and 'attended' is bookkeeping after the
+-- night; neither is news to anybody.
+create or replace function private.notify_status_change()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  secret text;
+begin
+  if new.status is not distinct from old.status then
+    return null;
+  end if;
+  if new.status is not distinct from new.notified_status then
+    return null;
+  end if;
+  if new.status in ('pending', 'attended') then
+    return null;
+  end if;
+
+  select decrypted_secret into secret
+    from vault.decrypted_secrets
+   where name = 'irl_webhook_secret';
+
+  if secret is null then
+    return null;
+  end if;
+
+  perform net.http_post(
+    url := 'https://ykqeshyloyemchswsusn.supabase.co/functions/v1/signup-email',
+    headers := jsonb_build_object(
+      'Content-Type', 'application/json',
+      'Authorization', 'Bearer ' ||
+        'sb_publishable_f5d1HUm0Llv56gALG-zpug_YOIHIo-s',
+      'x-irl-secret', secret
+    ),
+    body := jsonb_build_object('signup_id', new.id, 'kind', 'status'),
+    timeout_milliseconds := 5000
+  );
+
+  return null;
+exception when others then
+  -- An admin must never be blocked from changing a status because the mailer
+  -- is down. Same principle as the sign-up path.
+  return null;
+end;
+$$;
+
+drop trigger if exists signups_notify_status on public.signups;
+create trigger signups_notify_status
+  after update of status on public.signups
+  for each row execute function private.notify_status_change();
