@@ -69,9 +69,16 @@ Running `schema.sql` installs `pg_net`, generates a shared secret in Vault, and
 adds a `signups_notify` trigger that hands each new row to the `signup-email`
 edge function. The function is deployed but sends nothing until these are set.
 
-**a. Resend.** Create an account, add **mummysboy.com** as a sending domain, and
-put the DKIM/SPF records it gives you into Netlify DNS (both domains are on
-Netlify's nameservers). Then create an API key.
+**a. Resend.** Create an account, add **rightimagedigital.com** as a sending
+domain, and put the DKIM/SPF records it gives you into Netlify DNS (the domain
+is on Netlify's nameservers). Then create an API key.
+
+Adding it does **not** disturb the Google Workspace mail already on that domain.
+Resend puts its SPF and bounce MX on `send.rightimagedigital.com` and its DKIM at
+`resend._domainkey.rightimagedigital.com` — all three unused — and leaves the
+root `v=spf1 include:_spf.google.com ~all` record alone. Only one SPF record is
+allowed per name, so if a future provider ever asks you to edit the *root* TXT,
+merge its `include:` into the existing record rather than adding a second one.
 
 **b. Read the shared secret.** SQL Editor:
 
@@ -87,18 +94,22 @@ Secrets** (or `supabase secrets set`):
 |---|---|
 | `RESEND_API_KEY` | the key from step a |
 | `IRL_WEBHOOK_SECRET` | the value from step b |
-| `IRL_MAIL_FROM` | `IRL <hello@mummysboy.com>` |
+| `IRL_MAIL_FROM` | `IRL <irl@rightimagedigital.com>` |
 | `IRL_MAIL_REPLY_TO` | `support@rightimagedigital.com` |
 | `IRL_ALERT_TO` | wherever you want the alerts |
 
 `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected by the platform —
 do not add them, and do not put any of the above in this repo.
 
-**Why the from and reply-to are different domains.** `mummysboy.com` is the site
-the person just used, so it is the name they will recognise in an inbox and the
-domain worth building a sending reputation on — but it has no MX records, so a
-reply to it would bounce. `rightimagedigital.com` is the real Google Workspace
-mailbox. If you ever point MX at `mummysboy.com`, collapse these back into one.
+**The from address has to be a real mailbox.** People reply to a confirmation —
+to cancel a seat, or to ask to be deleted, which the email itself invites. Add
+`irl@` as an alias of `support@` in Google Workspace (aliases are free) so those
+replies land somewhere. If you would rather not, set `IRL_MAIL_FROM` to
+`IRL <support@rightimagedigital.com>` and it works with no setup at all.
+
+**Not mummysboy.com**, even though that is the site people just used: it has no
+MX records, so every reply to it would bounce. Sending from the domain that
+already has a mailbox keeps the reply path honest.
 
 **The function is deployed with `verify_jwt` off** because the database calls it,
 and the trigger has no user session. What actually authenticates the call is the
