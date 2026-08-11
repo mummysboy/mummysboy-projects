@@ -69,16 +69,18 @@ Running `schema.sql` installs `pg_net`, generates a shared secret in Vault, and
 adds a `signups_notify` trigger that hands each new row to the `signup-email`
 edge function. The function is deployed but sends nothing until these are set.
 
-**a. Resend.** Create an account, add **rightimagedigital.com** as a sending
-domain, and put the DKIM/SPF records it gives you into Netlify DNS (the domain
-is on Netlify's nameservers). Then create an API key.
+**a. Resend.** There is nothing to set up in DNS —
+**`outreach.rightimagedigital.com`** is already a verified Resend sending domain,
+the one the Gig backend uses for its Android-signup alerts. All you need is an
+API key: Resend → **API Keys → Create API Key**, sending access, restricted to
+that domain. Make a *separate* key for IRL rather than reusing Gig's, so either
+can be revoked without taking the other down.
 
-Adding it does **not** disturb the Google Workspace mail already on that domain.
-Resend puts its SPF and bounce MX on `send.rightimagedigital.com` and its DKIM at
-`resend._domainkey.rightimagedigital.com` — all three unused — and leaves the
-root `v=spf1 include:_spf.google.com ~all` record alone. Only one SPF record is
-allowed per name, so if a future provider ever asks you to edit the *root* TXT,
-merge its `include:` into the existing record rather than adding a second one.
+**The from address must be on that subdomain.** `rightimagedigital.com` itself is
+**not** verified in Resend — it runs Google Workspace and has no Resend DKIM — so
+a send from `irl@rightimagedigital.com` is rejected outright. Reply-to is
+unconstrained and points at the real Workspace mailbox on the root domain, which
+is how a reply gets back to a human.
 
 **b. Set the function's secrets.** These are **project-wide**, not per-function,
 and they are not on the function's own page: Dashboard → **Project Settings →
@@ -88,7 +90,7 @@ effect on the next invocation; no redeploy needed.
 | Name | Value |
 |---|---|
 | `RESEND_API_KEY` | the key from step a |
-| `IRL_MAIL_FROM` | `IRL <irl@rightimagedigital.com>` |
+| `IRL_MAIL_FROM` | `IRL <irl@outreach.rightimagedigital.com>` |
 | `IRL_MAIL_REPLY_TO` | `support@rightimagedigital.com` |
 | `IRL_ALERT_TO` | wherever you want the alerts |
 
@@ -99,22 +101,26 @@ cannot be mistyped into a silent 401. `SUPABASE_URL` and
 `SUPABASE_SERVICE_ROLE_KEY` are injected by the platform; do not add them, and do
 not put any of the above in this repo.
 
-**The from address has to actually receive mail.** People reply to a
-confirmation — to cancel a seat, or to ask to be deleted, which the email itself
-invites. `irl@rightimagedigital.com` is a Google Workspace **group**; two of its
-settings are load-bearing and neither is on by default in a useful way:
+**The reply-to has to actually receive mail.** People reply to a confirmation —
+to cancel a seat, or to ask to be deleted, which the email itself invites. It
+points at `support@rightimagedigital.com`, an existing Workspace mailbox, so this
+works today.
+
+There is also an `irl@rightimagedigital.com` Google **group**, which is a nicer
+destination once two of its settings are right — neither is useful by default:
 
 - it needs at least one **member** subscribed to *Each email*, or replies are
   accepted and delivered to nobody;
 - **Who can post** must be *Anyone on the web*, because every applicant is
   external to the org and would otherwise be rejected.
 
-A rejected or undelivered reply is invisible from our side, so test the path from
-a non-Workspace address after any change to that group.
+Point `IRL_MAIL_REPLY_TO` at the group only once both are done. A rejected or
+undelivered reply is invisible from our side, so test the path from a
+non-Workspace address after any change.
 
-**Not mummysboy.com**, even though that is the site people just used: it has no
-MX records, so every reply to it would bounce. Sending from the domain that
-already has a mailbox keeps the reply path honest.
+**Not mummysboy.com**, even though that is the site people just used: it is not
+verified in Resend and has no MX records, so the send would be rejected and any
+reply would bounce.
 
 **The function is deployed with `verify_jwt` off** because the database calls it,
 and the trigger has no user session. What actually authenticates the call is the
