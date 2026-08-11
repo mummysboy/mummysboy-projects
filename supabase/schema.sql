@@ -486,3 +486,84 @@ grant execute on function public.submit_signup(
   uuid, text, text, text, text, text, integer, text, text[], text, text,
   integer, boolean, boolean, boolean
 ) to anon, authenticated;
+
+-- ============================================================================
+-- Signup email — hand the new row off to the `signup-email` edge function,
+-- which sends the applicant their confirmation and us the alert.
+--
+-- pg_net is asynchronous: http_post queues the request and a background worker
+-- sends it after this transaction commits. That ordering is the whole reason
+-- for doing it here rather than inside submit_signup() — a visitor's sign-up
+-- must not wait on, or fail because of, an email provider.
+-- ============================================================================
+create extension if not exists pg_net;
+
+-- The shared secret the edge function checks. Generated in the database so it
+-- is never written down in this repo, and only created once — re-running this
+-- file must not rotate a secret the deployed function is still using.
+--
+-- To read it when configuring the function (once, in the SQL editor):
+--   select decrypted_secret from vault.decrypted_secrets
+--    where name = 'irl_webhook_secret';
+do $$
+begin
+  if not exists (select 1 from vault.secrets where name = 'irl_webhook_secret') then
+    perform vault.create_secret(
+      encode(extensions.gen_random_bytes(32), 'hex'),
+      'irl_webhook_secret',
+      'Shared secret between the signups trigger and the signup-email function.'
+    );
+  end if;
+end
+$$;
+
+create or replace function private.notify_signup()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  secret text;
+begin
+  select decrypted_secret into secret
+    from vault.decrypted_secrets
+   where name = 'irl_webhook_secret';
+
+  -- No secret configured yet means the email side is not set up. That is not a
+  -- reason to refuse someone a seat.
+  if secret is null then
+    return null;
+  end if;
+
+  perform net.http_post(
+    url := 'https://ykqeshyloyemchswsusn.supabase.co/functions/v1/signup-email',
+    headers := jsonb_build_object(
+      'Content-Type', 'application/json',
+      -- The anon key only gets us past the platform's JWT check; the header
+      -- below is what actually authenticates this call. Both are sent so the
+      -- trigger works whether or not the function is deployed with
+      -- verify_jwt disabled.
+      'Authorization', 'Bearer ' ||
+        'sb_publishable_f5d1HUm0Llv56gALG-zpug_YOIHIo-s',
+      'x-irl-secret', secret
+    ),
+    -- Only the id travels. pg_net keeps request bodies in its own tables, and
+    -- there is no reason for a name, phone number and sexual orientation to sit
+    -- in a queue as well as in `signups`.
+    body := jsonb_build_object('signup_id', new.id),
+    timeout_milliseconds := 5000
+  );
+
+  return null;
+exception when others then
+  -- Belt and braces around the same principle as above: whatever goes wrong
+  -- reaching the mailer, the sign-up stands.
+  return null;
+end;
+$$;
+
+drop trigger if exists signups_notify on public.signups;
+create trigger signups_notify
+  after insert on public.signups
+  for each row execute function private.notify_signup();

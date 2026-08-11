@@ -60,8 +60,57 @@ Dashboard → **Authentication → Sign In / Providers**:
   offers a magic link as a fallback.
 
 Supabase's built-in mailer is rate-limited to a couple of messages an hour, which
-is fine for the magic-link fallback. If you ever want to email applicants from
-the app, add a real SMTP provider first.
+is fine for the magic-link fallback. It cannot send the sign-up emails — those go
+through Resend, below.
+
+## 6. Turn on the sign-up emails
+
+Running `schema.sql` installs `pg_net`, generates a shared secret in Vault, and
+adds a `signups_notify` trigger that hands each new row to the `signup-email`
+edge function. The function is deployed but sends nothing until these are set.
+
+**a. Resend.** Create an account, add **mummysboy.com** as a sending domain, and
+put the DKIM/SPF records it gives you into Netlify DNS (both domains are on
+Netlify's nameservers). Then create an API key.
+
+**b. Read the shared secret.** SQL Editor:
+
+```sql
+select decrypted_secret from vault.decrypted_secrets
+ where name = 'irl_webhook_secret';
+```
+
+**c. Set the function's secrets.** Dashboard → **Edge Functions → signup-email →
+Secrets** (or `supabase secrets set`):
+
+| Name | Value |
+|---|---|
+| `RESEND_API_KEY` | the key from step a |
+| `IRL_WEBHOOK_SECRET` | the value from step b |
+| `IRL_MAIL_FROM` | `IRL <hello@mummysboy.com>` |
+| `IRL_MAIL_REPLY_TO` | `support@rightimagedigital.com` |
+| `IRL_ALERT_TO` | wherever you want the alerts |
+
+`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected by the platform —
+do not add them, and do not put any of the above in this repo.
+
+**Why the from and reply-to are different domains.** `mummysboy.com` is the site
+the person just used, so it is the name they will recognise in an inbox and the
+domain worth building a sending reputation on — but it has no MX records, so a
+reply to it would bounce. `rightimagedigital.com` is the real Google Workspace
+mailbox. If you ever point MX at `mummysboy.com`, collapse these back into one.
+
+**The function is deployed with `verify_jwt` off** because the database calls it,
+and the trigger has no user session. What actually authenticates the call is the
+`x-irl-secret` header, compared in constant time inside the function. If you
+redeploy it, keep JWT verification off or the trigger silently stops working —
+and never remove that header check, or the endpoint becomes a free email sender
+for anyone who finds the URL.
+
+**Failure is deliberately silent.** The trigger swallows every error and the
+function always answers 200. A sign-up must never fail because a mail provider
+did. The cost is that a broken mailer looks like nothing happening — check
+**Edge Functions → Logs** if a confirmation does not turn up.
 
 ---
 
@@ -127,6 +176,10 @@ thing and the form another.
   honeypot and a one-signup-per-email-per-show constraint, which stops casual
   bots; a determined one would get through. Cloudflare Turnstile in front of the
   RPC is the usual next step.
-- **Confirmation emails.** Nothing is emailed today — the admin shows you who
-  applied and you contact them. A database webhook on `signups` into Resend or
-  Postmark would automate it.
+- **A timezone column on `events`.** The confirmation email formats the start
+  time in `America/Los_Angeles`, hardcoded in the edge function. The first show
+  outside Pacific time will announce itself in the wrong timezone.
+- **Status-change emails.** A signup only emails on insert. Approving a
+  participant, or promoting a spectator off the waitlist, still means writing to
+  them by hand — the `signups_notify` trigger is `after insert` only, on purpose,
+  so admin edits in the console do not spray mail at people.

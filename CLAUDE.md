@@ -201,6 +201,8 @@ mummysboy/
 │   └── irl-config.js     # IRL's Supabase URL + public key, and its form options
 ├── supabase/
 │   ├── schema.sql        # IRL database: tables, RLS, triggers, grants (idempotent)
+│   ├── functions/
+│   │   └── signup-email/index.ts  # Deno edge fn: confirmation + alert on a new signup
 │   └── README.md         # setup order + the security model, read before editing policies
 ├── styles/
 │   ├── tokens.css        # CSS custom properties: palette + font stacks
@@ -322,6 +324,17 @@ only the listings are client-rendered (an `Event` JSON-LD block is injected for 
   is the action" — filled once in the hero, outlined on each event row. The headline
   uses the warm `.stage` gradient where the rest of the hub uses `.metal` silver;
   silver stays the material on the masthead.
+- **Sign-up email is fire-and-forget, and must stay that way.** An `after insert`
+  trigger on `signups` hands the row id (only the id — the rest would sit in
+  pg_net's queue as a second copy of someone's personal data) to the
+  `signup-email` edge function, which sends the applicant a confirmation and us
+  an alert via Resend. The trigger swallows every error and the function always
+  answers 200: **a sign-up must never fail because a mailer did.** It fires on
+  insert only, so admin edits in the console don't spray mail at people. The
+  confirmation copy carries the same honesty rule as the page — a participant is
+  told their application is in, *not* that they have a place, and a waitlisted
+  spectator is told plainly not to travel. Setup lives in `supabase/README.md`;
+  every secret is a Supabase env var and none of them belong in this repo.
 - **Copy honesty.** Participant availability is never a number: applications can
   exceed places, so the lineup reports open/waitlist and only spectator seats, which
   really are first-come, show a count. The filming line and the house rules describe
