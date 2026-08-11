@@ -101,11 +101,18 @@ Secrets** (or `supabase secrets set`):
 `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected by the platform —
 do not add them, and do not put any of the above in this repo.
 
-**The from address has to be a real mailbox.** People reply to a confirmation —
-to cancel a seat, or to ask to be deleted, which the email itself invites. Add
-`irl@` as an alias of `support@` in Google Workspace (aliases are free) so those
-replies land somewhere. If you would rather not, set `IRL_MAIL_FROM` to
-`IRL <support@rightimagedigital.com>` and it works with no setup at all.
+**The from address has to actually receive mail.** People reply to a
+confirmation — to cancel a seat, or to ask to be deleted, which the email itself
+invites. `irl@rightimagedigital.com` is a Google Workspace **group**; two of its
+settings are load-bearing and neither is on by default in a useful way:
+
+- it needs at least one **member** subscribed to *Each email*, or replies are
+  accepted and delivered to nobody;
+- **Who can post** must be *Anyone on the web*, because every applicant is
+  external to the org and would otherwise be rejected.
+
+A rejected or undelivered reply is invisible from our side, so test the path from
+a non-Workspace address after any change to that group.
 
 **Not mummysboy.com**, even though that is the site people just used: it has no
 MX records, so every reply to it would bounce. Sending from the domain that
