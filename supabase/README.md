@@ -87,8 +87,10 @@ select decrypted_secret from vault.decrypted_secrets
  where name = 'irl_webhook_secret';
 ```
 
-**c. Set the function's secrets.** Dashboard → **Edge Functions → signup-email →
-Secrets** (or `supabase secrets set`):
+**c. Set the function's secrets.** These are **project-wide**, not per-function,
+and they are not on the function's own page: Dashboard → **Project Settings →
+Edge Functions → Edge Function Secrets** (or `supabase secrets set`). They take
+effect on the next invocation; no redeploy needed.
 
 | Name | Value |
 |---|---|
