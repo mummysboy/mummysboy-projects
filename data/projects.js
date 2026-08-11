@@ -42,7 +42,7 @@ export const projects = [
     name: "IRL",
     blurb: "Live dating shows, hosted at real venues.",
     titleTag: "IRL — Live Dating Shows at Real Venues | Play or Watch",
-    status: "building",
+    status: "live",
     tags: ["events", "nightlife"],
   },
   {
