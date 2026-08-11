@@ -469,6 +469,33 @@ ul {
   color: var(--silver-bright);
 }
 
+/* A CTA that opens something on the web rather than in a store — same volt
+   treatment as .cta--ios, since it plays the same role (the one accent). */
+.cta--go {
+  border-color: var(--volt);
+  color: var(--volt);
+}
+
+.cta--go:hover {
+  background: var(--volt);
+  color: var(--ink);
+}
+
+/* Unreleased platform. Applied to a <span>, never an <a> or <button>: an inert
+   control that takes focus and does nothing is a 4.1.2 lie, and "coming soon"
+   is stated in words so the quiet styling isn't the only signal (1.4.1). */
+.cta--soon {
+  color: var(--silver);
+  cursor: default;
+}
+
+.cta__tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  color: var(--steel);
+}
+
 /* Android early-access modal — the same request as the Gig landing page. */
 .af-overlay {
   position: fixed;

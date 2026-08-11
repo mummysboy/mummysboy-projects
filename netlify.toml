@@ -45,6 +45,17 @@
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 
+[[headers]]
+  for = "/rfcfinder/shots/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
+# The RFC Finder share card — same rename-don't-replace rule as the others.
+[[headers]]
+  for = "/rfcfinder/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
 # The IRL share card. Link scrapers cache aggressively anyway; rename the file
 # if the artwork changes, since nothing here has a hashed filename.
 [[headers]]

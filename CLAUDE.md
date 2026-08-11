@@ -171,6 +171,10 @@ mummysboy/
 │   ├── assets/           # official App Store + Google Play store badges
 │   ├── shots/            # Gig screenshots + the real App Store icon used on the page
 │   └── share-card.png    # OpenGraph/Twitter share image
+├── rfcfinder/
+│   ├── index.html        # RFC Finder page — registry name/blurb + authored substance
+│   ├── shots/            # app icon + two app screenshots
+│   └── share-card.png    # OpenGraph/Twitter share image
 ├── irldatingshows/
 │   ├── index.html        # IRL landing page — authored copy + DB-driven event list
 │   └── admin/index.html  # private phone-first ops console (noindex)

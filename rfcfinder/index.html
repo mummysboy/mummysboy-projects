@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Registry sets this too (projects.js → titleTag); kept static so the page has a
+         real title before the module runs, and for scrapers that don't execute JS. -->
+    <title>RFC Finder — Find a Rugby Club Near You | Rugby Football Club Finder</title>
+    <meta
+      name="description"
+      content="RFC Finder is a location-based directory for rugby clubs. Search by location and radius, see every club in range on a map, and open a full profile — division, category, practice times and contact details. Live on the web; iOS and Android coming soon."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- Link previews (iMessage, WhatsApp, Slack, Facebook, X). Nothing here has a hashed
+         filename and scrapers cache the card hard — rename share-card.png if the art changes. -->
+    <link rel="canonical" href="https://mummysboy.com/rfcfinder/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="mummysboy" />
+    <meta property="og:url" content="https://mummysboy.com/rfcfinder/" />
+    <meta property="og:title" content="RFC Finder — Find a Rugby Club Near You" />
+    <meta
+      property="og:description"
+      content="Enter a location, set a radius, and see every rugby club in range on a map and in a list — with the details you need to actually turn up."
+    />
+    <meta property="og:image" content="https://mummysboy.com/rfcfinder/share-card.png" />
+    <meta property="og:image:secure_url" content="https://mummysboy.com/rfcfinder/share-card.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Rugby Football Club Finder — find your club, wherever you land." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="RFC Finder — Find a Rugby Club Near You" />
+    <meta
+      name="twitter:description"
+      content="A location-based directory for rugby clubs. Search by location and radius; map and list."
+    />
+    <meta name="twitter:image" content="https://mummysboy.com/rfcfinder/share-card.png" />
+    <meta name="twitter:image:alt" content="Rugby Football Club Finder." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fonts load async (display=swap paints fallback text immediately); noscript keeps them for JS-off visitors. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <link rel="stylesheet" href="/styles/tokens.css" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <!-- Advertising: consent gate first (it defines window.mbConsent), then the mediago
+         pixel, which stays silent until the gate says yes. Both are shared classic
+         scripts — there is no build step, so this is how they stay identical on every
+         page. Order matters; do not swap these two lines. -->
+    <script src="/scripts/consent.js"></script>
+    <script src="/scripts/mediago.js"></script>
+  </head>
+  <body data-project="rfcfinder">
+    <header class="masthead">
+      <div class="bar">
+        <a class="mark" href="/">mummysboy</a>
+        <span class="bar__meta">est. 1990</span>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <a class="back" href="/">← Index</a>
+
+      <article class="project">
+        <div class="project__head">
+          <img
+            class="app-icon"
+            src="/rfcfinder/shots/app-icon.png"
+            alt="RFC Finder app icon"
+            width="104"
+            height="104"
+          />
+        </div>
+
+        <!-- Authored eyebrow rather than the [data-path] hook: it carries the "live"
+             signal in words, so the page can spend its one volt accent on the CTA
+             instead of on a status dot. -->
+        <p class="eyebrow">/ rfcfinder · rugby club directory · live on the web</p>
+
+        <h1 class="title metal" data-name>Find a rugby club, wherever you land.</h1>
+        <p class="lede" data-blurb>
+          Enter a location, set a radius, and see every club in range on a map and in a list — with the
+          details you need to actually turn up.
+        </p>
+
+        <div class="project__meta">
+          <ul class="tags" data-tags></ul>
+        </div>
+
+        <!-- The web app is live and is this page's single volt accent. The two store
+             buttons are inert spans, not links or buttons: a focusable control that
+             does nothing would be a 4.1.2 lie. -->
+        <div class="cta-row">
+          <a class="cta cta--go" href="https://www.rfcfinder.com" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.93 9h-2.95a15.65 15.65 0 00-1.38-5.53A8.03 8.03 0 0118.93 11zM12 4.04c.83 1.2 1.72 3.3 1.95 6.96h-3.9c.23-3.66 1.12-5.76 1.95-6.96zM4.26 13h2.95c.16 2.1.62 4 1.38 5.53A8.03 8.03 0 014.26 13zm2.95-2H4.26a8.03 8.03 0 014.33-5.53A15.65 15.65 0 007.21 11zM12 19.96c-.83-1.2-1.72-3.3-1.95-6.96h3.9c-.23 3.66-1.12 5.76-1.95 6.96zm3.41-1.43c.76-1.53 1.22-3.43 1.38-5.53h2.95a8.03 8.03 0 01-4.33 5.53z"
+              />
+            </svg>
+            Open rfcfinder.com
+          </a>
+
+          <span class="cta cta--soon">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"
+              />
+            </svg>
+            iOS <span class="cta__tag">Coming soon</span>
+          </span>
+
+          <span class="cta cta--soon">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.46 11.46 0 00-8.94 0L5.65 5.67c-.19-.29-.57-.38-.85-.22-.3.16-.42.54-.26.85L6.4 9.48A10.78 10.78 0 001 18h22a10.78 10.78 0 00-5.4-8.52M7 15.25a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5m10 0a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5"
+              />
+            </svg>
+            Android <span class="cta__tag">Coming soon</span>
+          </span>
+        </div>
+      </article>
+
+      <hr class="hairline spacer" />
+
+      <section aria-label="What RFC Finder is">
+        <dl class="spec">
+          <div class="spec__row">
+            <dt class="spec__key">What it is</dt>
+            <dd class="spec__val">
+              The answer to &ldquo;is there a rugby club near me?&rdquo; — a question that today gets answered
+              with a search, a dead Facebook page and a bit of word of mouth. RFC Finder makes it a
+              <strong>thirty-second lookup</strong>. It&rsquo;s live now at
+              <a class="spec__link" href="https://www.rfcfinder.com" target="_blank" rel="noopener noreferrer"
+                >rfcfinder.com</a
+              >.
+            </dd>
+          </div>
+
+          <div class="spec__row">
+            <dt class="spec__key">Finding a club</dt>
+            <dd class="spec__val">
+              Type a location and set a radius. Clubs in range appear as pins on the map and as a list
+              underneath, both filtered together by <strong>Men&rsquo;s, Women&rsquo;s, Mixed, Youth or Old
+              Boys</strong>. Open one and you get the full profile — crest, year founded, division and
+              category, practice ground, practice days and times, website, email and phone.
+            </dd>
+          </div>
+
+          <div class="spec__row">
+            <dt class="spec__key">Being found</dt>
+            <dd class="spec__val">
+              Clubs are seeded by hand so the map is useful from day one. A club can then
+              <strong>claim its own profile</strong> and keep it current — claims are approved manually,
+              so a listing can&rsquo;t be hijacked.
+            </dd>
+          </div>
+
+          <div class="spec__row">
+            <dt class="spec__key">How it&rsquo;s built</dt>
+            <dd class="spec__val">
+              One Expo codebase targeting web, iOS and Android, on Supabase with PostGIS for the radius
+              search and Mapbox for the map and the location autocomplete. Rugby is the launch vertical,
+              but the club-specific parts are isolated on purpose — the same directory re-skins for any
+              other sport or hobby.
+            </dd>
+          </div>
+
+          <div class="spec__row">
+            <dt class="spec__key">Status</dt>
+            <dd class="spec__val">
+              The web app is live and open to anyone. The <strong>iOS and Android builds come from the
+              same codebase</strong> and are on the way — no date promised until they&rsquo;re through
+              review.
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="shots-section" aria-label="A look at the app">
+        <div class="section-label">
+          <span>The app</span>
+          <span>Search → club</span>
+        </div>
+        <p class="shots-lede">Two screens do the whole job: find what&rsquo;s near you, then decide who to contact.</p>
+        <ol class="shots">
+          <li class="shot">
+            <img
+              src="/rfcfinder/shots/home.jpg"
+              alt="RFC Finder home screen — a location box, category filters, a map of the United States covered in club pins, and a list reading '70 clubs in view'."
+              width="471"
+              height="1024"
+              loading="lazy"
+            />
+            <div class="shot__cap">
+              <span class="shot__step"><b>01</b> &nbsp;Search</span>
+              <span class="shot__text">Location in, radius set — pins on the map, the same clubs listed below.</span>
+            </div>
+          </li>
+          <li class="shot">
+            <img
+              src="/rfcfinder/shots/club.jpg"
+              alt="A club profile in RFC Finder — team photo, crest, division and founding year, an about section, and details including practice ground, practice days and times, website, email and phone."
+              width="471"
+              height="1024"
+              loading="lazy"
+            />
+            <div class="shot__cap">
+              <span class="shot__step"><b>02</b> &nbsp;The club</span>
+              <span class="shot__text">Who they are, where they train, when they train, and how to reach them.</span>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <nav class="project-nav">
+        <a class="next" data-next href="/"></a>
+      </nav>
+    </main>
+
+    <footer class="footer">
+      <div class="bar">
+        <a class="footer-legal" href="/privacy/">Privacy</a>
+        <ul class="social">
+          <li>
+            <a
+              href="https://www.tiktok.com/@mummysboy348"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="TikTok"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"
+                />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.instagram.com/gigbymummysboy"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.facebook.com/profile.php?id=61589961461573"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                />
+              </svg>
+            </a>
+          </li>
+        </ul>
+        <span class="bar__meta">© 1990</span>
+      </div>
+    </footer>
+
+    <script type="module" src="/scripts/project.js"></script>
+  </body>
+</html>

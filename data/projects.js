@@ -27,6 +27,17 @@ export const projects = [
     tags: [],
   },
   {
+    slug: "rfcfinder",
+    name: "RFC Finder",
+    blurb: "A location-based directory for finding rugby clubs.",
+    titleTag: "RFC Finder — Find a Rugby Club Near You | Rugby Football Club Finder",
+    headline: "Find a rugby club, wherever you land.",
+    heroBlurb:
+      "Enter a location, set a radius, and see every club in range on a map and in a list — with the details you need to actually turn up.",
+    status: "live",
+    tags: ["directory", "rugby", "maps"],
+  },
+  {
     slug: "irldatingshows",
     name: "IRL",
     blurb: "Live dating shows, hosted at real venues.",
