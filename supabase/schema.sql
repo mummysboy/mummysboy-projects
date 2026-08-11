@@ -517,6 +517,29 @@ begin
 end
 $$;
 
+-- How the edge function checks the header above. It holds the service role, so
+-- it asks the database rather than carrying its own copy of the secret in an
+-- env var: two copies is one more than necessary, and when they drift the only
+-- symptom is a 401 that the sign-up path is built to swallow — nothing anywhere
+-- reports a problem, and the emails just stop.
+--
+-- Returns a boolean, never the secret. anon and authenticated cannot execute it.
+create or replace function public.irl_webhook_secret_ok(candidate text)
+returns boolean
+language sql
+security definer
+set search_path = ''
+as $$
+  select exists (
+    select 1 from vault.decrypted_secrets
+     where name = 'irl_webhook_secret'
+       and decrypted_secret = candidate
+  );
+$$;
+
+revoke all on function public.irl_webhook_secret_ok(text) from public, anon, authenticated;
+grant execute on function public.irl_webhook_secret_ok(text) to service_role;
+
 create or replace function private.notify_signup()
 returns trigger
 language plpgsql

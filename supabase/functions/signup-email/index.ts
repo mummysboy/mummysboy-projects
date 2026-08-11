@@ -35,17 +35,32 @@ function esc(value: unknown): string {
   );
 }
 
-/** Length-independent compare, so the secret can't be guessed a byte at a time. */
-function secretsMatch(a: string, b: string): boolean {
-  if (!a || !b) return false;
-  const enc = new TextEncoder();
-  const x = enc.encode(a);
-  const y = enc.encode(b);
-  let diff = x.length ^ y.length;
-  for (let i = 0; i < Math.max(x.length, y.length); i++) {
-    diff |= (x[i] ?? 0) ^ (y[i] ?? 0);
+/**
+ * Checks the caller's secret against the one the trigger reads, which lives in
+ * Vault — deliberately not in an env var here. A second copy of a secret is a
+ * thing that can drift, and when it drifted the only symptom was a 401 that the
+ * sign-up path is built to swallow, so nothing anywhere reported a problem.
+ *
+ * The comparison happens in Postgres and returns a boolean; the secret itself
+ * never leaves the database. Only service_role may execute the function.
+ */
+async function secretOk(candidate: string, base: string, key: string): Promise<boolean> {
+  if (!candidate) return false;
+  try {
+    const res = await fetch(`${base}/rest/v1/rpc/irl_webhook_secret_ok`, {
+      method: "POST",
+      headers: {
+        apikey: key,
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ candidate }),
+    });
+    return res.ok && (await res.json()) === true;
+  } catch (err) {
+    console.error("secret check failed", err);
+    return false;
   }
-  return diff === 0;
 }
 
 type Signup = {
@@ -270,7 +285,11 @@ async function send(payload: Record<string, unknown>): Promise<void> {
 Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("method not allowed", { status: 405 });
 
-  if (!secretsMatch(req.headers.get("x-irl-secret") ?? "", env("IRL_WEBHOOK_SECRET"))) {
+  const base = env("SUPABASE_URL");
+  const key = env("SUPABASE_SERVICE_ROLE_KEY");
+  const auth = { apikey: key, Authorization: `Bearer ${key}` };
+
+  if (!(await secretOk(req.headers.get("x-irl-secret") ?? "", base, key))) {
     // The function is reachable without a user JWT so the database can call it,
     // which makes this header the only thing standing between the open internet
     // and a free email sender. Say nothing useful about why it failed.
@@ -280,10 +299,6 @@ Deno.serve(async (req) => {
   try {
     const { signup_id } = await req.json();
     if (!signup_id) return new Response("ok", { status: 200 });
-
-    const base = env("SUPABASE_URL");
-    const key = env("SUPABASE_SERVICE_ROLE_KEY");
-    const auth = { apikey: key, Authorization: `Bearer ${key}` };
 
     const sRes = await fetch(
       `${base}/rest/v1/signups?id=eq.${encodeURIComponent(signup_id)}&select=*`,

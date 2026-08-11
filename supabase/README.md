@@ -80,14 +80,7 @@ root `v=spf1 include:_spf.google.com ~all` record alone. Only one SPF record is
 allowed per name, so if a future provider ever asks you to edit the *root* TXT,
 merge its `include:` into the existing record rather than adding a second one.
 
-**b. Read the shared secret.** SQL Editor:
-
-```sql
-select decrypted_secret from vault.decrypted_secrets
- where name = 'irl_webhook_secret';
-```
-
-**c. Set the function's secrets.** These are **project-wide**, not per-function,
+**b. Set the function's secrets.** These are **project-wide**, not per-function,
 and they are not on the function's own page: Dashboard → **Project Settings →
 Edge Functions → Edge Function Secrets** (or `supabase secrets set`). They take
 effect on the next invocation; no redeploy needed.
@@ -95,13 +88,16 @@ effect on the next invocation; no redeploy needed.
 | Name | Value |
 |---|---|
 | `RESEND_API_KEY` | the key from step a |
-| `IRL_WEBHOOK_SECRET` | the value from step b |
 | `IRL_MAIL_FROM` | `IRL <irl@rightimagedigital.com>` |
 | `IRL_MAIL_REPLY_TO` | `support@rightimagedigital.com` |
 | `IRL_ALERT_TO` | wherever you want the alerts |
 
-`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected by the platform —
-do not add them, and do not put any of the above in this repo.
+There is no `IRL_WEBHOOK_SECRET` to set. The function verifies the header by
+calling `public.irl_webhook_secret_ok()` with its service role, which compares
+against Vault inside the database — so the secret exists in exactly one place and
+cannot be mistyped into a silent 401. `SUPABASE_URL` and
+`SUPABASE_SERVICE_ROLE_KEY` are injected by the platform; do not add them, and do
+not put any of the above in this repo.
 
 **The from address has to actually receive mail.** People reply to a
 confirmation — to cancel a seat, or to ask to be deleted, which the email itself
