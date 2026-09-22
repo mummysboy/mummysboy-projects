@@ -336,6 +336,18 @@ html.is-desktop .scan--ready {
   flex-direction: column;
 }
 
+/* Indexable reading block on /gig/, below the closing CTA. The funnel
+   above it is unchanged. Text links only — the page's one volt accent
+   stays on "Period." */
+body[data-project="gig"] .seo {
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--hairline);
+}
+body[data-project="gig"] .seo .prose > h2:first-child {
+  margin-top: 0;
+}
+
 /* ===== Gig comparison page (/gig/compare/) — indexable marketing surface =====
    Renders on the light App Store theme (html.gig-light). Every "winner" cue for Gig
    comes from scale, weight and a surface fill — NEVER a second accent — so the single
@@ -425,7 +437,7 @@ html.is-desktop .scan--ready {
   display: grid;
   grid-template-columns: 2.25rem 1fr;
   gap: 1rem;
-  align-items: baseline;
+  align-items: start;
   padding: 1.15rem 0;
   border-top: 1px solid var(--hairline);
 }
@@ -476,6 +488,46 @@ html.is-desktop .scan--ready {
   font-size: 0.9375rem;
   line-height: 1.55;
   color: var(--silver);
+}
+
+/* Store links — text, not badge art, so six apps don't become a wall of
+   identical buttons. Underline + label (not colour alone). Same-tab on
+   purpose: a new tab is a dead tap in Instagram and Facebook's browsers. */
+.board__stores {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.85rem;
+  margin-top: 0.55rem;
+}
+.board__who {
+  flex: 0 0 auto;
+  margin-right: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+.board__store {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--silver-bright);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--steel);
+  transition: text-decoration-color 160ms ease;
+}
+.board__store:hover {
+  text-decoration-color: var(--silver-bright);
+}
+.prose .board__stores {
+  margin-top: 0.35rem;
+  margin-bottom: 1.25rem;
 }
 
 /* Verdict marks in the matrix — symbol + text (never colour alone). */

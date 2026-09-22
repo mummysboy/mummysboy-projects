@@ -22,7 +22,7 @@ export const projects = [
     // Hero copy now lives ONLY in the landing pages themselves (the campaign variant
     // system authors it per page — see CLAUDE.md → Gig landing variants), so there are
     // no headline/heroBlurb swap fields here anymore. titleTag still sets /gig/'s <title>.
-    titleTag: "Gig — Commission-Free Local Services Marketplace | Find or Offer Help",
+    titleTag: "Gig — Commission-Free Local Services Marketplace | Keep 100%",
     status: "live",
     tags: [],
   },

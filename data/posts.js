@@ -2,7 +2,8 @@
  * Source of truth for the Gig blog. Add a post = one entry here, then author
  * its static article at /gig/blog/<slug>/index.html (the article body lives in
  * HTML, not JS, so it's fully crawlable). This registry drives the index grid
- * and the "more reading" links between posts.
+ * and the "more reading" links between posts. Newest first — the index and
+ * each article's "more reading" list follow this order, so add a post at the top.
  *
  * @typedef {Object} Post
  * @property {string}  slug      Route segment → /gig/blog/<slug>/.
@@ -18,6 +19,45 @@
 
 /** @type {Post[]} */
 export const posts = [
+  {
+    slug: "how-to-get-your-first-local-clients",
+    title: "How to Get Your First Local Service Clients (Without Paying for Leads)",
+    excerpt:
+      "List one specific service, show up where people already look, and don't pay for an introduction that might not book. On Gig the listing is free and the commission is 0% — the first booking still depends on demand near you.",
+    date: "2026-09-21",
+    dateLabel: "September 21, 2026",
+    readMins: "7 min",
+    tags: ["get-clients", "make-money", "no-fees"],
+    image:
+      "https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=1200&q=70",
+    alt: "A worker in a yellow hard hat and gloves repairing an outdoor electrical box.",
+  },
+  {
+    slug: "how-easy-is-gig-to-use",
+    title: "How Easy Is Gig to Use? About a Minute to Set Up",
+    excerpt:
+      "Download it, sign in with Apple, Google, or email, and either describe the job in a sentence or list what you do. No category maze, no subscription, no fee to start. The booking itself is still a short conversation.",
+    date: "2026-09-15",
+    dateLabel: "September 15, 2026",
+    readMins: "5 min",
+    tags: ["how-to", "getting-started", "ease"],
+    image:
+      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=1200&q=70",
+    alt: "An iPhone on a pale wooden table with the home screen open.",
+  },
+  {
+    slug: "is-gig-safe",
+    title: "Is Gig Safe? What Protects You, and What It Doesn't",
+    excerpt:
+      "Apple or Google sign-in, two-way ratings, and in-app messages you can leave. Gig does not run background checks, check licenses, or hold the payment — here is the honest split.",
+    date: "2026-09-08",
+    dateLabel: "September 8, 2026",
+    readMins: "6 min",
+    tags: ["safety", "trust", "hiring"],
+    image:
+      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=70",
+    alt: "A wooden house at dusk with the lights on and a path to the front door.",
+  },
   {
     slug: "commission-free-services-marketplace",
     title: "Commission-Free, No Middleman: How Gig Actually Works",
@@ -83,5 +123,5 @@ export const posts = [
       "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=70",
     alt: "Tax forms, a calculator and a pen laid out on a white table.",
   },
-  // add the next post here ↓
+  // Older posts above this line. Add the next one at the top of the array.
 ];
