@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-variant="dual">
+<html lang="en" data-variant="dual-b">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,7 +10,10 @@
       name="description"
       content="Find local help or list a service on Gig. Commission is 0% — you keep 100%, and Gig never touches the payment. Free on iOS and Android."
     />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- Rounded PNG (transparent corners) for the tab. The home-screen icon stays the square
+         JPG: iOS rounds it itself, and transparent corners there would render black. -->
+    <link rel="icon" href="/gig/shots/app-icon-rounded.png" type="image/png" sizes="96x96" />
+    <link rel="apple-touch-icon" href="/gig/shots/app-icon.jpg" />
 
     <!-- iOS Safari Smart App Banner: a native one-tap GET bar for the highest-intent segment. -->
     <meta name="apple-itunes-app" content="app-id=6758136203" />
@@ -125,7 +128,7 @@
             "name": "Is Gig safe to use?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "You can sign in with Apple, Google, or email. Ratings run both ways after a job. Messages stay in the app, and you can block or report at any point. Gig does not run background checks, and it does not hold the payment."
+              "text": "You can sign in with Apple, Google, or email. Ratings run both ways after a job. Profiles can link to Instagram, TikTok, LinkedIn, Facebook, or a website, so you can see someone's work before you meet. Messages stay in the app, and you can block or report at any point. Gig does not run background checks, and it does not hold the payment."
             }
           }
         ]
@@ -162,6 +165,8 @@
     <link rel="stylesheet" href="/styles/styles.css" />
     <!-- Redesign additions (see README → styles). Append into styles.css, or keep separate. -->
     <link rel="stylesheet" href="/styles/gig-additions.css" />
+    <!-- dual-b ad treatment — /gig/ only, every rule scoped to html[data-variant="dual-b"]. -->
+    <link rel="stylesheet" href="/styles/gig-ad.css" />
     <!-- Advertising: consent gate first (it defines window.mbConsent), then the mediago
          pixel, which stays silent until the gate says yes. Both are shared classic
          scripts — there is no build step, so this is how they stay identical on every
@@ -177,235 +182,380 @@
       </div>
     </header>
 
-    <main class="wrap">
-      <!-- ===================== HERO (above the fold) ===================== -->
-      <article class="hero" data-section="hero">
-        <div class="hero__copy">
-          <div class="project__head">
-            <img class="app-icon" src="/gig/shots/app-icon.jpg" alt="Gig app icon" width="104" height="104" />
+    <!-- dual-b (2026-09-23): the ad treatment. A scoped exception to the house design
+         rules at the owner's direction — see styles/gig-ad.css. The `dual` rows in the
+         dashboard are the old spec-sheet page; compare from this date. -->
+    <main class="ad">
+      <!-- ===================== HERO BAND (above the fold) ===================== -->
+      <section class="ad-band ad-hero" data-section="hero">
+        <div class="ad-inner ad-hero__grid">
+          <div class="ad-hero__copy">
+            <div class="ad-hero__id">
+              <img class="app-icon" src="/gig/shots/app-icon.jpg" alt="Gig app icon" width="104" height="104" />
+              <p class="ad-chip">Free &middot; iOS + Android</p>
+            </div>
+
+            <!-- Static hero copy — authored here, not registry-driven (the data-name/data-blurb
+                 hooks are deliberately absent so project.js can't overwrite the variant copy). -->
+            <h1 class="ad-hero__title"><span>Hire anyone.</span> <span>Keep every dollar.</span></h1>
+
+
+            <p class="ad-hero__sub">
+              Describe the job in a sentence and get matched locally. Or list your skills and keep
+              <strong>100%</strong>.
+            </p>
+
+            <div class="cta-row" data-pos="hero">
+              <!-- No target="_blank" — it is dead in the IG/FB in-app browsers, and the click
+                   still beacons an `ios` conversion. See CLAUDE.md → Analytics. -->
+              <a class="store-badge cta-ios-primary" id="iosCta" href="https://apps.apple.com/app/id6758136203">
+                <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
+              </a>
+              <a
+                class="store-badge cta-android-primary"
+                id="androidBtn"
+                href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig"
+              >
+                <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
+              </a>
+            </div>
+
+            <p class="ad-hero__proof">0% commission &middot; No fees &middot; Free</p>
+
+            <!-- Desktop-only bridge to the phone (scripts/gig-qr.js draws the code). -->
+            <div class="scan" data-qr>
+              <div class="scan__code" data-qr-code></div>
+              <div class="scan__copy">
+                <p class="scan__label">On a computer?</p>
+                <p class="scan__text">Scan with your phone camera to open this page there — free on iOS and Android.</p>
+              </div>
+            </div>
           </div>
 
-          <p class="eyebrow">/ gig · local + global services · live on iOS + android</p>
-
-          <!-- Static hero copy — authored here, not registry-driven (the data-name/data-blurb
-               hooks are deliberately absent so project.js can't overwrite the variant copy). -->
-          <h1 class="title metal">Find a service or provide one.</h1>
-
-          <!-- The two-sided story as typography — self-identify in one saccade, no switch. -->
-          <dl class="couplet">
-            <div>
-              <dt>Need a pro</dt>
-              <dd>Describe the job in a sentence — the best matches show up, ranked by rating and distance.</dd>
+          <!-- Product shot: two whole phones (search in front, profile behind) that overlap
+               the band's bottom edge onto the page below — the overlap, not a crop, is
+               what frames them. The back phone repeats the flow strip, so its alt is empty. -->
+          <div class="ad-hero__media">
+            <div class="ad-devices">
+              <img
+                class="ad-phone ad-phone--back"
+                src="/gig/shots/profile.jpg"
+                alt=""
+                width="471"
+                height="1024"
+                decoding="async"
+              />
+              <img
+                class="ad-phone ad-phone--front"
+                src="/gig/shots/search.jpg"
+                alt="Gig search — a plain-language request over nearby providers ranked by rating and distance."
+                width="471"
+                height="1024"
+                decoding="async"
+              />
             </div>
-            <div>
-              <dt>Be the pro</dt>
-              <dd>List what you do once and get found — nearby or worldwide.</dd>
+          </div>
+        </div>
+      </section>
+
+      <div class="ad-inner">
+        <!-- ===================== THE NUMBERS ===================== -->
+        <ul class="ad-stats" aria-label="Gig in three numbers">
+          <li class="ad-stat">
+            <span class="ad-stat__num">0%</span>
+            <span class="ad-stat__label">commission, on every job</span>
+          </li>
+          <li class="ad-stat">
+            <span class="ad-stat__num">$0</span>
+            <span class="ad-stat__label">to join, list, or hire</span>
+          </li>
+          <li class="ad-stat">
+            <span class="ad-stat__num">100%</span>
+            <span class="ad-stat__label">of the price goes to the pro</span>
+          </li>
+        </ul>
+
+        <!-- ===================== WHAT PEOPLE HIRE FOR ===================== -->
+        <!-- Unsplash stock (free Unsplash License, no attribution required), cropped 4:5.
+             Illustrative of the categories only — never captioned or framed as Gig users. -->
+        <section class="ad-cats" data-section="categories" data-reveal aria-labelledby="cats-heading">
+          <h2 class="ad-h2" id="cats-heading">Help for almost anything.</h2>
+          <p class="ad-cats__lede">A few of the jobs people hire for — and anything else you can describe in a sentence.</p>
+          <ul class="ad-cats__grid">
+            <li class="ad-cat">
+              <img src="/gig/shots/hire-cleaning.webp" alt="Someone carrying a cleaning caddy and broom up a flight of stairs at home." width="480" height="600" loading="lazy" decoding="async" />
+              <span class="ad-cat__label">Cleaning</span>
+            </li>
+            <li class="ad-cat">
+              <img src="/gig/shots/hire-moving.webp" alt="Two people carrying moving boxes and a plant into a new home." width="480" height="600" loading="lazy" decoding="async" />
+              <span class="ad-cat__label">Moving</span>
+            </li>
+            <li class="ad-cat">
+              <img src="/gig/shots/hire-handyman.webp" alt="A worker cutting trim on a miter saw during a home renovation." width="480" height="600" loading="lazy" decoding="async" />
+              <span class="ad-cat__label">Handyman</span>
+            </li>
+            <li class="ad-cat">
+              <img src="/gig/shots/hire-tutoring.webp" alt="A student working through a lesson with a tutor at a table." width="480" height="600" loading="lazy" decoding="async" />
+              <span class="ad-cat__label">Tutoring</span>
+            </li>
+            <li class="ad-cat">
+              <img src="/gig/shots/hire-pets.webp" alt="Someone walking a dog on a leash along a forest path." width="480" height="600" loading="lazy" decoding="async" />
+              <span class="ad-cat__label">Pet care</span>
+            </li>
+            <li class="ad-cat">
+              <img src="/gig/shots/hire-hair.webp" alt="A hairdresser trimming someone&rsquo;s long hair with scissors." width="480" height="600" loading="lazy" decoding="async" />
+              <span class="ad-cat__label">Hair &amp; beauty</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ===================== MONEY MOMENT ===================== -->
+        <!-- Same claim, same hedge as /gig/compare/ — keep them in step. -->
+        <section class="ad-money" data-section="spec" data-reveal aria-labelledby="money-heading">
+          <h2 class="ad-h2" id="money-heading">On a $100 job, where does the money go?</h2>
+          <div class="ad-money__cols">
+            <div class="ad-money__col">
+              <p class="ad-money__who">Typical gig apps</p>
+              <p class="ad-money__num">~$15+</p>
+              <p class="ad-money__text">
+                A service fee of around 15% is commonly reported, often with more on top — or a charge per lead,
+                whether you win the job or not.
+              </p>
             </div>
-          </dl>
+            <div class="ad-money__col ad-money__col--gig">
+              <p class="ad-money__who">Gig</p>
+              <p class="ad-money__num">$0</p>
+              <p class="ad-money__text">
+                The customer pays the pro directly. Gig never touches the payment, so all $100 stays with the
+                person who did the work.
+              </p>
+            </div>
+          </div>
+          <!-- Quick comparison as an in-place dropdown, not an exit. Native <details>: keyboard
+               and screen-reader support for free, no JS. Rows mirror the matrix on
+               /gig/compare/ — change both together. -->
+          <details class="ad-cmp">
+            <summary class="ad-cmp__toggle">
+              See how Gig compares
+              <svg class="ad-cmp__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="ad-cmp__panel">
+              <table class="ad-cmp__table">
+                <caption class="sr-only">What each app takes from a worker's pay, and whether they keep 100%</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">App</th>
+                    <th scope="col">Its cut of your pay</th>
+                    <th scope="col">Keep 100%?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ad-cmp__gig">
+                    <th scope="row">Gig</th>
+                    <td>0% — never touches the payment</td>
+                    <td><span class="ad-cmp__mark ad-cmp__mark--yes" aria-hidden="true">✓</span> Yes</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">TaskRabbit</th>
+                    <td>~15% service fee (commonly reported) + fees</td>
+                    <td><span class="ad-cmp__mark" aria-hidden="true">✗</span> No</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Thumbtack</th>
+                    <td>Pay per lead, even if you don&rsquo;t book</td>
+                    <td><span class="ad-cmp__mark" aria-hidden="true">✗</span> No</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Uber &amp; Lyft</th>
+                    <td>Variable cut; the platform sets the fare</td>
+                    <td><span class="ad-cmp__mark" aria-hidden="true">✗</span> No</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">DoorDash</th>
+                    <td>The platform sets your pay per delivery</td>
+                    <td><span class="ad-cmp__mark" aria-hidden="true">✗</span> No</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p class="ad-cmp__note">
+                Typical, commonly reported terms — fees vary by market and change often.
+                <a href="/gig/compare/" data-exit="compare">Full comparison</a>
+              </p>
+            </div>
+          </details>
+        </section>
 
-          <!-- The page's single volt accent: "Period.", directly above the badge. -->
-          <p class="readout">No commissions. No service fees. <span class="readout__stat">Period.</span></p>
+        <!-- ===================== BOTH SIDES + MID CTA ===================== -->
+        <section class="ad-sides" data-section="mid-cta" data-reveal aria-labelledby="sides-heading">
+          <h2 class="ad-h2" id="sides-heading">One free app. Both sides of the job.</h2>
+          <div class="ad-cards">
+            <div class="ad-card">
+              <p class="ad-card__kicker">Need something done?</p>
+              <h3 class="ad-card__title">Say it in a sentence. Get matched.</h3>
+              <ul class="ad-checks">
+                <li>Type it how you&rsquo;d say it — &ldquo;fix my leaking sink.&rdquo;</li>
+                <li>Pros ranked by rating and distance.</li>
+                <li>Price up front, with no platform markup.</li>
+              </ul>
+            </div>
+            <div class="ad-card">
+              <p class="ad-card__kicker">Got a skill?</p>
+              <h3 class="ad-card__title">Get found. Keep 100%.</h3>
+              <ul class="ad-checks">
+                <li>List your services once, free.</li>
+                <li>No commission, no lead fees, no subscription.</li>
+                <li>Turn on GigFlex to get hired for jobs you didn&rsquo;t list.</li>
+              </ul>
+            </div>
+          </div>
 
-          <div class="cta-row" data-pos="hero">
-            <!-- iOS: official App Store badge (see README → assets; swap in Apple's exact file).
-                 No target="_blank" — it is dead in the IG/FB in-app browsers, and the click
-                 still beacons an `ios` conversion. See CLAUDE.md → Analytics. -->
-            <a
-              class="store-badge cta-ios-primary"
-              id="iosCta"
-              href="https://apps.apple.com/app/id6758136203"
-            >
+          <div class="cta-row ad-sides__cta" data-pos="mid">
+            <a class="store-badge cta-ios-primary" href="https://apps.apple.com/app/id6758136203">
               <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
             </a>
-            <!-- Android: live on Google Play since 2026-08-05 (was an invite-only beta modal). -->
             <a
               class="store-badge cta-android-primary"
-              id="androidBtn"
               href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig"
             >
               <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
             </a>
-
           </div>
+        </section>
 
-          <p class="proof">New on the App Store — early reviews coming in.</p>
+        <!-- ===================== SAFETY ===================== -->
+        <!-- Real shipped features only. Mutuals are what the linked platforms show, not
+             something Gig computes — keep the wording that way. No "vetted" or "verified
+             pros": Gig runs no background checks (see the FAQ). -->
+        <section class="ad-safety" data-section="safety" data-reveal aria-labelledby="safety-heading">
+          <div class="ad-safety__grid">
+            <div>
+              <h2 class="ad-h2" id="safety-heading">Know who you&rsquo;re dealing with.</h2>
+              <p class="ad-safety__lede">
+                Every profile can link to Instagram, TikTok, LinkedIn, Facebook, or a website. Check someone
+                out before you ever meet.
+              </p>
+              <ul class="ad-safety__list">
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H4V4Zm2 2v8h12V6H6Zm2 6 2.5-3 2 2.5L14 9l3 3H8Zm-4 6h16v2H4v-2Z"/></svg>
+                  <div>
+                    <h3>See their real work</h3>
+                    <p>Tap through to their socials or site for photos, posts, and past jobs.</p>
+                  </div>
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm8 0a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7ZM1 20c0-3.9 3.1-7 7-7s7 3.1 7 7H1Zm15-7c3.3 0 6 2.5 6 6v1h-5c0-2.8-1.1-5.2-2.9-6.8.6-.1 1.2-.2 1.9-.2Z"/></svg>
+                  <div>
+                    <h3>Spot mutual connections</h3>
+                    <p>Their Instagram or LinkedIn shows who you both know.</p>
+                  </div>
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.5 2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9L12 2.5Z"/></svg>
+                  <div>
+                    <h3>Ratings both ways</h3>
+                    <p>Customers rate pros and pros rate customers after every job.</p>
+                  </div>
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Zm-1.2 14.2-3.5-3.5 1.4-1.4 2.1 2.1 4.8-4.8 1.4 1.4-6.2 6.2Z"/></svg>
+                  <div>
+                    <h3>Stay in control</h3>
+                    <p>Sign in with Apple or Google, chat in the app, and block or report anytime.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="ad-safety__media">
+              <img
+                class="ad-phone"
+                src="/gig/shots/profile.jpg"
+                alt="A Gig profile with the person's locations, services, and links to their social accounts."
+                width="471"
+                height="1024"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </section>
 
-          <!-- Desktop-only bridge to the phone (scripts/gig-qr.js draws the code). -->
-          <div class="scan" data-qr>
-            <div class="scan__code" data-qr-code></div>
-            <div class="scan__copy">
-              <p class="scan__label">On a computer?</p>
-              <p class="scan__text">Scan with your phone camera to open this page there — free on iOS and Android.</p>
+        <!-- ===================== SCREENSHOT FLOW ===================== -->
+        <section class="shots-section ad-flow" data-section="flow" data-reveal aria-labelledby="flow-heading">
+          <h2 class="ad-h2" id="flow-heading">See it in 30 seconds.</h2>
+          <p class="shots-lede">The full loop — find help, or get found.</p>
+          <!-- Value order, not onboarding order: search → range → work side → profile,
+               with sign-in as the safety closer at the moment of decision. -->
+          <ol class="shots">
+            <li class="shot">
+              <img src="/gig/shots/search.jpg" alt="Gig search screen — a natural-language request box over nearby worker results." loading="lazy" />
+              <div class="shot__cap">
+                <span class="shot__step"><b>01</b> &nbsp;Search</span>
+                <span class="shot__text">Type it the way you&rsquo;d say it — the best-matched pros show up, priced up front.</span>
+              </div>
+            </li>
+            <li class="shot">
+              <img src="/gig/shots/map.jpg" alt="Search-radius map centred on San Francisco with a 10-mile range." loading="lazy" />
+              <div class="shot__cap">
+                <span class="shot__step"><b>02</b> &nbsp;Set your range</span>
+                <span class="shot__text">See only help close enough to actually show up.</span>
+              </div>
+            </li>
+            <li class="shot">
+              <img src="/gig/shots/services.jpg" alt="Service management — per-service on/off toggles." loading="lazy" />
+              <div class="shot__cap">
+                <span class="shot__step"><b>03</b> &nbsp;Flip to the work side</span>
+                <span class="shot__text">Same account: list what you do and show up in searches everywhere, not just nearby.</span>
+              </div>
+            </li>
+            <li class="shot">
+              <img src="/gig/shots/profile.jpg" alt="A unified Gig profile with locations, services count, and links." loading="lazy" />
+              <div class="shot__cap">
+                <span class="shot__step"><b>04</b> &nbsp;One profile</span>
+                <span class="shot__text">Locations, services, ratings — both sides in one place.</span>
+              </div>
+            </li>
+            <li class="shot">
+              <img src="/gig/shots/login.jpg" alt="Gig login screen with the tagline 'Find help for almost anything', plus Google and Apple sign-in." loading="lazy" />
+              <div class="shot__cap">
+                <span class="shot__step"><b>05</b> &nbsp;Sign in</span>
+                <span class="shot__text">Apple, Google, or email — in and set in seconds.</span>
+              </div>
+            </li>
+          </ol>
+        </section>
+      </div>
+
+      <!-- ===================== CLOSING BAND (peak intent) ===================== -->
+      <section class="ad-band ad-close" data-section="closing" aria-labelledby="close-heading">
+        <div class="ad-inner ad-close__grid">
+          <div>
+            <h2 class="ad-close__title" id="close-heading">Your first job is one sentence away.</h2>
+            <p class="ad-close__line">Free to download. Free to join. Nothing taken from what you earn.</p>
+          </div>
+          <div class="get-app__actions">
+            <div class="cta-row" data-pos="closing">
+              <a class="store-badge cta-ios-primary" href="https://apps.apple.com/app/id6758136203">
+                <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
+              </a>
+              <a
+                class="store-badge cta-android-primary"
+                href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig"
+              >
+                <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
+              </a>
+            </div>
+
+            <div class="scan" data-qr>
+              <div class="scan__code" data-qr-code></div>
+              <div class="scan__copy">
+                <p class="scan__label">On a computer?</p>
+                <p class="scan__text">Scan to pick this up on your phone.</p>
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- The natural-language "magic moment" — shown beside the copy on wider screens. -->
-        <div class="hero__media">
-          <img
-            class="phone"
-            src="/gig/shots/search.jpg"
-            alt="Gig search — a plain-language request over nearby providers ranked by rating and distance."
-            width="471"
-            height="1024"
-            loading="lazy"
-          />
-        </div>
-      </article>
-
-      <hr class="hairline spacer" />
-
-      <!-- ===================== BENEFIT LEDGER + TRUST ===================== -->
-      <section data-section="spec">
-        <dl class="spec">
-          <div class="spec__row" data-reveal>
-            <dt class="spec__key">If you're hiring</dt>
-            <dd class="spec__val">
-              Describe the job in your own words — &ldquo;fix my leaking sink,&rdquo; &ldquo;tutor for 8th-grade math.&rdquo; The
-              best-matched pros surface, ranked by rating and distance, priced up front with <strong>no platform markup</strong>.
-            </dd>
-          </div>
-
-          <div class="spec__row" data-reveal>
-            <dt class="spec__key">If you're working</dt>
-            <dd class="spec__val">
-              List your services once and <strong>keep 100% of what you earn</strong> — Gig takes no cut on any job, ever.
-              Open to more? Turn on GigFlex and customers can hire you for jobs you didn&rsquo;t think to list.
-            </dd>
-          </div>
-
-          <!-- Trust row: real shipped features only — turns the "is it safe?" fear into a feature. -->
-          <div class="spec__row" data-reveal>
-            <dt class="spec__key">Either way</dt>
-            <dd class="spec__val">
-              One profile covers both sides. Verified sign-in with Apple or Google. Two-way ratings on every job.
-              Message in-app; block or report anytime.
-            </dd>
-          </div>
-        </dl>
       </section>
 
-      <!-- ===================== MID CTA (ends the hero→closing desert) ===================== -->
-      <section class="mid-cta" data-section="mid-cta" data-reveal>
-        <p class="mid-cta__line">All of this is live today. Free on iOS and Android.</p>
-        <div class="cta-row" data-pos="mid">
-          <a
-            class="store-badge cta-ios-primary"
-            href="https://apps.apple.com/app/id6758136203"
-          >
-            <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
-          </a>
-          <a
-            class="store-badge cta-android-primary"
-            href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig"
-          >
-            <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
-          </a>
-        </div>
-      </section>
-
-      <!-- ===================== SCREENSHOT FLOW ===================== -->
-      <section class="shots-section" aria-label="A walk-through" data-section="flow" data-reveal>
-        <div class="section-label">
-          <span>The flow</span>
-          <span>Start → finish</span>
-        </div>
-        <p class="shots-lede">The full loop — find help, or get found.</p>
-        <!-- Value order, not onboarding order: search → range → work side → profile,
-             with sign-in as the safety closer at the moment of decision. -->
-        <ol class="shots">
-          <li class="shot">
-            <img
-              src="/gig/shots/search.jpg"
-              alt="Gig search screen — a natural-language request box over nearby worker results."
-              loading="lazy"
-            />
-            <div class="shot__cap">
-              <span class="shot__step"><b>01</b> &nbsp;Search</span>
-              <span class="shot__text">Type it the way you&rsquo;d say it — the best-matched pros show up, priced up front.</span>
-            </div>
-          </li>
-          <li class="shot">
-            <img
-              src="/gig/shots/map.jpg"
-              alt="Search-radius map centred on San Francisco with a 10-mile range."
-              loading="lazy"
-            />
-            <div class="shot__cap">
-              <span class="shot__step"><b>02</b> &nbsp;Set your range</span>
-              <span class="shot__text">See only help close enough to actually show up.</span>
-            </div>
-          </li>
-          <li class="shot">
-            <img
-              src="/gig/shots/services.jpg"
-              alt="Service management — per-service on/off toggles."
-              loading="lazy"
-            />
-            <div class="shot__cap">
-              <span class="shot__step"><b>03</b> &nbsp;Flip to the work side</span>
-              <span class="shot__text">Same account: list what you do and show up in searches everywhere, not just nearby.</span>
-            </div>
-          </li>
-          <li class="shot">
-            <img
-              src="/gig/shots/profile.jpg"
-              alt="A unified Gig profile with locations, services count, and links."
-              loading="lazy"
-            />
-            <div class="shot__cap">
-              <span class="shot__step"><b>04</b> &nbsp;One profile</span>
-              <span class="shot__text">Locations, services, ratings — both sides in one place.</span>
-            </div>
-          </li>
-          <li class="shot">
-            <img
-              src="/gig/shots/login.jpg"
-              alt="Gig login screen with the tagline 'Find help for almost anything', plus Google and Apple sign-in."
-              loading="lazy"
-            />
-            <div class="shot__cap">
-              <span class="shot__step"><b>05</b> &nbsp;Sign in</span>
-              <span class="shot__text">Apple, Google, or email — in and set in seconds.</span>
-            </div>
-          </li>
-        </ol>
-      </section>
-
-      <!-- ===================== CLOSING CTA (peak intent) ===================== -->
-      <aside class="get-app" data-section="closing" data-reveal>
-        <div>
-          <p class="get-app__kicker">One profile, both sides</p>
-          <p class="get-app__line">
-            Be one of the first in your area — describe a need or list a skill in under a minute.
-          </p>
-        </div>
-        <div class="get-app__actions">
-          <div class="cta-row" data-pos="closing">
-            <a
-              class="store-badge cta-ios-primary"
-              href="https://apps.apple.com/app/id6758136203"
-            >
-              <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
-            </a>
-            <a
-              class="store-badge cta-android-primary"
-              href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig"
-            >
-              <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
-            </a>
-          </div>
-
-          <div class="scan" data-qr>
-            <div class="scan__code" data-qr-code></div>
-            <div class="scan__copy">
-              <p class="scan__label">On a computer?</p>
-              <p class="scan__text">Scan to pick this up on your phone.</p>
-            </div>
-          </div>
-        </div>
-      </aside>
-
+      <div class="ad-inner">
       <!-- Below the measured funnel on purpose. Crawlable copy and internal
            links for search. No data-section and no store links: a store tap
            here would beacon as a conversion with no position. -->
@@ -525,18 +675,36 @@
             <p class="faq__q">Is Gig safe to use?</p>
             <p class="faq__a">
               You can sign in with Apple, Google, or email. Ratings run both
-              ways after a job. Messages stay in the app, and you can block or
+              ways after a job. Profiles can link to Instagram, TikTok,
+              LinkedIn, Facebook, or a website, so you can see someone's work
+              before you meet. Messages stay in the app, and you can block or
               report at any point. Gig does not run background checks, and it
               does not hold the payment.
             </p>
           </div>
         </div>
       </section>
-
-      <nav class="project-nav">
-        <a class="next" data-next href="/"></a>
-      </nav>
+        <nav class="project-nav">
+          <a class="next" data-next href="/"></a>
+        </nav>
+      </div>
     </main>
+
+    <!-- Mobile sticky download bar. scripts/gig-sticky.js shows it once the hero badges
+         leave the screen and hides it over the closing band; without JS it never shows. -->
+    <div class="sticky-cta" role="region" aria-label="Download Gig" data-sticky>
+      <div class="cta-row" data-pos="sticky">
+        <a class="store-badge cta-ios-primary" href="https://apps.apple.com/app/id6758136203">
+          <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="40" />
+        </a>
+        <a
+          class="store-badge cta-android-primary"
+          href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig"
+        >
+          <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="40" />
+        </a>
+      </div>
+    </div>
 
     <footer class="footer" data-section="footer">
       <div class="bar">
@@ -586,6 +754,7 @@
     <script type="module" src="/scripts/reveal.js"></script>
     <script type="module" src="/scripts/project.js"></script>
     <script type="module" src="/scripts/gig-qr.js"></script>
+    <script type="module" src="/scripts/gig-sticky.js"></script>
     <script type="module" src="/scripts/gig-analytics.js"></script>
   </body>
 </html>

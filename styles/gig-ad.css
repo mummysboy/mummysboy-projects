@@ -1,0 +1,934 @@
+/* ===== /gig/ ad treatment (variant "dual-b") =====
+   The one page that sells rather than informs. At the owner's direction it is a
+   scoped exception to house design rules 1–4: saturated brand bands, big stat
+   blocks, a second accent colour, and a soft shadow on the phone. Everything
+   else still holds — WCAG 2.1 AA, mobile-first, honest copy, honest motion.
+   Every rule is scoped to html[data-variant="dual-b"] so nothing leaks to the
+   other arms or the hub. The light-theme tokens come from gig-additions.css.
+
+   Colour split: BLUE is the brand (sampled from the Gig app icon, so ad → page →
+   App Store reads as one product; green would also read as TaskRabbit/Upwork/
+   Fiverr). GREEN (--volt) is kept only for money — 0% / $0 / 100%, the Gig
+   column of the $100 comparison, and the checkmarks.
+
+   Contrast (computed, not eyeballed):
+     #fff on --ad-band ........ 9.07:1   body + headline text on the band
+     --ad-on-band-dim on band . 7.12:1   secondary text on the band
+     badge grey edge on band .. 3.72:1   the official badges' own #a6a6a6 border (1.4.11)
+     --ad-band on --ad-tint ... 8.12:1   safety icons
+     --volt on #fff / --money-tint 5.42 / 4.99:1   money numbers + check marks */
+html[data-variant="dual-b"] {
+  --ad-band: #144984; /* the icon's cobalt */
+  --ad-on-band: #ffffff;
+  --ad-on-band-dim: #d6e6f5;
+  --ad-tint: #edf3fa; /* pale brand blue — safety icon plates */
+  --money-tint: #eef8f2; /* pale green — the Gig $0 card */
+  --ad-inner: 1120px;
+  --hero-overlap: 8rem; /* how far the hero phones hang below the band */
+}
+
+@media (min-width: 760px) {
+  html[data-variant="dual-b"] {
+    --hero-overlap: 7rem;
+  }
+}
+
+/* Full-bleed bands need a main that is not .wrap; the inner containers carry
+   the grid width instead. */
+html[data-variant="dual-b"] .ad {
+  flex: 1;
+  width: 100%;
+}
+
+html[data-variant="dual-b"] .ad-inner {
+  width: 100%;
+  max-width: var(--ad-inner);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  html[data-variant="dual-b"] .ad-inner {
+    padding-inline: 2rem;
+  }
+}
+
+/* Nothing on this page may widen it past the phone: every column is allowed to
+   shrink, and the page itself clips rather than scrolls sideways. */
+html[data-variant="dual-b"] body {
+  overflow-x: clip;
+}
+
+html[data-variant="dual-b"] .ad,
+html[data-variant="dual-b"] .ad-inner,
+html[data-variant="dual-b"] .ad-hero__copy {
+  min-width: 0;
+  max-width: 100%;
+}
+
+html[data-variant="dual-b"] .ad-inner {
+  max-width: var(--ad-inner);
+}
+
+html[data-variant="dual-b"] .ad-hero__sub,
+html[data-variant="dual-b"] .ad-hero__proof {
+  overflow-wrap: break-word;
+}
+
+/* Badges stay side by side and left-aligned on phones. styles.css stacks every
+   .cta-row into a centred column below 480px (built for full-width .cta
+   buttons); two ~120px badges fit on one line down to 320px, so undo that here. */
+html[data-variant="dual-b"] .cta-row {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* The scan-to-phone QR is for real desktop screens only — never in a narrow
+   window, even on a desktop browser (or a devtools responsive preview). */
+@media (max-width: 759px) {
+  html[data-variant="dual-b"] .scan--ready {
+    display: none !important;
+  }
+}
+
+/* ---- Bands ---------------------------------------------------------- */
+/* Bands carry a faded mosaic of the six job photos (gig/shots/band-mosaic.webp).
+   The blue duotone is BAKED INTO the file, not layered on in CSS, so contrast is
+   a property of the image and was measured against its brightest pixel:
+     #fff 7.52:1 · --ad-on-band-dim 5.90:1 · badge #a6a6a6 edge 3.09:1.
+   If the mosaic is ever regenerated, re-measure all three. The flat --ad-band
+   colour is the fallback while it loads (and is darker than the image's max). */
+html[data-variant="dual-b"] .ad-band {
+  background: var(--ad-band) url("/gig/shots/band-mosaic.webp") center / cover no-repeat;
+  color: var(--ad-on-band);
+}
+
+/* Closing band shows the other half of the mosaic, so the page doesn't repeat itself. */
+html[data-variant="dual-b"] .ad-close {
+  background-position: center bottom;
+}
+
+/* The global volt ring is 1.1:1 on the band — swap to white inside it. */
+html[data-variant="dual-b"] .ad-band :focus-visible {
+  outline-color: var(--ad-on-band);
+}
+
+html[data-variant="dual-b"] .ad-band ::selection {
+  background: var(--ad-on-band);
+  color: var(--ad-band);
+}
+
+/* ---- Hero ----------------------------------------------------------- */
+html[data-variant="dual-b"] .ad-hero {
+  padding-top: 2rem;
+}
+
+html[data-variant="dual-b"] .ad-hero__id {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+html[data-variant="dual-b"] .ad-hero .app-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 0;
+  border-radius: 13px;
+}
+
+html[data-variant="dual-b"] .ad-chip {
+  display: inline-block;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--ad-on-band-dim);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ad-on-band);
+}
+
+/* One sentence per line, on purpose — the break is authored, not left to
+   wherever the viewport happens to cut "Keep". */
+html[data-variant="dual-b"] .ad-hero__title span {
+  display: block;
+}
+
+html[data-variant="dual-b"] .ad-hero__title {
+  margin-top: 1.25rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.125rem, 9.5vw, 4.75rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  color: var(--ad-on-band);
+  overflow-wrap: break-word;
+}
+
+html[data-variant="dual-b"] .ad-hero__sub {
+  max-width: 34rem;
+  margin-top: 1.1rem;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: var(--ad-on-band-dim);
+}
+
+html[data-variant="dual-b"] .ad-hero__sub strong {
+  color: var(--ad-on-band);
+  font-weight: 600;
+}
+
+html[data-variant="dual-b"] .ad-hero .cta-row {
+  margin-top: 1.5rem;
+}
+
+html[data-variant="dual-b"] .ad-hero__proof {
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ad-on-band-dim);
+}
+
+/* ---- Hero product shot ---------------------------------------------
+   Two whole phones — search in front, profile behind and raised — that hang
+   --hero-overlap below the band onto the white page. The overlap is what frames
+   them (a crop inside the band read as "cut off"); the stat strip adds the same
+   amount of top margin so nothing collides. */
+html[data-variant="dual-b"] .ad-hero__copy {
+  padding-bottom: 2.25rem;
+}
+
+html[data-variant="dual-b"] .ad-hero__media {
+  position: relative;
+  z-index: 1; /* paints over the white section it overlaps */
+  margin-bottom: calc(-1 * var(--hero-overlap));
+}
+
+html[data-variant="dual-b"] .ad-devices {
+  position: relative;
+  width: min(74vw, 300px);
+  margin-inline: auto;
+  padding-top: 1.5rem; /* the back phone rises this far above the front one */
+}
+
+/* Shared device frame (also used by the safety section's profile shot). */
+html[data-variant="dual-b"] .ad-phone {
+  display: block;
+  width: 62%;
+  max-width: 230px;
+  height: auto;
+  aspect-ratio: 471 / 1024;
+  margin-inline: auto;
+  border: 6px solid #1d1d1f;
+  border-radius: 30px;
+  background: #1d1d1f;
+  box-shadow: 0 24px 48px rgb(0 0 0 / 0.28);
+}
+
+html[data-variant="dual-b"] .ad-devices .ad-phone {
+  max-width: none;
+  margin: 0;
+}
+
+html[data-variant="dual-b"] .ad-devices .ad-phone--front {
+  position: relative;
+  z-index: 2;
+  width: 70%;
+  border-width: 5px;
+  border-radius: 26px;
+}
+
+html[data-variant="dual-b"] .ad-devices .ad-phone--back {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  width: 58%;
+  border-width: 4px;
+  border-radius: 22px;
+  box-shadow: 0 16px 32px rgb(0 0 0 / 0.22);
+}
+
+@media (min-width: 760px) {
+  html[data-variant="dual-b"] .ad-hero {
+    padding-top: 3.5rem;
+  }
+
+  html[data-variant="dual-b"] .ad-hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+    gap: 3rem;
+    align-items: end;
+  }
+
+  html[data-variant="dual-b"] .ad-hero__copy {
+    padding-bottom: 4rem;
+  }
+
+  html[data-variant="dual-b"] .ad-hero .app-icon {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 16px;
+  }
+
+  html[data-variant="dual-b"] .ad-devices {
+    width: 100%;
+    padding-top: 2rem;
+  }
+
+  html[data-variant="dual-b"] .ad-devices .ad-phone--front {
+    border-width: 6px;
+    border-radius: 30px;
+  }
+
+  html[data-variant="dual-b"] .ad-devices .ad-phone--back {
+    border-width: 5px;
+    border-radius: 26px;
+  }
+}
+
+/* QR block, re-coloured for the band (steel on the band would fail AA). */
+html[data-variant="dual-b"] .ad-band .scan--ready {
+  border-top-color: rgb(255 255 255 / 0.35);
+}
+
+html[data-variant="dual-b"] .ad-band .scan__label {
+  color: var(--ad-on-band);
+}
+
+html[data-variant="dual-b"] .ad-band .scan__text {
+  color: var(--ad-on-band-dim);
+}
+
+html[data-variant="dual-b"] .ad-band .scan__code {
+  border-color: transparent;
+}
+
+/* ---- Section heads -------------------------------------------------- */
+html[data-variant="dual-b"] .ad-h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--silver-bright);
+  overflow-wrap: break-word;
+}
+
+/* ---- Stat strip ----------------------------------------------------- */
+html[data-variant="dual-b"] .ad-stats {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: calc(var(--hero-overlap) + 2rem); /* clears the hero phones */
+  padding: 0;
+  list-style: none;
+}
+
+html[data-variant="dual-b"] .ad-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+html[data-variant="dual-b"] .ad-stat__num {
+  flex: 0 0 auto;
+  min-width: 5.5rem; /* lines the labels up; "100%" is wider and may push past it */
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 2.5rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--volt);
+}
+
+html[data-variant="dual-b"] .ad-stat__label {
+  font-size: 1rem;
+  line-height: 1.35;
+  color: var(--silver);
+}
+
+@media (min-width: 760px) {
+  html[data-variant="dual-b"] .ad-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: calc(var(--hero-overlap) + 3rem);
+  }
+
+  html[data-variant="dual-b"] .ad-stat {
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.75rem 1.5rem;
+  }
+
+  html[data-variant="dual-b"] .ad-stat__num {
+    flex: none;
+    font-size: 3.75rem;
+  }
+}
+
+/* ---- What people hire for ------------------------------------------
+   Stock photo tiles, 4:5. The label sits on a solid white pill rather than on
+   the photo itself, so its contrast never depends on what's in the picture. */
+html[data-variant="dual-b"] .ad-cats {
+  margin-top: 4rem;
+}
+
+html[data-variant="dual-b"] .ad-cats__lede {
+  max-width: 34rem;
+  margin-top: 0.75rem;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--silver);
+}
+
+html[data-variant="dual-b"] .ad-cats__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+html[data-variant="dual-b"] .ad-cat {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+html[data-variant="dual-b"] .ad-cat img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+html[data-variant="dual-b"] .ad-cat__label {
+  position: absolute;
+  left: 0.6rem;
+  bottom: 0.6rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--silver-bright);
+}
+
+@media (min-width: 680px) {
+  html[data-variant="dual-b"] .ad-cats__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  html[data-variant="dual-b"] .ad-cat__label {
+    left: 0.85rem;
+    bottom: 0.85rem;
+    font-size: 0.9375rem;
+  }
+}
+
+/* ---- Money moment --------------------------------------------------- */
+html[data-variant="dual-b"] .ad-money {
+  margin-top: 4rem;
+}
+
+html[data-variant="dual-b"] .ad-money__cols {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+html[data-variant="dual-b"] .ad-money__col {
+  padding: 1.5rem;
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+}
+
+html[data-variant="dual-b"] .ad-money__col--gig {
+  border: 2px solid var(--volt);
+  background: var(--money-tint);
+}
+
+html[data-variant="dual-b"] .ad-money__who {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+}
+
+html[data-variant="dual-b"] .ad-money__num {
+  margin-top: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(3rem, 12vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--silver-bright);
+}
+
+html[data-variant="dual-b"] .ad-money__col--gig .ad-money__num {
+  color: var(--volt);
+}
+
+html[data-variant="dual-b"] .ad-money__text {
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--silver);
+}
+
+/* Quick comparison — an in-place dropdown (native <details>), not an exit link. */
+html[data-variant="dual-b"] .ad-cmp {
+  margin-top: 1.25rem;
+}
+
+html[data-variant="dual-b"] .ad-cmp__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 1rem 0.55rem 1.1rem;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--silver-bright);
+  cursor: pointer;
+  list-style: none;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+html[data-variant="dual-b"] .ad-cmp__toggle::-webkit-details-marker {
+  display: none;
+}
+
+html[data-variant="dual-b"] .ad-cmp__toggle:hover,
+html[data-variant="dual-b"] .ad-cmp[open] .ad-cmp__toggle {
+  border-color: var(--steel);
+  background: var(--surface);
+}
+
+html[data-variant="dual-b"] .ad-cmp__chev {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 160ms ease;
+}
+
+html[data-variant="dual-b"] .ad-cmp[open] .ad-cmp__chev {
+  transform: rotate(180deg);
+}
+
+html[data-variant="dual-b"] .ad-cmp__panel {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1.1rem 1rem;
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgb(20 73 132 / 0.12);
+}
+
+html[data-variant="dual-b"] .ad-cmp[open] .ad-cmp__panel {
+  animation: ad-cmp-in 160ms ease;
+}
+
+@keyframes ad-cmp-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+html[data-variant="dual-b"] .ad-cmp__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+html[data-variant="dual-b"] .ad-cmp__table th,
+html[data-variant="dual-b"] .ad-cmp__table td {
+  padding: 0.7rem 0.5rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--hairline);
+}
+
+html[data-variant="dual-b"] .ad-cmp__table th:first-child {
+  padding-left: 0;
+}
+
+html[data-variant="dual-b"] .ad-cmp__table td:last-child {
+  padding-right: 0;
+  white-space: nowrap;
+}
+
+html[data-variant="dual-b"] .ad-cmp__table thead th {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--steel);
+}
+
+html[data-variant="dual-b"] .ad-cmp__table tbody th {
+  font-weight: 500;
+  color: var(--silver-bright);
+}
+
+html[data-variant="dual-b"] .ad-cmp__table td {
+  color: var(--silver);
+}
+
+html[data-variant="dual-b"] .ad-cmp__gig th,
+html[data-variant="dual-b"] .ad-cmp__gig td {
+  font-weight: 600;
+  color: var(--silver-bright);
+}
+
+html[data-variant="dual-b"] .ad-cmp__mark {
+  font-weight: 600;
+  color: var(--steel);
+}
+
+html[data-variant="dual-b"] .ad-cmp__mark--yes {
+  color: var(--volt);
+}
+
+html[data-variant="dual-b"] .ad-cmp__note {
+  margin-top: 0.85rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--steel);
+}
+
+html[data-variant="dual-b"] .ad-cmp__note a {
+  color: var(--silver-bright);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-variant="dual-b"] .ad-cmp[open] .ad-cmp__panel {
+    animation: none;
+  }
+
+  html[data-variant="dual-b"] .ad-cmp__chev {
+    transition: none;
+  }
+}
+
+
+@media (min-width: 680px) {
+  html[data-variant="dual-b"] .ad-money__cols {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+}
+
+/* ---- Both sides ----------------------------------------------------- */
+html[data-variant="dual-b"] .ad-sides {
+  margin-top: 4.5rem;
+}
+
+html[data-variant="dual-b"] .ad-cards {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+html[data-variant="dual-b"] .ad-card {
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+html[data-variant="dual-b"] .ad-card__kicker {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+}
+
+html[data-variant="dual-b"] .ad-card__title {
+  margin-top: 0.6rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--silver-bright);
+}
+
+html[data-variant="dual-b"] .ad-checks {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 1.1rem;
+  padding: 0;
+  list-style: none;
+}
+
+/* Tick drawn in CSS — decorative; the list itself carries the meaning. */
+html[data-variant="dual-b"] .ad-checks li {
+  position: relative;
+  padding-left: 1.75rem;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--silver);
+}
+
+html[data-variant="dual-b"] .ad-checks li::before {
+  content: "";
+  position: absolute;
+  left: 0.2rem;
+  top: 0.3rem;
+  width: 0.45rem;
+  height: 0.8rem;
+  border-right: 2.5px solid var(--volt);
+  border-bottom: 2.5px solid var(--volt);
+  transform: rotate(45deg);
+}
+
+html[data-variant="dual-b"] .ad-sides__cta {
+  margin-top: 1.75rem;
+}
+
+@media (min-width: 680px) {
+  html[data-variant="dual-b"] .ad-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  html[data-variant="dual-b"] .ad-card {
+    padding: 2rem;
+  }
+}
+
+/* ---- Safety ------------------------------------------------------- */
+html[data-variant="dual-b"] .ad-safety {
+  margin-top: 4.5rem;
+}
+
+html[data-variant="dual-b"] .ad-safety__lede {
+  max-width: 34rem;
+  margin-top: 0.9rem;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--silver);
+}
+
+html[data-variant="dual-b"] .ad-safety__list {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+html[data-variant="dual-b"] .ad-safety__list li {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+}
+
+html[data-variant="dual-b"] .ad-safety__list svg {
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.55rem;
+  border-radius: 12px;
+  background: var(--ad-tint);
+  fill: var(--ad-band);
+}
+
+html[data-variant="dual-b"] .ad-safety__list h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.125rem;
+  line-height: 1.25;
+  color: var(--silver-bright);
+}
+
+html[data-variant="dual-b"] .ad-safety__list p {
+  margin-top: 0.2rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--silver);
+}
+
+/* The profile shot sits beside the list on wider screens; phones already
+   meet it in the filmstrip below, so it isn't repeated there. */
+html[data-variant="dual-b"] .ad-safety__media {
+  display: none;
+}
+
+@media (min-width: 680px) {
+  html[data-variant="dual-b"] .ad-safety__list {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem 2rem;
+  }
+}
+
+@media (min-width: 900px) {
+  html[data-variant="dual-b"] .ad-safety__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  html[data-variant="dual-b"] .ad-safety__media {
+    display: block;
+  }
+
+  html[data-variant="dual-b"] .ad-safety__media .ad-phone {
+    width: 100%;
+  }
+}
+
+/* ---- Flow ----------------------------------------------------------- */
+html[data-variant="dual-b"] .ad-flow {
+  margin-top: 4.5rem;
+}
+
+html[data-variant="dual-b"] .ad-flow .shots-lede {
+  margin-top: 0.75rem;
+  font-size: 1.0625rem;
+}
+
+html[data-variant="dual-b"] .ad-flow .shot__text {
+  font-size: 0.9375rem;
+}
+
+/* ---- Closing band --------------------------------------------------- */
+html[data-variant="dual-b"] .ad-close {
+  margin-top: 4.5rem;
+  padding-block: 3rem;
+}
+
+html[data-variant="dual-b"] .ad-close__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+html[data-variant="dual-b"] .ad-close__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 8vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--ad-on-band);
+  overflow-wrap: break-word;
+}
+
+html[data-variant="dual-b"] .ad-close__line {
+  max-width: 30rem;
+  margin-top: 0.9rem;
+  font-size: 1.0625rem;
+  color: var(--ad-on-band-dim);
+}
+
+html[data-variant="dual-b"] .ad-close .cta-row {
+  margin-top: 0;
+}
+
+@media (min-width: 760px) {
+  html[data-variant="dual-b"] .ad-close {
+    padding-block: 4.5rem;
+  }
+
+  html[data-variant="dual-b"] .ad-close__grid {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3rem;
+  }
+}
+
+/* The SEO block now sits after a band, not a boxed rail. */
+html[data-variant="dual-b"] body[data-project="gig"] .seo {
+  border-top: 0;
+}
+
+/* ---- Sticky mobile download bar -------------------------------------
+   Off-screen AND visibility:hidden when off, so its links are never
+   focusable or announced while unseen. Phones only; hidden whenever the
+   consent banner is up so two fixed bars never stack. */
+html[data-variant="dual-b"] .sticky-cta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30; /* under the consent banner (40) */
+  padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--hairline);
+  background: var(--ink);
+  visibility: hidden;
+  transform: translateY(100%);
+  transition:
+    transform 180ms ease,
+    visibility 0s linear 180ms;
+}
+
+html[data-variant="dual-b"] .sticky-cta .cta-row {
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 0.6rem;
+  margin-top: 0;
+}
+
+html[data-variant="dual-b"] .sticky-cta .store-badge img {
+  height: 40px;
+}
+
+html[data-variant="dual-b"] .sticky-cta--on {
+  visibility: visible;
+  transform: none;
+  transition: transform 180ms ease;
+}
+
+html[data-variant="dual-b"] body.has-sticky:not(.has-consent) {
+  padding-bottom: 4.25rem;
+}
+
+html[data-variant="dual-b"] body.has-consent .sticky-cta {
+  visibility: hidden;
+  transform: translateY(100%);
+}
+
+@media (min-width: 760px) {
+  html[data-variant="dual-b"] .sticky-cta {
+    display: none;
+  }
+
+  html[data-variant="dual-b"] body.has-sticky:not(.has-consent) {
+    padding-bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-variant="dual-b"] .sticky-cta,
+  html[data-variant="dual-b"] .sticky-cta--on {
+    transition: none;
+  }
+}

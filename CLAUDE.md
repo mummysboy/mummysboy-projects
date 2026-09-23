@@ -162,7 +162,7 @@ Tight modular scale (~1.25). Confident H1, fast drop to body. Small mono labels 
 mummysboy/
 ├── index.html            # homepage — intent + empty #project-grid (filled by JS)
 ├── gig/
-│   ├── index.html        # Gig landing page — the "dual" test arm (authored hero; registry sets <title>)
+│   ├── index.html        # Gig landing page — the "dual-b" ad-style test arm (authored hero; registry sets <title>)
 │   ├── pro/index.html    # provider-audience campaign variant ("pro" arm; noindexed)
 │   ├── hire/index.html   # customer-audience campaign variant ("hire" arm; noindexed)
 │   ├── blog/
@@ -191,6 +191,7 @@ mummysboy/
 │   ├── gig-analytics.js  # first-party landing-page analytics → POSTs beacons to the Gig backend
 │   ├── qr.js             # dependency-free QR encoder (byte mode, ECC M, versions 1–10) → SVG string
 │   ├── gig-qr.js         # desktop-only "scan to install" code on the Gig arms (uses qr.js)
+│   ├── gig-sticky.js     # /gig/ (dual-b) mobile sticky download bar
 │   ├── reveal.js         # scroll-reveal for [data-reveal] sections (progressive enhancement; hero exempt)
 │   ├── android-access.js # Gig Android beta-invite modal → POSTs to the Gig backend
 │   ├── consent.js        # privacy gate: picks the regime, draws the banner, owns window.mbConsent
@@ -208,6 +209,7 @@ mummysboy/
 │   ├── tokens.css        # CSS custom properties: palette + font stacks
 │   ├── styles.css        # all component styles (@imports tokens.css)
 │   ├── gig-additions.css # Gig landing-page redesign rules (uses the same token palette)
+│   ├── gig-ad.css        # /gig/ ad treatment, scoped to html[data-variant="dual-b"]
 │   ├── irl.css           # IRL identity: ember accent, listings, dialog, forms
 │   └── irl-admin.css     # IRL admin only — never loaded by the public page
 ├── favicon.svg           # silver dot on near-black
@@ -282,7 +284,7 @@ The Gig landing surface is an audience-segmented test — three arms, one per tr
 
 | Arm | Path | `<html data-variant>` | Audience |
 |---|---|---|---|
-| dual (control) | `/gig/` | `dual` | both sides (broad/organic) |
+| dual (control) | `/gig/` | `dual-b` (was `dual` until 2026-09-23) | both sides (broad/organic) |
 | provider | `/gig/pro/` | `pro` | people offering services |
 | customer | `/gig/hire/` | `hire` | people hiring |
 
@@ -292,7 +294,8 @@ Rules that keep the test valid — do not "fix" these:
 - **`data-variant` is an experiment id.** Iterate copy under a *new* id (`pro-b`), never silently change a page under an existing id — historical rows in the dashboard would be poisoned. (`v2` rows are the pre-test baseline of `/gig/`.)
 - **SEO safety:** variant pages carry `noindex, follow` + `canonical → https://mummysboy.com/gig/`, keep a full OG set with `og:url` pointing at *themselves* (ad link previews work — OG scrapers ignore robots meta), stay **out of `sitemap.xml`**, and must **not** be `Disallow`ed in `robots.txt` (a crawl block would hide the noindex).
 - **Campaign links:** `/gig/pro?id=SRC` (query) or `/gig/pro/id=SRC` (pretty path — `netlify.toml` has a 200 rewrite per variant folder). Add the rewrite when adding a variant.
-- **Cross-arm comparability:** keep `data-section` / `data-pos` hook names consistent across arms (`hero`, `spec`, `flow`, `closing`, `footer`; positions `hero`, `status`, `closing` — dual adds `mid`/`mid-cta`). Variant-scoped styles live in `styles/gig-additions.css` under `html[data-variant="…"]` selectors, token palette only.
+- **Cross-arm comparability:** keep `data-section` / `data-pos` hook names consistent across arms (`hero`, `spec`, `flow`, `closing`, `footer`; positions `hero`, `status`, `closing` — dual adds `mid`/`mid-cta`, and dual-b adds the `sticky` position for the mobile sticky bar plus `categories` and `safety` sections). Variant-scoped styles live in `styles/gig-additions.css` under `html[data-variant="…"]` selectors, token palette only.
+- **`/gig/` is the ad page (`dual-b`).** At the owner's direction (2026-09-23) it is a scoped exception to design rules 1–4: blue brand bands (the app icon's cobalt), green kept only for money figures, big stat blocks, a shadowed phone. It lives entirely in `styles/gig-ad.css` under `html[data-variant="dual-b"]` and must not leak to other arms or the hub. AA, mobile, copy honesty and the CTA rules still apply in full. The "~$15+ in fees" money block uses the same hedged claim as `/gig/compare/`, so keep the two in step.
 - **Copy honesty is load-bearing:** "Gig takes 0%" / "keep 100%" must stay literally true — if paid placement or fee tiers ever ship, every arm's copy changes the same day. Android is always a beta *invite*, never a download.
 
 ---
