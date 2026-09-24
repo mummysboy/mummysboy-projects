@@ -142,13 +142,14 @@ html[data-variant] .af-msg--err {
 }
 
 /* ===== Campaign variant pages (see CLAUDE.md → Gig landing variants) =====
-   Three arms share this stylesheet: /gig/ (data-variant="dual"), /gig/pro/
+   Three arms share this stylesheet: /gig/ (data-variant="dual-c", was "dual"), /gig/pro/
    ("pro"), /gig/hire/ ("hire"). Rules are scoped by <html data-variant> so
    each page opts into only what it authors. Token palette only. */
 
 /* Smaller hero icon buys back in-app-browser fold: 64px on phones; dual
    restores the classic 104px where the fold isn't contested. */
 html[data-variant="dual"] .app-icon,
+html[data-variant="dual-c"] .app-icon,
 html[data-variant="pro"] .app-icon {
   width: 4rem;
   height: 4rem;
@@ -156,7 +157,8 @@ html[data-variant="pro"] .app-icon {
 }
 
 @media (min-width: 760px) {
-  html[data-variant="dual"] .app-icon {
+  html[data-variant="dual"] .app-icon,
+  html[data-variant="dual-c"] .app-icon {
     width: 6.5rem;
     height: 6.5rem;
     border-radius: 22px;

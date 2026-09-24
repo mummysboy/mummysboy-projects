@@ -1,4 +1,4 @@
-// Mobile sticky download bar on /gig/ (dual-b). Shows once the hero badges have
+// Mobile sticky download bar on /gig/ (dual-c). Shows once the hero badges have
 // scrolled off the top, hides again while the closing band is on screen — so
 // there is always exactly one set of badges in view. Progressive enhancement:
 // the bar is invisible until this runs, and nothing here may throw.
