@@ -166,8 +166,10 @@
     <link rel="stylesheet" href="/styles/styles.css" />
     <!-- Redesign additions (see README → styles). Append into styles.css, or keep separate. -->
     <link rel="stylesheet" href="/styles/gig-additions.css" />
-    <!-- dual-c ad treatment — /gig/ only, every rule scoped to html[data-variant="dual-c"]. -->
-    <link rel="stylesheet" href="/styles/gig-ad.css" />
+    <!-- dual-c ad treatment — /gig/ only, every rule scoped to html[data-variant="dual-c"].
+         ?v= changes with the class names: /styles/ is served with a 24h stale-while-revalidate,
+         and this HTML is not, so new markup must never be paired with a cached old sheet. -->
+    <link rel="stylesheet" href="/styles/gig-ad.css?v=2" />
     <!-- Advertising: consent gate first (it defines window.mbConsent), then the mediago
          pixel, which stays silent until the gate says yes. Both are shared classic
          scripts — there is no build step, so this is how they stay identical on every
@@ -187,10 +189,12 @@
          (light background, metal headline, couplet, one phone). Everything below the
          hero is the ad treatment — a scoped exception to the house design rules at the
          owner's direction, see styles/gig-ad.css. `dual` rows are the old spec-sheet
-         page, `dual-b` rows the cobalt-band hero; compare dual-c from this date. -->
-    <main class="ad">
+         page, `dual-b` rows the cobalt-band hero; compare dual-c from this date.
+         2026-10-01: classes renamed ad-* → pitch-*. Ad blockers hid every .ad-inner, so
+         before this date dual-c rows include ad-blocker visitors who saw a blank page. -->
+    <main class="pitch">
       <!-- ===================== HERO (above the fold) ===================== -->
-      <div class="ad-inner ad-top">
+      <div class="pitch-inner pitch-top">
         <article class="hero" data-section="hero">
           <div class="hero__copy">
             <div class="project__head">
@@ -258,10 +262,10 @@
         </article>
       </div>
 
-      <div class="ad-inner">
+      <div class="pitch-inner">
         <!-- ===================== SCREENSHOT FLOW ===================== -->
-        <section class="shots-section ad-flow" data-section="flow" data-reveal aria-labelledby="flow-heading">
-          <h2 class="ad-h2" id="flow-heading">See it in 30 seconds.</h2>
+        <section class="shots-section pitch-flow" data-section="flow" data-reveal aria-labelledby="flow-heading">
+          <h2 class="pitch-h2" id="flow-heading">See it in 30 seconds.</h2>
           <p class="shots-lede">The full loop — find help, or get found.</p>
           <!-- Value order, not onboarding order: search → range → work side → profile,
                with sign-in as the safety closer at the moment of decision. -->
@@ -308,15 +312,15 @@
         <!-- Real shipped features only. Mutuals are what the linked platforms show, not
              something Gig computes — keep the wording that way. No "vetted" or "verified
              pros": Gig runs no background checks (see the FAQ). -->
-        <section class="ad-safety" data-section="safety" data-reveal aria-labelledby="safety-heading">
-          <div class="ad-safety__grid">
+        <section class="pitch-safety" data-section="safety" data-reveal aria-labelledby="safety-heading">
+          <div class="pitch-safety__grid">
             <div>
-              <h2 class="ad-h2" id="safety-heading">Know who you&rsquo;re dealing with.</h2>
-              <p class="ad-safety__lede">
+              <h2 class="pitch-h2" id="safety-heading">Know who you&rsquo;re dealing with.</h2>
+              <p class="pitch-safety__lede">
                 Every profile can link to Instagram, TikTok, LinkedIn, Facebook, or a website. Check someone
                 out before you ever meet.
               </p>
-              <ul class="ad-safety__list">
+              <ul class="pitch-safety__list">
                 <li>
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H4V4Zm2 2v8h12V6H6Zm2 6 2.5-3 2 2.5L14 9l3 3H8Zm-4 6h16v2H4v-2Z"/></svg>
                   <div>
@@ -347,9 +351,9 @@
                 </li>
               </ul>
             </div>
-            <div class="ad-safety__media">
+            <div class="pitch-safety__media">
               <img
-                class="ad-phone"
+                class="pitch-phone"
                 src="/gig/shots/app-reviews.webp"
                 alt="Reviews on a Gig profile — a five-star rating and a written review from a past customer, with a Leave a Review button."
                 width="600"
@@ -361,72 +365,72 @@
         </section>
 
         <!-- ===================== THE NUMBERS ===================== -->
-        <ul class="ad-stats" aria-label="Gig in three numbers">
-          <li class="ad-stat">
-            <span class="ad-stat__num">0%</span>
-            <span class="ad-stat__label">commission, on every job</span>
+        <ul class="pitch-stats" aria-label="Gig in three numbers">
+          <li class="pitch-stat">
+            <span class="pitch-stat__num">0%</span>
+            <span class="pitch-stat__label">commission, on every job</span>
           </li>
-          <li class="ad-stat">
-            <span class="ad-stat__num">$0</span>
-            <span class="ad-stat__label">to join, list, or hire</span>
+          <li class="pitch-stat">
+            <span class="pitch-stat__num">$0</span>
+            <span class="pitch-stat__label">to join, list, or hire</span>
           </li>
-          <li class="ad-stat">
-            <span class="ad-stat__num">100%</span>
-            <span class="ad-stat__label">of the price goes to the pro</span>
+          <li class="pitch-stat">
+            <span class="pitch-stat__num">100%</span>
+            <span class="pitch-stat__label">of the price goes to the pro</span>
           </li>
         </ul>
 
         <!-- ===================== WHAT PEOPLE HIRE FOR ===================== -->
         <!-- Unsplash stock (free Unsplash License, no attribution required), cropped 4:5.
              Illustrative of the categories only — never captioned or framed as Gig users. -->
-        <section class="ad-cats" data-section="categories" data-reveal aria-labelledby="cats-heading">
-          <h2 class="ad-h2" id="cats-heading">Help for almost anything.</h2>
-          <p class="ad-cats__lede">A few of the jobs people hire for — and anything else you can describe in a sentence.</p>
-          <ul class="ad-cats__grid">
-            <li class="ad-cat">
+        <section class="pitch-cats" data-section="categories" data-reveal aria-labelledby="cats-heading">
+          <h2 class="pitch-h2" id="cats-heading">Help for almost anything.</h2>
+          <p class="pitch-cats__lede">A few of the jobs people hire for — and anything else you can describe in a sentence.</p>
+          <ul class="pitch-cats__grid">
+            <li class="pitch-cat">
               <img src="/gig/shots/hire-cleaning.webp" alt="Someone carrying a cleaning caddy and broom up a flight of stairs at home." width="480" height="600" loading="lazy" decoding="async" />
-              <span class="ad-cat__label">Cleaning</span>
+              <span class="pitch-cat__label">Cleaning</span>
             </li>
-            <li class="ad-cat">
+            <li class="pitch-cat">
               <img src="/gig/shots/hire-moving.webp" alt="Two people carrying moving boxes and a plant into a new home." width="480" height="600" loading="lazy" decoding="async" />
-              <span class="ad-cat__label">Moving</span>
+              <span class="pitch-cat__label">Moving</span>
             </li>
-            <li class="ad-cat">
+            <li class="pitch-cat">
               <img src="/gig/shots/hire-handyman.webp" alt="A worker cutting trim on a miter saw during a home renovation." width="480" height="600" loading="lazy" decoding="async" />
-              <span class="ad-cat__label">Handyman</span>
+              <span class="pitch-cat__label">Handyman</span>
             </li>
-            <li class="ad-cat">
+            <li class="pitch-cat">
               <img src="/gig/shots/hire-tutoring.webp" alt="A student working through a lesson with a tutor at a table." width="480" height="600" loading="lazy" decoding="async" />
-              <span class="ad-cat__label">Tutoring</span>
+              <span class="pitch-cat__label">Tutoring</span>
             </li>
-            <li class="ad-cat">
+            <li class="pitch-cat">
               <img src="/gig/shots/hire-pets.webp" alt="Someone walking a dog on a leash along a forest path." width="480" height="600" loading="lazy" decoding="async" />
-              <span class="ad-cat__label">Pet care</span>
+              <span class="pitch-cat__label">Pet care</span>
             </li>
-            <li class="ad-cat">
+            <li class="pitch-cat">
               <img src="/gig/shots/hire-hair.webp" alt="A hairdresser trimming someone&rsquo;s long hair with scissors." width="480" height="600" loading="lazy" decoding="async" />
-              <span class="ad-cat__label">Hair &amp; beauty</span>
+              <span class="pitch-cat__label">Hair &amp; beauty</span>
             </li>
           </ul>
         </section>
 
         <!-- ===================== MONEY MOMENT ===================== -->
         <!-- Same claim, same hedge as /gig/compare/ — keep them in step. -->
-        <section class="ad-money" data-section="spec" data-reveal aria-labelledby="money-heading">
-          <h2 class="ad-h2" id="money-heading">On a $100 job, where does the money go?</h2>
-          <div class="ad-money__cols">
-            <div class="ad-money__col">
-              <p class="ad-money__who">Typical gig apps</p>
-              <p class="ad-money__num">~$15+</p>
-              <p class="ad-money__text">
+        <section class="pitch-money" data-section="spec" data-reveal aria-labelledby="money-heading">
+          <h2 class="pitch-h2" id="money-heading">On a $100 job, where does the money go?</h2>
+          <div class="pitch-money__cols">
+            <div class="pitch-money__col">
+              <p class="pitch-money__who">Typical gig apps</p>
+              <p class="pitch-money__num">~$15+</p>
+              <p class="pitch-money__text">
                 A service fee of around 15% is commonly reported, often with more on top — or a charge per lead,
                 whether you win the job or not.
               </p>
             </div>
-            <div class="ad-money__col ad-money__col--gig">
-              <p class="ad-money__who">Gig</p>
-              <p class="ad-money__num">$0</p>
-              <p class="ad-money__text">
+            <div class="pitch-money__col pitch-money__col--gig">
+              <p class="pitch-money__who">Gig</p>
+              <p class="pitch-money__num">$0</p>
+              <p class="pitch-money__text">
                 The customer pays the pro directly. Gig never touches the payment, so all $100 stays with the
                 person who did the work.
               </p>
@@ -435,13 +439,13 @@
           <!-- Quick comparison as an in-place dropdown, not an exit. Native <details>: keyboard
                and screen-reader support for free, no JS. Rows mirror the matrix on
                /gig/compare/ — change both together. -->
-          <details class="ad-cmp">
-            <summary class="ad-cmp__toggle">
+          <details class="pitch-cmp">
+            <summary class="pitch-cmp__toggle">
               See how Gig compares
-              <svg class="ad-cmp__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              <svg class="pitch-cmp__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
             </summary>
-            <div class="ad-cmp__panel">
-              <table class="ad-cmp__table">
+            <div class="pitch-cmp__panel">
+              <table class="pitch-cmp__table">
                 <caption class="sr-only">What each app takes from a worker's pay, and whether they keep 100%</caption>
                 <thead>
                   <tr>
@@ -451,34 +455,34 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="ad-cmp__gig">
+                  <tr class="pitch-cmp__gig">
                     <th scope="row">Gig</th>
                     <td>0% — never touches the payment</td>
-                    <td><span class="ad-cmp__mark ad-cmp__mark--yes" aria-hidden="true">✓</span> Yes</td>
+                    <td><span class="pitch-cmp__mark pitch-cmp__mark--yes" aria-hidden="true">✓</span> Yes</td>
                   </tr>
                   <tr>
                     <th scope="row">TaskRabbit</th>
                     <td>~15% service fee (commonly reported) + fees</td>
-                    <td><span class="ad-cmp__mark" aria-hidden="true">✗</span> No</td>
+                    <td><span class="pitch-cmp__mark" aria-hidden="true">✗</span> No</td>
                   </tr>
                   <tr>
                     <th scope="row">Thumbtack</th>
                     <td>Pay per lead, even if you don&rsquo;t book</td>
-                    <td><span class="ad-cmp__mark" aria-hidden="true">✗</span> No</td>
+                    <td><span class="pitch-cmp__mark" aria-hidden="true">✗</span> No</td>
                   </tr>
                   <tr>
                     <th scope="row">Uber &amp; Lyft</th>
                     <td>Variable cut; the platform sets the fare</td>
-                    <td><span class="ad-cmp__mark" aria-hidden="true">✗</span> No</td>
+                    <td><span class="pitch-cmp__mark" aria-hidden="true">✗</span> No</td>
                   </tr>
                   <tr>
                     <th scope="row">DoorDash</th>
                     <td>The platform sets your pay per delivery</td>
-                    <td><span class="ad-cmp__mark" aria-hidden="true">✗</span> No</td>
+                    <td><span class="pitch-cmp__mark" aria-hidden="true">✗</span> No</td>
                   </tr>
                 </tbody>
               </table>
-              <p class="ad-cmp__note">
+              <p class="pitch-cmp__note">
                 Typical, commonly reported terms — fees vary by market and change often.
                 <a href="/gig/compare/" data-exit="compare">Full comparison</a>
               </p>
@@ -487,22 +491,22 @@
         </section>
 
         <!-- ===================== BOTH SIDES + MID CTA ===================== -->
-        <section class="ad-sides" data-section="mid-cta" data-reveal aria-labelledby="sides-heading">
-          <h2 class="ad-h2" id="sides-heading">One free app. Both sides of the job.</h2>
-          <div class="ad-cards">
-            <div class="ad-card">
-              <p class="ad-card__kicker">Need something done?</p>
-              <h3 class="ad-card__title">Say it in a sentence. Get matched.</h3>
-              <ul class="ad-checks">
+        <section class="pitch-sides" data-section="mid-cta" data-reveal aria-labelledby="sides-heading">
+          <h2 class="pitch-h2" id="sides-heading">One free app. Both sides of the job.</h2>
+          <div class="pitch-cards">
+            <div class="pitch-card">
+              <p class="pitch-card__kicker">Need something done?</p>
+              <h3 class="pitch-card__title">Say it in a sentence. Get matched.</h3>
+              <ul class="pitch-checks">
                 <li>Type it how you&rsquo;d say it — &ldquo;fix my leaking sink.&rdquo;</li>
                 <li>Pros ranked by rating and distance.</li>
                 <li>Price up front, with no platform markup.</li>
               </ul>
             </div>
-            <div class="ad-card">
-              <p class="ad-card__kicker">Got a skill?</p>
-              <h3 class="ad-card__title">Get found. Keep 100%.</h3>
-              <ul class="ad-checks">
+            <div class="pitch-card">
+              <p class="pitch-card__kicker">Got a skill?</p>
+              <h3 class="pitch-card__title">Get found. Keep 100%.</h3>
+              <ul class="pitch-checks">
                 <li>List your services once, free.</li>
                 <li>No commission, no lead fees, no subscription.</li>
                 <li>Turn on GigFlex to get hired for jobs you didn&rsquo;t list.</li>
@@ -510,7 +514,7 @@
             </div>
           </div>
 
-          <div class="cta-row ad-sides__cta" data-pos="mid">
+          <div class="cta-row pitch-sides__cta" data-pos="mid">
             <a class="store-badge cta-ios-primary" href="https://apps.apple.com/app/id6758136203">
               <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
             </a>
@@ -525,11 +529,11 @@
       </div>
 
       <!-- ===================== CLOSING BAND (peak intent) ===================== -->
-      <section class="ad-band ad-close" data-section="closing" aria-labelledby="close-heading">
-        <div class="ad-inner ad-close__grid">
+      <section class="pitch-band pitch-close" data-section="closing" aria-labelledby="close-heading">
+        <div class="pitch-inner pitch-close__grid">
           <div>
-            <h2 class="ad-close__title" id="close-heading">Your first job is one sentence away.</h2>
-            <p class="ad-close__line">Free to download. Free to join. Nothing taken from what you earn.</p>
+            <h2 class="pitch-close__title" id="close-heading">Your first job is one sentence away.</h2>
+            <p class="pitch-close__line">Free to download. Free to join. Nothing taken from what you earn.</p>
           </div>
           <div class="get-app__actions">
             <div class="cta-row" data-pos="closing">
@@ -555,7 +559,7 @@
         </div>
       </section>
 
-      <div class="ad-inner">
+      <div class="pitch-inner">
       <!-- Below the measured funnel on purpose. Crawlable copy and internal
            links for search. No data-section and no store links: a store tap
            here would beacon as a conversion with no position. -->

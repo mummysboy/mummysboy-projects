@@ -6,42 +6,48 @@
    Every rule is scoped to html[data-variant="dual-c"] so nothing leaks to the
    other arms or the hub. The light-theme tokens come from gig-additions.css.
 
+   Class names are pitch-*, never ad-*. EasyList (uBlock Origin, AdBlock, Adblock
+   Plus, Brave) hides .ad-inner, .ad-top, .ad-card and .ad-cat on every site, and
+   every section here sits in an .ad-inner — from 2026-09-23 to 2026-10-01 an
+   ad-blocker visitor saw a masthead, an empty band and the footer. Check any new
+   class against the list before shipping it.
+
    Colour split: BLUE is the brand (sampled from the Gig app icon, so ad → page →
    App Store reads as one product; green would also read as TaskRabbit/Upwork/
    Fiverr). GREEN (--volt) is kept only for money — 0% / $0 / 100%, the Gig
    column of the $100 comparison, and the checkmarks.
 
    Contrast (computed, not eyeballed):
-     #fff on --ad-band ........ 9.07:1   body + headline text on the band
-     --ad-on-band-dim on band . 7.12:1   secondary text on the band
+     #fff on --pitch-band ........ 9.07:1   body + headline text on the band
+     --pitch-on-band-dim on band . 7.12:1   secondary text on the band
      badge grey edge on band .. 3.72:1   the official badges' own #a6a6a6 border (1.4.11)
-     --ad-band on --ad-tint ... 8.12:1   safety icons
+     --pitch-band on --pitch-tint ... 8.12:1   safety icons
      --volt on #fff / --money-tint 5.42 / 4.99:1   money numbers + check marks */
 html[data-variant="dual-c"] {
-  --ad-band: #144984; /* the icon's cobalt */
-  --ad-on-band: #ffffff;
-  --ad-on-band-dim: #d6e6f5;
-  --ad-tint: #edf3fa; /* pale brand blue — safety icon plates */
+  --pitch-band: #144984; /* the icon's cobalt */
+  --pitch-on-band: #ffffff;
+  --pitch-on-band-dim: #d6e6f5;
+  --pitch-tint: #edf3fa; /* pale brand blue — safety icon plates */
   --money-tint: #eef8f2; /* pale green — the Gig $0 card */
-  --ad-inner: 1120px;
+  --pitch-inner: 1120px;
 }
 
 /* Full-bleed bands need a main that is not .wrap; the inner containers carry
    the grid width instead. */
-html[data-variant="dual-c"] .ad {
+html[data-variant="dual-c"] .pitch {
   flex: 1;
   width: 100%;
 }
 
-html[data-variant="dual-c"] .ad-inner {
+html[data-variant="dual-c"] .pitch-inner {
   width: 100%;
-  max-width: var(--ad-inner);
+  max-width: var(--pitch-inner);
   margin-inline: auto;
   padding-inline: 1.25rem;
 }
 
 @media (min-width: 640px) {
-  html[data-variant="dual-c"] .ad-inner {
+  html[data-variant="dual-c"] .pitch-inner {
     padding-inline: 2rem;
   }
 }
@@ -52,15 +58,15 @@ html[data-variant="dual-c"] body {
   overflow-x: clip;
 }
 
-html[data-variant="dual-c"] .ad,
-html[data-variant="dual-c"] .ad-inner,
+html[data-variant="dual-c"] .pitch,
+html[data-variant="dual-c"] .pitch-inner,
 html[data-variant="dual-c"] .hero__copy {
   min-width: 0;
   max-width: 100%;
 }
 
-html[data-variant="dual-c"] .ad-inner {
-  max-width: var(--ad-inner);
+html[data-variant="dual-c"] .pitch-inner {
+  max-width: var(--pitch-inner);
 }
 
 /* Badges stay side by side and left-aligned on phones. styles.css stacks every
@@ -85,44 +91,44 @@ html[data-variant="dual-c"] .cta-row {
 /* Bands carry a faded mosaic of the six job photos (gig/shots/band-mosaic.webp).
    The blue duotone is BAKED INTO the file, not layered on in CSS, so contrast is
    a property of the image and was measured against its brightest pixel:
-     #fff 7.52:1 · --ad-on-band-dim 5.90:1 · badge #a6a6a6 edge 3.09:1.
-   If the mosaic is ever regenerated, re-measure all three. The flat --ad-band
+     #fff 7.52:1 · --pitch-on-band-dim 5.90:1 · badge #a6a6a6 edge 3.09:1.
+   If the mosaic is ever regenerated, re-measure all three. The flat --pitch-band
    colour is the fallback while it loads (and is darker than the image's max). */
-html[data-variant="dual-c"] .ad-band {
-  background: var(--ad-band) url("/gig/shots/band-mosaic.webp") center / cover no-repeat;
-  color: var(--ad-on-band);
+html[data-variant="dual-c"] .pitch-band {
+  background: var(--pitch-band) url("/gig/shots/band-mosaic.webp") center / cover no-repeat;
+  color: var(--pitch-on-band);
 }
 
 /* Closing band shows the other half of the mosaic, so the page doesn't repeat itself. */
-html[data-variant="dual-c"] .ad-close {
+html[data-variant="dual-c"] .pitch-close {
   background-position: center bottom;
 }
 
 /* The global volt ring is 1.1:1 on the band — swap to white inside it. */
-html[data-variant="dual-c"] .ad-band :focus-visible {
-  outline-color: var(--ad-on-band);
+html[data-variant="dual-c"] .pitch-band :focus-visible {
+  outline-color: var(--pitch-on-band);
 }
 
-html[data-variant="dual-c"] .ad-band ::selection {
-  background: var(--ad-on-band);
-  color: var(--ad-band);
+html[data-variant="dual-c"] .pitch-band ::selection {
+  background: var(--pitch-on-band);
+  color: var(--pitch-band);
 }
 
 /* ---- Hero ----------------------------------------------------------
    The original `dual` hero (markup + styles from styles.css / gig-additions.css)
    on the light page. This only restores the vertical rhythm .wrap gave it. */
-html[data-variant="dual-c"] .ad-top {
+html[data-variant="dual-c"] .pitch-top {
   padding-top: 1rem;
 }
 
 @media (min-width: 640px) {
-  html[data-variant="dual-c"] .ad-top {
+  html[data-variant="dual-c"] .pitch-top {
     padding-top: 4rem;
   }
 }
 
 /* Device frame for the safety section's profile shot. */
-html[data-variant="dual-c"] .ad-phone {
+html[data-variant="dual-c"] .pitch-phone {
   display: block;
   width: 62%;
   max-width: 230px;
@@ -136,24 +142,24 @@ html[data-variant="dual-c"] .ad-phone {
 }
 
 /* QR block, re-coloured for the band (steel on the band would fail AA). */
-html[data-variant="dual-c"] .ad-band .scan--ready {
+html[data-variant="dual-c"] .pitch-band .scan--ready {
   border-top-color: rgb(255 255 255 / 0.35);
 }
 
-html[data-variant="dual-c"] .ad-band .scan__label {
-  color: var(--ad-on-band);
+html[data-variant="dual-c"] .pitch-band .scan__label {
+  color: var(--pitch-on-band);
 }
 
-html[data-variant="dual-c"] .ad-band .scan__text {
-  color: var(--ad-on-band-dim);
+html[data-variant="dual-c"] .pitch-band .scan__text {
+  color: var(--pitch-on-band-dim);
 }
 
-html[data-variant="dual-c"] .ad-band .scan__code {
+html[data-variant="dual-c"] .pitch-band .scan__code {
   border-color: transparent;
 }
 
 /* ---- Section heads -------------------------------------------------- */
-html[data-variant="dual-c"] .ad-h2 {
+html[data-variant="dual-c"] .pitch-h2 {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: clamp(1.75rem, 6vw, 2.5rem);
@@ -164,7 +170,7 @@ html[data-variant="dual-c"] .ad-h2 {
 }
 
 /* ---- Stat strip ----------------------------------------------------- */
-html[data-variant="dual-c"] .ad-stats {
+html[data-variant="dual-c"] .pitch-stats {
   display: grid;
   gap: 0.75rem;
   margin-top: 3rem;
@@ -172,7 +178,7 @@ html[data-variant="dual-c"] .ad-stats {
   list-style: none;
 }
 
-html[data-variant="dual-c"] .ad-stat {
+html[data-variant="dual-c"] .pitch-stat {
   display: flex;
   align-items: baseline;
   gap: 1rem;
@@ -181,7 +187,7 @@ html[data-variant="dual-c"] .ad-stat {
   background: var(--surface);
 }
 
-html[data-variant="dual-c"] .ad-stat__num {
+html[data-variant="dual-c"] .pitch-stat__num {
   flex: 0 0 auto;
   min-width: 5.5rem; /* lines the labels up; "100%" is wider and may push past it */
   font-family: var(--font-display);
@@ -192,26 +198,26 @@ html[data-variant="dual-c"] .ad-stat__num {
   color: var(--volt);
 }
 
-html[data-variant="dual-c"] .ad-stat__label {
+html[data-variant="dual-c"] .pitch-stat__label {
   font-size: 1rem;
   line-height: 1.35;
   color: var(--silver);
 }
 
 @media (min-width: 760px) {
-  html[data-variant="dual-c"] .ad-stats {
+  html[data-variant="dual-c"] .pitch-stats {
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin-top: 5rem;
   }
 
-  html[data-variant="dual-c"] .ad-stat {
+  html[data-variant="dual-c"] .pitch-stat {
     flex-direction: column;
     gap: 0.6rem;
     padding: 1.75rem 1.5rem;
   }
 
-  html[data-variant="dual-c"] .ad-stat__num {
+  html[data-variant="dual-c"] .pitch-stat__num {
     flex: none;
     font-size: 3.75rem;
   }
@@ -220,11 +226,11 @@ html[data-variant="dual-c"] .ad-stat__label {
 /* ---- What people hire for ------------------------------------------
    Stock photo tiles, 4:5. The label sits on a solid white pill rather than on
    the photo itself, so its contrast never depends on what's in the picture. */
-html[data-variant="dual-c"] .ad-cats {
+html[data-variant="dual-c"] .pitch-cats {
   margin-top: 4rem;
 }
 
-html[data-variant="dual-c"] .ad-cats__lede {
+html[data-variant="dual-c"] .pitch-cats__lede {
   max-width: 34rem;
   margin-top: 0.75rem;
   font-size: 1.0625rem;
@@ -232,7 +238,7 @@ html[data-variant="dual-c"] .ad-cats__lede {
   color: var(--silver);
 }
 
-html[data-variant="dual-c"] .ad-cats__grid {
+html[data-variant="dual-c"] .pitch-cats__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
@@ -241,14 +247,14 @@ html[data-variant="dual-c"] .ad-cats__grid {
   list-style: none;
 }
 
-html[data-variant="dual-c"] .ad-cat {
+html[data-variant="dual-c"] .pitch-cat {
   position: relative;
   overflow: hidden;
   border-radius: 16px;
   background: var(--surface);
 }
 
-html[data-variant="dual-c"] .ad-cat img {
+html[data-variant="dual-c"] .pitch-cat img {
   display: block;
   width: 100%;
   height: auto;
@@ -256,7 +262,7 @@ html[data-variant="dual-c"] .ad-cat img {
   object-fit: cover;
 }
 
-html[data-variant="dual-c"] .ad-cat__label {
+html[data-variant="dual-c"] .pitch-cat__label {
   position: absolute;
   left: 0.6rem;
   bottom: 0.6rem;
@@ -270,12 +276,12 @@ html[data-variant="dual-c"] .ad-cat__label {
 }
 
 @media (min-width: 680px) {
-  html[data-variant="dual-c"] .ad-cats__grid {
+  html[data-variant="dual-c"] .pitch-cats__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
   }
 
-  html[data-variant="dual-c"] .ad-cat__label {
+  html[data-variant="dual-c"] .pitch-cat__label {
     left: 0.85rem;
     bottom: 0.85rem;
     font-size: 0.9375rem;
@@ -283,28 +289,28 @@ html[data-variant="dual-c"] .ad-cat__label {
 }
 
 /* ---- Money moment --------------------------------------------------- */
-html[data-variant="dual-c"] .ad-money {
+html[data-variant="dual-c"] .pitch-money {
   margin-top: 4rem;
 }
 
-html[data-variant="dual-c"] .ad-money__cols {
+html[data-variant="dual-c"] .pitch-money__cols {
   display: grid;
   gap: 0.75rem;
   margin-top: 1.5rem;
 }
 
-html[data-variant="dual-c"] .ad-money__col {
+html[data-variant="dual-c"] .pitch-money__col {
   padding: 1.5rem;
   border: 1px solid var(--hairline);
   border-radius: 16px;
 }
 
-html[data-variant="dual-c"] .ad-money__col--gig {
+html[data-variant="dual-c"] .pitch-money__col--gig {
   border: 2px solid var(--volt);
   background: var(--money-tint);
 }
 
-html[data-variant="dual-c"] .ad-money__who {
+html[data-variant="dual-c"] .pitch-money__who {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -312,7 +318,7 @@ html[data-variant="dual-c"] .ad-money__who {
   color: var(--steel);
 }
 
-html[data-variant="dual-c"] .ad-money__num {
+html[data-variant="dual-c"] .pitch-money__num {
   margin-top: 0.5rem;
   font-family: var(--font-display);
   font-weight: 600;
@@ -322,11 +328,11 @@ html[data-variant="dual-c"] .ad-money__num {
   color: var(--silver-bright);
 }
 
-html[data-variant="dual-c"] .ad-money__col--gig .ad-money__num {
+html[data-variant="dual-c"] .pitch-money__col--gig .pitch-money__num {
   color: var(--volt);
 }
 
-html[data-variant="dual-c"] .ad-money__text {
+html[data-variant="dual-c"] .pitch-money__text {
   margin-top: 0.75rem;
   font-size: 0.9375rem;
   line-height: 1.55;
@@ -334,11 +340,11 @@ html[data-variant="dual-c"] .ad-money__text {
 }
 
 /* Quick comparison — an in-place dropdown (native <details>), not an exit link. */
-html[data-variant="dual-c"] .ad-cmp {
+html[data-variant="dual-c"] .pitch-cmp {
   margin-top: 1.25rem;
 }
 
-html[data-variant="dual-c"] .ad-cmp__toggle {
+html[data-variant="dual-c"] .pitch-cmp__toggle {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -356,17 +362,17 @@ html[data-variant="dual-c"] .ad-cmp__toggle {
     border-color 160ms ease;
 }
 
-html[data-variant="dual-c"] .ad-cmp__toggle::-webkit-details-marker {
+html[data-variant="dual-c"] .pitch-cmp__toggle::-webkit-details-marker {
   display: none;
 }
 
-html[data-variant="dual-c"] .ad-cmp__toggle:hover,
-html[data-variant="dual-c"] .ad-cmp[open] .ad-cmp__toggle {
+html[data-variant="dual-c"] .pitch-cmp__toggle:hover,
+html[data-variant="dual-c"] .pitch-cmp[open] .pitch-cmp__toggle {
   border-color: var(--steel);
   background: var(--surface);
 }
 
-html[data-variant="dual-c"] .ad-cmp__chev {
+html[data-variant="dual-c"] .pitch-cmp__chev {
   width: 1.1rem;
   height: 1.1rem;
   fill: none;
@@ -377,11 +383,11 @@ html[data-variant="dual-c"] .ad-cmp__chev {
   transition: transform 160ms ease;
 }
 
-html[data-variant="dual-c"] .ad-cmp[open] .ad-cmp__chev {
+html[data-variant="dual-c"] .pitch-cmp[open] .pitch-cmp__chev {
   transform: rotate(180deg);
 }
 
-html[data-variant="dual-c"] .ad-cmp__panel {
+html[data-variant="dual-c"] .pitch-cmp__panel {
   margin-top: 0.75rem;
   padding: 0.5rem 1.1rem 1rem;
   border: 1px solid var(--hairline);
@@ -389,42 +395,42 @@ html[data-variant="dual-c"] .ad-cmp__panel {
   box-shadow: 0 12px 32px rgb(20 73 132 / 0.12);
 }
 
-html[data-variant="dual-c"] .ad-cmp[open] .ad-cmp__panel {
-  animation: ad-cmp-in 160ms ease;
+html[data-variant="dual-c"] .pitch-cmp[open] .pitch-cmp__panel {
+  animation: pitch-cmp-in 160ms ease;
 }
 
-@keyframes ad-cmp-in {
+@keyframes pitch-cmp-in {
   from {
     opacity: 0;
     transform: translateY(-6px);
   }
 }
 
-html[data-variant="dual-c"] .ad-cmp__table {
+html[data-variant="dual-c"] .pitch-cmp__table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
   line-height: 1.4;
 }
 
-html[data-variant="dual-c"] .ad-cmp__table th,
-html[data-variant="dual-c"] .ad-cmp__table td {
+html[data-variant="dual-c"] .pitch-cmp__table th,
+html[data-variant="dual-c"] .pitch-cmp__table td {
   padding: 0.7rem 0.5rem;
   text-align: left;
   vertical-align: top;
   border-bottom: 1px solid var(--hairline);
 }
 
-html[data-variant="dual-c"] .ad-cmp__table th:first-child {
+html[data-variant="dual-c"] .pitch-cmp__table th:first-child {
   padding-left: 0;
 }
 
-html[data-variant="dual-c"] .ad-cmp__table td:last-child {
+html[data-variant="dual-c"] .pitch-cmp__table td:last-child {
   padding-right: 0;
   white-space: nowrap;
 }
 
-html[data-variant="dual-c"] .ad-cmp__table thead th {
+html[data-variant="dual-c"] .pitch-cmp__table thead th {
   font-family: var(--font-mono);
   font-size: 0.625rem;
   font-weight: 500;
@@ -433,79 +439,79 @@ html[data-variant="dual-c"] .ad-cmp__table thead th {
   color: var(--steel);
 }
 
-html[data-variant="dual-c"] .ad-cmp__table tbody th {
+html[data-variant="dual-c"] .pitch-cmp__table tbody th {
   font-weight: 500;
   color: var(--silver-bright);
 }
 
-html[data-variant="dual-c"] .ad-cmp__table td {
+html[data-variant="dual-c"] .pitch-cmp__table td {
   color: var(--silver);
 }
 
-html[data-variant="dual-c"] .ad-cmp__gig th,
-html[data-variant="dual-c"] .ad-cmp__gig td {
+html[data-variant="dual-c"] .pitch-cmp__gig th,
+html[data-variant="dual-c"] .pitch-cmp__gig td {
   font-weight: 600;
   color: var(--silver-bright);
 }
 
-html[data-variant="dual-c"] .ad-cmp__mark {
+html[data-variant="dual-c"] .pitch-cmp__mark {
   font-weight: 600;
   color: var(--steel);
 }
 
-html[data-variant="dual-c"] .ad-cmp__mark--yes {
+html[data-variant="dual-c"] .pitch-cmp__mark--yes {
   color: var(--volt);
 }
 
-html[data-variant="dual-c"] .ad-cmp__note {
+html[data-variant="dual-c"] .pitch-cmp__note {
   margin-top: 0.85rem;
   font-size: 0.8125rem;
   line-height: 1.5;
   color: var(--steel);
 }
 
-html[data-variant="dual-c"] .ad-cmp__note a {
+html[data-variant="dual-c"] .pitch-cmp__note a {
   color: var(--silver-bright);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-variant="dual-c"] .ad-cmp[open] .ad-cmp__panel {
+  html[data-variant="dual-c"] .pitch-cmp[open] .pitch-cmp__panel {
     animation: none;
   }
 
-  html[data-variant="dual-c"] .ad-cmp__chev {
+  html[data-variant="dual-c"] .pitch-cmp__chev {
     transition: none;
   }
 }
 
 
 @media (min-width: 680px) {
-  html[data-variant="dual-c"] .ad-money__cols {
+  html[data-variant="dual-c"] .pitch-money__cols {
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
   }
 }
 
 /* ---- Both sides ----------------------------------------------------- */
-html[data-variant="dual-c"] .ad-sides {
+html[data-variant="dual-c"] .pitch-sides {
   margin-top: 4.5rem;
 }
 
-html[data-variant="dual-c"] .ad-cards {
+html[data-variant="dual-c"] .pitch-cards {
   display: grid;
   gap: 0.75rem;
   margin-top: 1.5rem;
 }
 
-html[data-variant="dual-c"] .ad-card {
+html[data-variant="dual-c"] .pitch-card {
   padding: 1.5rem;
   border-radius: 16px;
   background: var(--surface);
 }
 
-html[data-variant="dual-c"] .ad-card__kicker {
+html[data-variant="dual-c"] .pitch-card__kicker {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -513,7 +519,7 @@ html[data-variant="dual-c"] .ad-card__kicker {
   color: var(--steel);
 }
 
-html[data-variant="dual-c"] .ad-card__title {
+html[data-variant="dual-c"] .pitch-card__title {
   margin-top: 0.6rem;
   font-family: var(--font-display);
   font-weight: 500;
@@ -523,7 +529,7 @@ html[data-variant="dual-c"] .ad-card__title {
   color: var(--silver-bright);
 }
 
-html[data-variant="dual-c"] .ad-checks {
+html[data-variant="dual-c"] .pitch-checks {
   display: grid;
   gap: 0.6rem;
   margin-top: 1.1rem;
@@ -532,7 +538,7 @@ html[data-variant="dual-c"] .ad-checks {
 }
 
 /* Tick drawn in CSS — decorative; the list itself carries the meaning. */
-html[data-variant="dual-c"] .ad-checks li {
+html[data-variant="dual-c"] .pitch-checks li {
   position: relative;
   padding-left: 1.75rem;
   font-size: 1rem;
@@ -540,7 +546,7 @@ html[data-variant="dual-c"] .ad-checks li {
   color: var(--silver);
 }
 
-html[data-variant="dual-c"] .ad-checks li::before {
+html[data-variant="dual-c"] .pitch-checks li::before {
   content: "";
   position: absolute;
   left: 0.2rem;
@@ -552,27 +558,27 @@ html[data-variant="dual-c"] .ad-checks li::before {
   transform: rotate(45deg);
 }
 
-html[data-variant="dual-c"] .ad-sides__cta {
+html[data-variant="dual-c"] .pitch-sides__cta {
   margin-top: 1.75rem;
 }
 
 @media (min-width: 680px) {
-  html[data-variant="dual-c"] .ad-cards {
+  html[data-variant="dual-c"] .pitch-cards {
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
   }
 
-  html[data-variant="dual-c"] .ad-card {
+  html[data-variant="dual-c"] .pitch-card {
     padding: 2rem;
   }
 }
 
 /* ---- Safety ------------------------------------------------------- */
-html[data-variant="dual-c"] .ad-safety {
+html[data-variant="dual-c"] .pitch-safety {
   margin-top: 4.5rem;
 }
 
-html[data-variant="dual-c"] .ad-safety__lede {
+html[data-variant="dual-c"] .pitch-safety__lede {
   max-width: 34rem;
   margin-top: 0.9rem;
   font-size: 1.0625rem;
@@ -580,7 +586,7 @@ html[data-variant="dual-c"] .ad-safety__lede {
   color: var(--silver);
 }
 
-html[data-variant="dual-c"] .ad-safety__list {
+html[data-variant="dual-c"] .pitch-safety__list {
   display: grid;
   gap: 1.25rem;
   margin-top: 1.75rem;
@@ -588,23 +594,23 @@ html[data-variant="dual-c"] .ad-safety__list {
   list-style: none;
 }
 
-html[data-variant="dual-c"] .ad-safety__list li {
+html[data-variant="dual-c"] .pitch-safety__list li {
   display: flex;
   gap: 0.9rem;
   align-items: flex-start;
 }
 
-html[data-variant="dual-c"] .ad-safety__list svg {
+html[data-variant="dual-c"] .pitch-safety__list svg {
   flex: none;
   width: 2.5rem;
   height: 2.5rem;
   padding: 0.55rem;
   border-radius: 12px;
-  background: var(--ad-tint);
-  fill: var(--ad-band);
+  background: var(--pitch-tint);
+  fill: var(--pitch-band);
 }
 
-html[data-variant="dual-c"] .ad-safety__list h3 {
+html[data-variant="dual-c"] .pitch-safety__list h3 {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: 1.125rem;
@@ -612,7 +618,7 @@ html[data-variant="dual-c"] .ad-safety__list h3 {
   color: var(--silver-bright);
 }
 
-html[data-variant="dual-c"] .ad-safety__list p {
+html[data-variant="dual-c"] .pitch-safety__list p {
   margin-top: 0.2rem;
   font-size: 0.9375rem;
   line-height: 1.5;
@@ -621,87 +627,87 @@ html[data-variant="dual-c"] .ad-safety__list p {
 
 /* The profile shot sits beside the list on wider screens; phones already
    meet it in the filmstrip below, so it isn't repeated there. */
-html[data-variant="dual-c"] .ad-safety__media {
+html[data-variant="dual-c"] .pitch-safety__media {
   display: none;
 }
 
 @media (min-width: 680px) {
-  html[data-variant="dual-c"] .ad-safety__list {
+  html[data-variant="dual-c"] .pitch-safety__list {
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem 2rem;
   }
 }
 
 @media (min-width: 900px) {
-  html[data-variant="dual-c"] .ad-safety__grid {
+  html[data-variant="dual-c"] .pitch-safety__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 260px;
     gap: 4rem;
     align-items: center;
   }
 
-  html[data-variant="dual-c"] .ad-safety__media {
+  html[data-variant="dual-c"] .pitch-safety__media {
     display: block;
   }
 
-  html[data-variant="dual-c"] .ad-safety__media .ad-phone {
+  html[data-variant="dual-c"] .pitch-safety__media .pitch-phone {
     width: 100%;
   }
 }
 
 /* ---- Flow ----------------------------------------------------------- */
-html[data-variant="dual-c"] .ad-flow {
+html[data-variant="dual-c"] .pitch-flow {
   margin-top: 4.5rem;
 }
 
-html[data-variant="dual-c"] .ad-flow .shots-lede {
+html[data-variant="dual-c"] .pitch-flow .shots-lede {
   margin-top: 0.75rem;
   font-size: 1.0625rem;
 }
 
-html[data-variant="dual-c"] .ad-flow .shot__text {
+html[data-variant="dual-c"] .pitch-flow .shot__text {
   font-size: 0.9375rem;
 }
 
 /* ---- Closing band --------------------------------------------------- */
-html[data-variant="dual-c"] .ad-close {
+html[data-variant="dual-c"] .pitch-close {
   margin-top: 4.5rem;
   padding-block: 3rem;
 }
 
-html[data-variant="dual-c"] .ad-close__grid {
+html[data-variant="dual-c"] .pitch-close__grid {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-html[data-variant="dual-c"] .ad-close__title {
+html[data-variant="dual-c"] .pitch-close__title {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: clamp(2rem, 8vw, 3.25rem);
   line-height: 1.05;
   letter-spacing: -0.03em;
-  color: var(--ad-on-band);
+  color: var(--pitch-on-band);
   overflow-wrap: break-word;
 }
 
-html[data-variant="dual-c"] .ad-close__line {
+html[data-variant="dual-c"] .pitch-close__line {
   max-width: 30rem;
   margin-top: 0.9rem;
   font-size: 1.0625rem;
-  color: var(--ad-on-band-dim);
+  color: var(--pitch-on-band-dim);
 }
 
-html[data-variant="dual-c"] .ad-close .cta-row {
+html[data-variant="dual-c"] .pitch-close .cta-row {
   margin-top: 0;
 }
 
 @media (min-width: 760px) {
-  html[data-variant="dual-c"] .ad-close {
+  html[data-variant="dual-c"] .pitch-close {
     padding-block: 4.5rem;
   }
 
-  html[data-variant="dual-c"] .ad-close__grid {
+  html[data-variant="dual-c"] .pitch-close__grid {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
