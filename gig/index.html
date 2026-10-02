@@ -21,33 +21,32 @@
     <!-- Link previews (iMessage, WhatsApp, Slack, Facebook, X, etc.) — large card + benefit copy. -->
     <link rel="canonical" href="https://mummysboy.com/gig/" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="mummysboy" />
+    <meta property="og:site_name" content="Gig" />
     <meta property="og:url" content="https://mummysboy.com/gig/" />
-    <meta property="og:title" content="Gig — Available on iOS and Android" />
+    <meta property="og:title" content="No Commissions. No Fees. Period." />
     <meta
       property="og:description"
       content="Find local help or list a service on Gig. Commission is 0% — you keep 100%, and Gig never touches the payment. Free on iOS and Android."
     />
-    <!-- 1200×630 share card. Versioned filename on purpose: link scrapers (iMessage,
-         Slack, Facebook) cache OG images hard and nothing here has a hashed name, so
-         the artwork can only change by changing the URL. Bump the suffix if it changes
-         again, and update all three arms — they share this one card. Keep the icon and
-         copy inside the centre 630×630: Messenger, WhatsApp and Facebook's small preview
-         crop the card to that square. -->
-    <meta property="og:image" content="https://mummysboy.com/gig/share-card-v3.png" />
-    <meta property="og:image:secure_url" content="https://mummysboy.com/gig/share-card-v3.png" />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="The Gig app icon. Commission-free local services, available on iOS and Android." />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Gig — Available on iOS and Android" />
+    <!-- Share image is the app icon alone, square, so Messenger/WhatsApp/Facebook's
+         square thumbnail shows the whole icon (twitter:card "summary" does the same on
+         X). JPEG under 300KB: WhatsApp drops larger preview images. Link scrapers cache
+         OG images hard and nothing here has a hashed name, so if the image changes it
+         must get a new filename — and all three arms share it. -->
+    <meta property="og:image" content="https://mummysboy.com/gig/share-icon.jpg" />
+    <meta property="og:image:secure_url" content="https://mummysboy.com/gig/share-icon.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="1024" />
+    <meta property="og:image:alt" content="The Gig app icon." />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="No Commissions. No Fees. Period." />
     <meta
       name="twitter:description"
       content="Find local help or list a service on Gig. Commission is 0% — you keep 100%, and Gig never touches the payment. Free on iOS and Android."
     />
-    <meta name="twitter:image" content="https://mummysboy.com/gig/share-card-v3.png" />
-    <meta name="twitter:image:alt" content="The Gig app icon. Commission-free local services, available on iOS and Android." />
+    <meta name="twitter:image" content="https://mummysboy.com/gig/share-icon.jpg" />
+    <meta name="twitter:image:alt" content="The Gig app icon." />
 
     <!-- Disambiguates the very generic entity "Gig" for search + answer engines. No faked rating. -->
     <script type="application/ld+json">
@@ -74,7 +73,7 @@
           "https://mummysboy.com/gig/shots/app-home.webp",
           "https://mummysboy.com/gig/shots/app-search.webp",
           "https://mummysboy.com/gig/shots/app-provider.webp",
-          "https://mummysboy.com/gig/share-card-v3.png"
+          "https://mummysboy.com/gig/share-icon.jpg"
         ],
         "publisher": {
           "@type": "Organization",
