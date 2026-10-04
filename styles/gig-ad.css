@@ -1,9 +1,10 @@
-/* ===== /gig/ ad treatment (variant "dual-c"; was "dual-b" with a cobalt hero band) =====
+/* ===== /gig/ ad treatment (variant "dual-d"; "dual-c" until 2026-10-03, without the demo
+   button; "dual-b" before that, with a cobalt hero band) =====
    The one page that sells rather than informs. At the owner's direction it is a
    scoped exception to house design rules 1–4: saturated brand bands, big stat
    blocks, a second accent colour, and a soft shadow on the phone. Everything
    else still holds — WCAG 2.1 AA, mobile-first, honest copy, honest motion.
-   Every rule is scoped to html[data-variant="dual-c"] so nothing leaks to the
+   Every rule is scoped to html[data-variant="dual-d"] so nothing leaks to the
    other arms or the hub. The light-theme tokens come from gig-additions.css.
 
    Class names are pitch-*, never ad-*. EasyList (uBlock Origin, AdBlock, Adblock
@@ -23,7 +24,7 @@
      badge grey edge on band .. 3.72:1   the official badges' own #a6a6a6 border (1.4.11)
      --pitch-band on --pitch-tint ... 8.12:1   safety icons
      --volt on #fff / --money-tint 5.42 / 4.99:1   money numbers + check marks */
-html[data-variant="dual-c"] {
+html[data-variant="dual-d"] {
   --pitch-band: #144984; /* the icon's cobalt */
   --pitch-on-band: #ffffff;
   --pitch-on-band-dim: #d6e6f5;
@@ -34,12 +35,12 @@ html[data-variant="dual-c"] {
 
 /* Full-bleed bands need a main that is not .wrap; the inner containers carry
    the grid width instead. */
-html[data-variant="dual-c"] .pitch {
+html[data-variant="dual-d"] .pitch {
   flex: 1;
   width: 100%;
 }
 
-html[data-variant="dual-c"] .pitch-inner {
+html[data-variant="dual-d"] .pitch-inner {
   width: 100%;
   max-width: var(--pitch-inner);
   margin-inline: auto;
@@ -47,42 +48,74 @@ html[data-variant="dual-c"] .pitch-inner {
 }
 
 @media (min-width: 640px) {
-  html[data-variant="dual-c"] .pitch-inner {
+  html[data-variant="dual-d"] .pitch-inner {
     padding-inline: 2rem;
   }
 }
 
 /* Nothing on this page may widen it past the phone: every column is allowed to
    shrink, and the page itself clips rather than scrolls sideways. */
-html[data-variant="dual-c"] body {
+html[data-variant="dual-d"] body {
   overflow-x: clip;
 }
 
-html[data-variant="dual-c"] .pitch,
-html[data-variant="dual-c"] .pitch-inner,
-html[data-variant="dual-c"] .hero__copy {
+html[data-variant="dual-d"] .pitch,
+html[data-variant="dual-d"] .pitch-inner,
+html[data-variant="dual-d"] .hero__copy {
   min-width: 0;
   max-width: 100%;
 }
 
-html[data-variant="dual-c"] .pitch-inner {
+html[data-variant="dual-d"] .pitch-inner {
   max-width: var(--pitch-inner);
 }
 
 /* Badges stay side by side and left-aligned on phones. styles.css stacks every
    .cta-row into a centred column below 480px (built for full-width .cta
    buttons); two ~120px badges fit on one line down to 320px, so undo that here. */
-html[data-variant="dual-c"] .cta-row {
+html[data-variant="dual-d"] .cta-row {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
 }
 
+/* "Try it in your browser" (dual-d) — the web demo, a secondary action under the store
+   badges. Outlined rather than filled so the badges stay the primary CTA. The --steel
+   border is what identifies it as a control: 7.2:1 on white (1.4.11); the hint text is
+   --steel too (7.2:1, 1.4.3). 44px tall (2.5.8). */
+html[data-variant="dual-d"] .pitch-demo {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+  min-height: 44px;
+  margin-top: 0.875rem;
+  padding: 0.5rem 1.125rem;
+  border: 1px solid var(--steel);
+  border-radius: 999px;
+  color: var(--silver-bright);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: background-color 150ms ease;
+}
+
+html[data-variant="dual-d"] .pitch-demo:hover {
+  background: var(--surface);
+}
+
+html[data-variant="dual-d"] .pitch-demo__hint {
+  color: var(--steel);
+  font-weight: 400;
+}
+
 /* The scan-to-phone QR is for real desktop screens only — never in a narrow
    window, even on a desktop browser (or a devtools responsive preview). */
 @media (max-width: 759px) {
-  html[data-variant="dual-c"] .scan--ready {
+  html[data-variant="dual-d"] .scan--ready {
     display: none !important;
   }
 }
@@ -94,22 +127,22 @@ html[data-variant="dual-c"] .cta-row {
      #fff 7.52:1 · --pitch-on-band-dim 5.90:1 · badge #a6a6a6 edge 3.09:1.
    If the mosaic is ever regenerated, re-measure all three. The flat --pitch-band
    colour is the fallback while it loads (and is darker than the image's max). */
-html[data-variant="dual-c"] .pitch-band {
+html[data-variant="dual-d"] .pitch-band {
   background: var(--pitch-band) url("/gig/shots/band-mosaic.webp") center / cover no-repeat;
   color: var(--pitch-on-band);
 }
 
 /* Closing band shows the other half of the mosaic, so the page doesn't repeat itself. */
-html[data-variant="dual-c"] .pitch-close {
+html[data-variant="dual-d"] .pitch-close {
   background-position: center bottom;
 }
 
 /* The global volt ring is 1.1:1 on the band — swap to white inside it. */
-html[data-variant="dual-c"] .pitch-band :focus-visible {
+html[data-variant="dual-d"] .pitch-band :focus-visible {
   outline-color: var(--pitch-on-band);
 }
 
-html[data-variant="dual-c"] .pitch-band ::selection {
+html[data-variant="dual-d"] .pitch-band ::selection {
   background: var(--pitch-on-band);
   color: var(--pitch-band);
 }
@@ -117,18 +150,18 @@ html[data-variant="dual-c"] .pitch-band ::selection {
 /* ---- Hero ----------------------------------------------------------
    The original `dual` hero (markup + styles from styles.css / gig-additions.css)
    on the light page. This only restores the vertical rhythm .wrap gave it. */
-html[data-variant="dual-c"] .pitch-top {
+html[data-variant="dual-d"] .pitch-top {
   padding-top: 1rem;
 }
 
 @media (min-width: 640px) {
-  html[data-variant="dual-c"] .pitch-top {
+  html[data-variant="dual-d"] .pitch-top {
     padding-top: 4rem;
   }
 }
 
 /* Device frame for the safety section's profile shot. */
-html[data-variant="dual-c"] .pitch-phone {
+html[data-variant="dual-d"] .pitch-phone {
   display: block;
   width: 62%;
   max-width: 230px;
@@ -142,24 +175,24 @@ html[data-variant="dual-c"] .pitch-phone {
 }
 
 /* QR block, re-coloured for the band (steel on the band would fail AA). */
-html[data-variant="dual-c"] .pitch-band .scan--ready {
+html[data-variant="dual-d"] .pitch-band .scan--ready {
   border-top-color: rgb(255 255 255 / 0.35);
 }
 
-html[data-variant="dual-c"] .pitch-band .scan__label {
+html[data-variant="dual-d"] .pitch-band .scan__label {
   color: var(--pitch-on-band);
 }
 
-html[data-variant="dual-c"] .pitch-band .scan__text {
+html[data-variant="dual-d"] .pitch-band .scan__text {
   color: var(--pitch-on-band-dim);
 }
 
-html[data-variant="dual-c"] .pitch-band .scan__code {
+html[data-variant="dual-d"] .pitch-band .scan__code {
   border-color: transparent;
 }
 
 /* ---- Section heads -------------------------------------------------- */
-html[data-variant="dual-c"] .pitch-h2 {
+html[data-variant="dual-d"] .pitch-h2 {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: clamp(1.75rem, 6vw, 2.5rem);
@@ -170,7 +203,7 @@ html[data-variant="dual-c"] .pitch-h2 {
 }
 
 /* ---- Stat strip ----------------------------------------------------- */
-html[data-variant="dual-c"] .pitch-stats {
+html[data-variant="dual-d"] .pitch-stats {
   display: grid;
   gap: 0.75rem;
   margin-top: 3rem;
@@ -178,7 +211,7 @@ html[data-variant="dual-c"] .pitch-stats {
   list-style: none;
 }
 
-html[data-variant="dual-c"] .pitch-stat {
+html[data-variant="dual-d"] .pitch-stat {
   display: flex;
   align-items: baseline;
   gap: 1rem;
@@ -187,7 +220,7 @@ html[data-variant="dual-c"] .pitch-stat {
   background: var(--surface);
 }
 
-html[data-variant="dual-c"] .pitch-stat__num {
+html[data-variant="dual-d"] .pitch-stat__num {
   flex: 0 0 auto;
   min-width: 5.5rem; /* lines the labels up; "100%" is wider and may push past it */
   font-family: var(--font-display);
@@ -198,26 +231,26 @@ html[data-variant="dual-c"] .pitch-stat__num {
   color: var(--volt);
 }
 
-html[data-variant="dual-c"] .pitch-stat__label {
+html[data-variant="dual-d"] .pitch-stat__label {
   font-size: 1rem;
   line-height: 1.35;
   color: var(--silver);
 }
 
 @media (min-width: 760px) {
-  html[data-variant="dual-c"] .pitch-stats {
+  html[data-variant="dual-d"] .pitch-stats {
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin-top: 5rem;
   }
 
-  html[data-variant="dual-c"] .pitch-stat {
+  html[data-variant="dual-d"] .pitch-stat {
     flex-direction: column;
     gap: 0.6rem;
     padding: 1.75rem 1.5rem;
   }
 
-  html[data-variant="dual-c"] .pitch-stat__num {
+  html[data-variant="dual-d"] .pitch-stat__num {
     flex: none;
     font-size: 3.75rem;
   }
@@ -226,11 +259,11 @@ html[data-variant="dual-c"] .pitch-stat__label {
 /* ---- What people hire for ------------------------------------------
    Stock photo tiles, 4:5. The label sits on a solid white pill rather than on
    the photo itself, so its contrast never depends on what's in the picture. */
-html[data-variant="dual-c"] .pitch-cats {
+html[data-variant="dual-d"] .pitch-cats {
   margin-top: 4rem;
 }
 
-html[data-variant="dual-c"] .pitch-cats__lede {
+html[data-variant="dual-d"] .pitch-cats__lede {
   max-width: 34rem;
   margin-top: 0.75rem;
   font-size: 1.0625rem;
@@ -238,7 +271,7 @@ html[data-variant="dual-c"] .pitch-cats__lede {
   color: var(--silver);
 }
 
-html[data-variant="dual-c"] .pitch-cats__grid {
+html[data-variant="dual-d"] .pitch-cats__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
@@ -247,14 +280,14 @@ html[data-variant="dual-c"] .pitch-cats__grid {
   list-style: none;
 }
 
-html[data-variant="dual-c"] .pitch-cat {
+html[data-variant="dual-d"] .pitch-cat {
   position: relative;
   overflow: hidden;
   border-radius: 16px;
   background: var(--surface);
 }
 
-html[data-variant="dual-c"] .pitch-cat img {
+html[data-variant="dual-d"] .pitch-cat img {
   display: block;
   width: 100%;
   height: auto;
@@ -262,7 +295,7 @@ html[data-variant="dual-c"] .pitch-cat img {
   object-fit: cover;
 }
 
-html[data-variant="dual-c"] .pitch-cat__label {
+html[data-variant="dual-d"] .pitch-cat__label {
   position: absolute;
   left: 0.6rem;
   bottom: 0.6rem;
@@ -276,12 +309,12 @@ html[data-variant="dual-c"] .pitch-cat__label {
 }
 
 @media (min-width: 680px) {
-  html[data-variant="dual-c"] .pitch-cats__grid {
+  html[data-variant="dual-d"] .pitch-cats__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
   }
 
-  html[data-variant="dual-c"] .pitch-cat__label {
+  html[data-variant="dual-d"] .pitch-cat__label {
     left: 0.85rem;
     bottom: 0.85rem;
     font-size: 0.9375rem;
@@ -289,28 +322,28 @@ html[data-variant="dual-c"] .pitch-cat__label {
 }
 
 /* ---- Money moment --------------------------------------------------- */
-html[data-variant="dual-c"] .pitch-money {
+html[data-variant="dual-d"] .pitch-money {
   margin-top: 4rem;
 }
 
-html[data-variant="dual-c"] .pitch-money__cols {
+html[data-variant="dual-d"] .pitch-money__cols {
   display: grid;
   gap: 0.75rem;
   margin-top: 1.5rem;
 }
 
-html[data-variant="dual-c"] .pitch-money__col {
+html[data-variant="dual-d"] .pitch-money__col {
   padding: 1.5rem;
   border: 1px solid var(--hairline);
   border-radius: 16px;
 }
 
-html[data-variant="dual-c"] .pitch-money__col--gig {
+html[data-variant="dual-d"] .pitch-money__col--gig {
   border: 2px solid var(--volt);
   background: var(--money-tint);
 }
 
-html[data-variant="dual-c"] .pitch-money__who {
+html[data-variant="dual-d"] .pitch-money__who {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -318,7 +351,7 @@ html[data-variant="dual-c"] .pitch-money__who {
   color: var(--steel);
 }
 
-html[data-variant="dual-c"] .pitch-money__num {
+html[data-variant="dual-d"] .pitch-money__num {
   margin-top: 0.5rem;
   font-family: var(--font-display);
   font-weight: 600;
@@ -328,11 +361,11 @@ html[data-variant="dual-c"] .pitch-money__num {
   color: var(--silver-bright);
 }
 
-html[data-variant="dual-c"] .pitch-money__col--gig .pitch-money__num {
+html[data-variant="dual-d"] .pitch-money__col--gig .pitch-money__num {
   color: var(--volt);
 }
 
-html[data-variant="dual-c"] .pitch-money__text {
+html[data-variant="dual-d"] .pitch-money__text {
   margin-top: 0.75rem;
   font-size: 0.9375rem;
   line-height: 1.55;
@@ -340,11 +373,11 @@ html[data-variant="dual-c"] .pitch-money__text {
 }
 
 /* Quick comparison — an in-place dropdown (native <details>), not an exit link. */
-html[data-variant="dual-c"] .pitch-cmp {
+html[data-variant="dual-d"] .pitch-cmp {
   margin-top: 1.25rem;
 }
 
-html[data-variant="dual-c"] .pitch-cmp__toggle {
+html[data-variant="dual-d"] .pitch-cmp__toggle {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -362,17 +395,17 @@ html[data-variant="dual-c"] .pitch-cmp__toggle {
     border-color 160ms ease;
 }
 
-html[data-variant="dual-c"] .pitch-cmp__toggle::-webkit-details-marker {
+html[data-variant="dual-d"] .pitch-cmp__toggle::-webkit-details-marker {
   display: none;
 }
 
-html[data-variant="dual-c"] .pitch-cmp__toggle:hover,
-html[data-variant="dual-c"] .pitch-cmp[open] .pitch-cmp__toggle {
+html[data-variant="dual-d"] .pitch-cmp__toggle:hover,
+html[data-variant="dual-d"] .pitch-cmp[open] .pitch-cmp__toggle {
   border-color: var(--steel);
   background: var(--surface);
 }
 
-html[data-variant="dual-c"] .pitch-cmp__chev {
+html[data-variant="dual-d"] .pitch-cmp__chev {
   width: 1.1rem;
   height: 1.1rem;
   fill: none;
@@ -383,11 +416,11 @@ html[data-variant="dual-c"] .pitch-cmp__chev {
   transition: transform 160ms ease;
 }
 
-html[data-variant="dual-c"] .pitch-cmp[open] .pitch-cmp__chev {
+html[data-variant="dual-d"] .pitch-cmp[open] .pitch-cmp__chev {
   transform: rotate(180deg);
 }
 
-html[data-variant="dual-c"] .pitch-cmp__panel {
+html[data-variant="dual-d"] .pitch-cmp__panel {
   margin-top: 0.75rem;
   padding: 0.5rem 1.1rem 1rem;
   border: 1px solid var(--hairline);
@@ -395,7 +428,7 @@ html[data-variant="dual-c"] .pitch-cmp__panel {
   box-shadow: 0 12px 32px rgb(20 73 132 / 0.12);
 }
 
-html[data-variant="dual-c"] .pitch-cmp[open] .pitch-cmp__panel {
+html[data-variant="dual-d"] .pitch-cmp[open] .pitch-cmp__panel {
   animation: pitch-cmp-in 160ms ease;
 }
 
@@ -406,31 +439,31 @@ html[data-variant="dual-c"] .pitch-cmp[open] .pitch-cmp__panel {
   }
 }
 
-html[data-variant="dual-c"] .pitch-cmp__table {
+html[data-variant="dual-d"] .pitch-cmp__table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
   line-height: 1.4;
 }
 
-html[data-variant="dual-c"] .pitch-cmp__table th,
-html[data-variant="dual-c"] .pitch-cmp__table td {
+html[data-variant="dual-d"] .pitch-cmp__table th,
+html[data-variant="dual-d"] .pitch-cmp__table td {
   padding: 0.7rem 0.5rem;
   text-align: left;
   vertical-align: top;
   border-bottom: 1px solid var(--hairline);
 }
 
-html[data-variant="dual-c"] .pitch-cmp__table th:first-child {
+html[data-variant="dual-d"] .pitch-cmp__table th:first-child {
   padding-left: 0;
 }
 
-html[data-variant="dual-c"] .pitch-cmp__table td:last-child {
+html[data-variant="dual-d"] .pitch-cmp__table td:last-child {
   padding-right: 0;
   white-space: nowrap;
 }
 
-html[data-variant="dual-c"] .pitch-cmp__table thead th {
+html[data-variant="dual-d"] .pitch-cmp__table thead th {
   font-family: var(--font-mono);
   font-size: 0.625rem;
   font-weight: 500;
@@ -439,79 +472,79 @@ html[data-variant="dual-c"] .pitch-cmp__table thead th {
   color: var(--steel);
 }
 
-html[data-variant="dual-c"] .pitch-cmp__table tbody th {
+html[data-variant="dual-d"] .pitch-cmp__table tbody th {
   font-weight: 500;
   color: var(--silver-bright);
 }
 
-html[data-variant="dual-c"] .pitch-cmp__table td {
+html[data-variant="dual-d"] .pitch-cmp__table td {
   color: var(--silver);
 }
 
-html[data-variant="dual-c"] .pitch-cmp__gig th,
-html[data-variant="dual-c"] .pitch-cmp__gig td {
+html[data-variant="dual-d"] .pitch-cmp__gig th,
+html[data-variant="dual-d"] .pitch-cmp__gig td {
   font-weight: 600;
   color: var(--silver-bright);
 }
 
-html[data-variant="dual-c"] .pitch-cmp__mark {
+html[data-variant="dual-d"] .pitch-cmp__mark {
   font-weight: 600;
   color: var(--steel);
 }
 
-html[data-variant="dual-c"] .pitch-cmp__mark--yes {
+html[data-variant="dual-d"] .pitch-cmp__mark--yes {
   color: var(--volt);
 }
 
-html[data-variant="dual-c"] .pitch-cmp__note {
+html[data-variant="dual-d"] .pitch-cmp__note {
   margin-top: 0.85rem;
   font-size: 0.8125rem;
   line-height: 1.5;
   color: var(--steel);
 }
 
-html[data-variant="dual-c"] .pitch-cmp__note a {
+html[data-variant="dual-d"] .pitch-cmp__note a {
   color: var(--silver-bright);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-variant="dual-c"] .pitch-cmp[open] .pitch-cmp__panel {
+  html[data-variant="dual-d"] .pitch-cmp[open] .pitch-cmp__panel {
     animation: none;
   }
 
-  html[data-variant="dual-c"] .pitch-cmp__chev {
+  html[data-variant="dual-d"] .pitch-cmp__chev {
     transition: none;
   }
 }
 
 
 @media (min-width: 680px) {
-  html[data-variant="dual-c"] .pitch-money__cols {
+  html[data-variant="dual-d"] .pitch-money__cols {
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
   }
 }
 
 /* ---- Both sides ----------------------------------------------------- */
-html[data-variant="dual-c"] .pitch-sides {
+html[data-variant="dual-d"] .pitch-sides {
   margin-top: 4.5rem;
 }
 
-html[data-variant="dual-c"] .pitch-cards {
+html[data-variant="dual-d"] .pitch-cards {
   display: grid;
   gap: 0.75rem;
   margin-top: 1.5rem;
 }
 
-html[data-variant="dual-c"] .pitch-card {
+html[data-variant="dual-d"] .pitch-card {
   padding: 1.5rem;
   border-radius: 16px;
   background: var(--surface);
 }
 
-html[data-variant="dual-c"] .pitch-card__kicker {
+html[data-variant="dual-d"] .pitch-card__kicker {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -519,7 +552,7 @@ html[data-variant="dual-c"] .pitch-card__kicker {
   color: var(--steel);
 }
 
-html[data-variant="dual-c"] .pitch-card__title {
+html[data-variant="dual-d"] .pitch-card__title {
   margin-top: 0.6rem;
   font-family: var(--font-display);
   font-weight: 500;
@@ -529,7 +562,7 @@ html[data-variant="dual-c"] .pitch-card__title {
   color: var(--silver-bright);
 }
 
-html[data-variant="dual-c"] .pitch-checks {
+html[data-variant="dual-d"] .pitch-checks {
   display: grid;
   gap: 0.6rem;
   margin-top: 1.1rem;
@@ -538,7 +571,7 @@ html[data-variant="dual-c"] .pitch-checks {
 }
 
 /* Tick drawn in CSS — decorative; the list itself carries the meaning. */
-html[data-variant="dual-c"] .pitch-checks li {
+html[data-variant="dual-d"] .pitch-checks li {
   position: relative;
   padding-left: 1.75rem;
   font-size: 1rem;
@@ -546,7 +579,7 @@ html[data-variant="dual-c"] .pitch-checks li {
   color: var(--silver);
 }
 
-html[data-variant="dual-c"] .pitch-checks li::before {
+html[data-variant="dual-d"] .pitch-checks li::before {
   content: "";
   position: absolute;
   left: 0.2rem;
@@ -558,27 +591,27 @@ html[data-variant="dual-c"] .pitch-checks li::before {
   transform: rotate(45deg);
 }
 
-html[data-variant="dual-c"] .pitch-sides__cta {
+html[data-variant="dual-d"] .pitch-sides__cta {
   margin-top: 1.75rem;
 }
 
 @media (min-width: 680px) {
-  html[data-variant="dual-c"] .pitch-cards {
+  html[data-variant="dual-d"] .pitch-cards {
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
   }
 
-  html[data-variant="dual-c"] .pitch-card {
+  html[data-variant="dual-d"] .pitch-card {
     padding: 2rem;
   }
 }
 
 /* ---- Safety ------------------------------------------------------- */
-html[data-variant="dual-c"] .pitch-safety {
+html[data-variant="dual-d"] .pitch-safety {
   margin-top: 4.5rem;
 }
 
-html[data-variant="dual-c"] .pitch-safety__lede {
+html[data-variant="dual-d"] .pitch-safety__lede {
   max-width: 34rem;
   margin-top: 0.9rem;
   font-size: 1.0625rem;
@@ -586,7 +619,7 @@ html[data-variant="dual-c"] .pitch-safety__lede {
   color: var(--silver);
 }
 
-html[data-variant="dual-c"] .pitch-safety__list {
+html[data-variant="dual-d"] .pitch-safety__list {
   display: grid;
   gap: 1.25rem;
   margin-top: 1.75rem;
@@ -594,13 +627,13 @@ html[data-variant="dual-c"] .pitch-safety__list {
   list-style: none;
 }
 
-html[data-variant="dual-c"] .pitch-safety__list li {
+html[data-variant="dual-d"] .pitch-safety__list li {
   display: flex;
   gap: 0.9rem;
   align-items: flex-start;
 }
 
-html[data-variant="dual-c"] .pitch-safety__list svg {
+html[data-variant="dual-d"] .pitch-safety__list svg {
   flex: none;
   width: 2.5rem;
   height: 2.5rem;
@@ -610,7 +643,7 @@ html[data-variant="dual-c"] .pitch-safety__list svg {
   fill: var(--pitch-band);
 }
 
-html[data-variant="dual-c"] .pitch-safety__list h3 {
+html[data-variant="dual-d"] .pitch-safety__list h3 {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: 1.125rem;
@@ -618,7 +651,7 @@ html[data-variant="dual-c"] .pitch-safety__list h3 {
   color: var(--silver-bright);
 }
 
-html[data-variant="dual-c"] .pitch-safety__list p {
+html[data-variant="dual-d"] .pitch-safety__list p {
   margin-top: 0.2rem;
   font-size: 0.9375rem;
   line-height: 1.5;
@@ -627,61 +660,61 @@ html[data-variant="dual-c"] .pitch-safety__list p {
 
 /* The profile shot sits beside the list on wider screens; phones already
    meet it in the filmstrip below, so it isn't repeated there. */
-html[data-variant="dual-c"] .pitch-safety__media {
+html[data-variant="dual-d"] .pitch-safety__media {
   display: none;
 }
 
 @media (min-width: 680px) {
-  html[data-variant="dual-c"] .pitch-safety__list {
+  html[data-variant="dual-d"] .pitch-safety__list {
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem 2rem;
   }
 }
 
 @media (min-width: 900px) {
-  html[data-variant="dual-c"] .pitch-safety__grid {
+  html[data-variant="dual-d"] .pitch-safety__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 260px;
     gap: 4rem;
     align-items: center;
   }
 
-  html[data-variant="dual-c"] .pitch-safety__media {
+  html[data-variant="dual-d"] .pitch-safety__media {
     display: block;
   }
 
-  html[data-variant="dual-c"] .pitch-safety__media .pitch-phone {
+  html[data-variant="dual-d"] .pitch-safety__media .pitch-phone {
     width: 100%;
   }
 }
 
 /* ---- Flow ----------------------------------------------------------- */
-html[data-variant="dual-c"] .pitch-flow {
+html[data-variant="dual-d"] .pitch-flow {
   margin-top: 4.5rem;
 }
 
-html[data-variant="dual-c"] .pitch-flow .shots-lede {
+html[data-variant="dual-d"] .pitch-flow .shots-lede {
   margin-top: 0.75rem;
   font-size: 1.0625rem;
 }
 
-html[data-variant="dual-c"] .pitch-flow .shot__text {
+html[data-variant="dual-d"] .pitch-flow .shot__text {
   font-size: 0.9375rem;
 }
 
 /* ---- Closing band --------------------------------------------------- */
-html[data-variant="dual-c"] .pitch-close {
+html[data-variant="dual-d"] .pitch-close {
   margin-top: 4.5rem;
   padding-block: 3rem;
 }
 
-html[data-variant="dual-c"] .pitch-close__grid {
+html[data-variant="dual-d"] .pitch-close__grid {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-html[data-variant="dual-c"] .pitch-close__title {
+html[data-variant="dual-d"] .pitch-close__title {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: clamp(2rem, 8vw, 3.25rem);
@@ -691,23 +724,23 @@ html[data-variant="dual-c"] .pitch-close__title {
   overflow-wrap: break-word;
 }
 
-html[data-variant="dual-c"] .pitch-close__line {
+html[data-variant="dual-d"] .pitch-close__line {
   max-width: 30rem;
   margin-top: 0.9rem;
   font-size: 1.0625rem;
   color: var(--pitch-on-band-dim);
 }
 
-html[data-variant="dual-c"] .pitch-close .cta-row {
+html[data-variant="dual-d"] .pitch-close .cta-row {
   margin-top: 0;
 }
 
 @media (min-width: 760px) {
-  html[data-variant="dual-c"] .pitch-close {
+  html[data-variant="dual-d"] .pitch-close {
     padding-block: 4.5rem;
   }
 
-  html[data-variant="dual-c"] .pitch-close__grid {
+  html[data-variant="dual-d"] .pitch-close__grid {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -716,7 +749,7 @@ html[data-variant="dual-c"] .pitch-close .cta-row {
 }
 
 /* The SEO block now sits after a band, not a boxed rail. */
-html[data-variant="dual-c"] body[data-project="gig"] .seo {
+html[data-variant="dual-d"] body[data-project="gig"] .seo {
   border-top: 0;
 }
 
@@ -724,7 +757,7 @@ html[data-variant="dual-c"] body[data-project="gig"] .seo {
    Off-screen AND visibility:hidden when off, so its links are never
    focusable or announced while unseen. Phones only; hidden whenever the
    consent banner is up so two fixed bars never stack. */
-html[data-variant="dual-c"] .sticky-cta {
+html[data-variant="dual-d"] .sticky-cta {
   position: fixed;
   left: 0;
   right: 0;
@@ -740,45 +773,45 @@ html[data-variant="dual-c"] .sticky-cta {
     visibility 0s linear 180ms;
 }
 
-html[data-variant="dual-c"] .sticky-cta .cta-row {
+html[data-variant="dual-d"] .sticky-cta .cta-row {
   justify-content: center;
   flex-wrap: nowrap;
   gap: 0.6rem;
   margin-top: 0;
 }
 
-html[data-variant="dual-c"] .sticky-cta .store-badge img {
+html[data-variant="dual-d"] .sticky-cta .store-badge img {
   height: 40px;
 }
 
-html[data-variant="dual-c"] .sticky-cta--on {
+html[data-variant="dual-d"] .sticky-cta--on {
   visibility: visible;
   transform: none;
   transition: transform 180ms ease;
 }
 
-html[data-variant="dual-c"] body.has-sticky:not(.has-consent) {
+html[data-variant="dual-d"] body.has-sticky:not(.has-consent) {
   padding-bottom: 4.25rem;
 }
 
-html[data-variant="dual-c"] body.has-consent .sticky-cta {
+html[data-variant="dual-d"] body.has-consent .sticky-cta {
   visibility: hidden;
   transform: translateY(100%);
 }
 
 @media (min-width: 760px) {
-  html[data-variant="dual-c"] .sticky-cta {
+  html[data-variant="dual-d"] .sticky-cta {
     display: none;
   }
 
-  html[data-variant="dual-c"] body.has-sticky:not(.has-consent) {
+  html[data-variant="dual-d"] body.has-sticky:not(.has-consent) {
     padding-bottom: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-variant="dual-c"] .sticky-cta,
-  html[data-variant="dual-c"] .sticky-cta--on {
+  html[data-variant="dual-d"] .sticky-cta,
+  html[data-variant="dual-d"] .sticky-cta--on {
     transition: none;
   }
 }

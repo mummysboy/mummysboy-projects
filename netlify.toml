@@ -45,6 +45,30 @@
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 
+# The Gig web demo (/gig/demo/), generated in the Gig repo by
+# mobile/scripts/build-web-demo.mjs — rebuild it there, don't edit it here. On a
+# computer the page shows itself inside a phone frame, so this site (and only this
+# site) may frame it. CSP frame-ancestors takes precedence over the site-wide
+# X-Frame-Options: DENY in current browsers; X-Frame-Options itself can't be lifted
+# for one path, because Netlify would send both values.
+[[headers]]
+  for = "/gig/demo/*"
+  [headers.values]
+    Content-Security-Policy = "frame-ancestors 'self'"
+
+# The demo's bundle and assets have a content hash in every filename, so they can be
+# cached for good. Its index.html is left to revalidate on every load, so a rebuild
+# shows up at once.
+[[headers]]
+  for = "/gig/demo/_expo/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/gig/demo/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
 [[headers]]
   for = "/rfcfinder/shots/*"
   [headers.values]
