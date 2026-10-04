@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-variant="dual-d">
+<html lang="en" data-variant="dual-e">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -166,11 +166,11 @@
     <link rel="stylesheet" href="/styles/tokens.css" />
     <link rel="stylesheet" href="/styles/styles.css" />
     <!-- Redesign additions (see README → styles). Append into styles.css, or keep separate. -->
-    <link rel="stylesheet" href="/styles/gig-additions.css?v=2" />
-    <!-- dual-d ad treatment — /gig/ only, every rule scoped to html[data-variant="dual-d"].
+    <link rel="stylesheet" href="/styles/gig-additions.css?v=3" />
+    <!-- dual-e ad treatment — /gig/ only, every rule scoped to html[data-variant="dual-e"].
          ?v= changes with the class names: /styles/ is served with a 24h stale-while-revalidate,
          and this HTML is not, so new markup must never be paired with a cached old sheet. -->
-    <link rel="stylesheet" href="/styles/gig-ad.css?v=3" />
+    <link rel="stylesheet" href="/styles/gig-ad.css?v=4" />
     <!-- Advertising: consent gate first (it defines window.mbConsent), then the mediago
          pixel, which stays silent until the gate says yes. Both are shared classic
          scripts — there is no build step, so this is how they stay identical on every
@@ -193,8 +193,10 @@
          page, `dual-b` rows the cobalt-band hero; compare dual-c from this date.
          2026-10-01: classes renamed ad-* → pitch-*. Ad blockers hid every .ad-inner, so
          before this date dual-c rows include ad-blocker visitors who saw a blank page.
-         dual-d (2026-10-03): dual-c plus a "Try it in your browser" button under the hero
-         badges, opening the web demo at /gig/demo/. Compare dual-d from this date. -->
+         dual-d (2026-10-03, about an hour): dual-c plus an outlined "Try it in your browser"
+         pill under the hero badges, opening the web demo at /gig/demo/.
+         dual-e (2026-10-03): the demo CTA redone as a "Try demo" badge styled like the App Store badge,
+         and the desktop hero phone itself opens the demo. Compare dual-e from this date. -->
     <main class="pitch">
       <!-- ===================== HERO (above the fold) ===================== -->
       <div class="pitch-inner pitch-top">
@@ -237,15 +239,18 @@
               >
                 <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
               </a>
+              <!-- The web demo: the real app on sample pros (/gig/demo/, built in the Gig repo).
+                   Drawn to match the App Store badge, with the Gig icon for Apple's logo.
+                   Same tab, never target="_blank" (dead in in-app browsers); data-exit
+                   beacons the tap as an `exit` labelled "demo". -->
+              <a class="pitch-try" href="/gig/demo/" data-exit="demo" aria-label="Try demo: the Gig app in your browser, no download necessary">
+                <img class="pitch-try__logo" src="/gig/shots/app-icon-rounded.png" alt="" width="28" height="28" />
+                <span class="pitch-try__text" aria-hidden="true">
+                  <span class="pitch-try__label">Try demo</span>
+                  <span class="pitch-try__sub">No download necessary</span>
+                </span>
+              </a>
             </div>
-
-            <!-- The web demo: the real app on sample pros (/gig/demo/, built in the Gig repo).
-                 Same tab, never target="_blank" (dead in in-app browsers); data-exit beacons
-                 the tap as an `exit` labelled "demo". -->
-            <a class="pitch-demo" href="/gig/demo/" data-exit="demo">
-              Try it in your browser <span class="pitch-demo__hint">· sample pros, no download</span>
-              <span aria-hidden="true">→</span>
-            </a>
 
             <p class="proof">New on the App Store — early reviews coming in.</p>
 
@@ -261,14 +266,21 @@
 
           <!-- The natural-language "magic moment" — shown beside the copy on wider screens. -->
           <div class="hero__media">
-            <img
-              class="phone"
-              src="/gig/shots/app-home.webp"
-              alt="Gig home screen asking &ldquo;What do you need help with?&rdquo; above nearby providers with their ratings, distance, and prices."
-              width="600"
-              height="1304"
-              decoding="async"
-            />
+            <!-- The phone is the demo's door on wider screens: tap the app to use the app. -->
+            <a class="pitch-try-phone" href="/gig/demo/" data-exit="demo-phone" aria-label="Try demo: the Gig app in your browser, no download necessary">
+              <img
+                class="phone"
+                src="/gig/shots/app-home.webp"
+                alt="Gig home screen asking &ldquo;What do you need help with?&rdquo; above nearby providers with their ratings, distance, and prices."
+                width="600"
+                height="1304"
+                decoding="async"
+              />
+              <span class="pitch-try-phone__chip" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor" /></svg>
+                Try demo
+              </span>
+            </a>
           </div>
         </article>
       </div>
