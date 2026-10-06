@@ -232,7 +232,7 @@ A nested route's `<body data-project="…">` lets `scripts/project.js` fill whic
 
 `/gig/` is the reference implementation. It pulls `name`/`blurb` from the registry and otherwise authors:
 
-- a header row (`.project__head`) — the app icon (`gig/shots/app-icon.jpg`, the real current App Store icon) on the left, social links top-right;
+- a header row (`.project__head`) — the app icon (`gig/shots/app-icon-black.jpg`, the real current App Store icon) on the left, social links top-right;
 - two download CTAs — **iOS** (`.cta--ios`, the page's single volt accent, → App Store) and **Android** (`.cta--ghost`, opens the beta-invite modal);
 - the Android modal (`#afOverlay`), wired by `scripts/android-access.js`, which POSTs `{email, phone, contact_method}` to the **external Gig backend** at `https://backend-production-9a98f.up.railway.app/android-access`. On success it draws a checkmark and auto-dismisses;
 - official **App Store + Google Play badges** from `gig/assets/` (not hand-rolled buttons — use the real vendor artwork);
