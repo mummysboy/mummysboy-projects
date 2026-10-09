@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en" data-variant="vid">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Video-hero variant of /gig/ (data-variant "vid", 2026-10-09): the same page with a
+         muted video loop of people doing gig work in the hero. Kept out of search: noindex +
+         canonical to /gig/. See CLAUDE.md → Gig landing variants. -->
+    <title>Gig — Commission-Free Local Services Marketplace | Keep 100%</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta
+      name="description"
+      content="Find local help or list a service on Gig. Commission is 0% — you keep 100%, and Gig never touches the payment. Free on iOS and Android."
+    />
+    <!-- Rounded PNG (transparent corners) for the tab. The home-screen icon stays the square
+         JPG: iOS rounds it itself, and transparent corners there would render black. -->
+    <link rel="icon" href="/gig/shots/app-icon-black-rounded.png" type="image/png" sizes="96x96" />
+    <link rel="apple-touch-icon" href="/gig/shots/app-icon-black.jpg" />
+
+    <!-- iOS Safari Smart App Banner: a native one-tap GET bar for the highest-intent segment. -->
+    <meta name="apple-itunes-app" content="app-id=6758136203" />
+
+    <!-- Link previews still work on a noindexed page — OG scrapers fetch directly and
+         ignore robots directives. og:url points at THIS page so shares land here. -->
+    <link rel="canonical" href="https://mummysboy.com/gig/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Gig" />
+    <meta property="og:url" content="https://mummysboy.com/gig/vid/" />
+    <meta property="og:title" content="No Commissions. No Fees. Period." />
+    <meta
+      property="og:description"
+      content="Find local help or list a service on Gig. Commission is 0% — you keep 100%, and Gig never touches the payment. Free on iOS and Android."
+    />
+    <!-- Share image is the app icon alone, square, so Messenger/WhatsApp/Facebook's
+         square thumbnail shows the whole icon (twitter:card "summary" does the same on
+         X). JPEG under 300KB: WhatsApp drops larger preview images. Link scrapers cache
+         OG images hard and nothing here has a hashed name, so if the image changes it
+         must get a new filename — and all three arms share it. -->
+    <meta property="og:image" content="https://mummysboy.com/gig/share-icon-black.jpg" />
+    <meta property="og:image:secure_url" content="https://mummysboy.com/gig/share-icon-black.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="1024" />
+    <meta property="og:image:alt" content="The Gig app icon." />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="No Commissions. No Fees. Period." />
+    <meta
+      name="twitter:description"
+      content="Find local help or list a service on Gig. Commission is 0% — you keep 100%, and Gig never touches the payment. Free on iOS and Android."
+    />
+    <meta name="twitter:image" content="https://mummysboy.com/gig/share-icon-black.jpg" />
+    <meta name="twitter:image:alt" content="The Gig app icon." />
+
+
+    <!-- OS class set before paint — read by gig-analytics.js to tag beacons with the device (os field). -->
+    <script>
+      (function () {
+        var ua = navigator.userAgent || "";
+        var cls = "is-desktop";
+        if (/iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) cls = "is-ios";
+        else if (/Android/i.test(ua)) cls = "is-android";
+        document.documentElement.classList.add(cls);
+      })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fonts load async (display=swap paints fallback text immediately); noscript keeps them for JS-off visitors. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <link rel="stylesheet" href="/styles/tokens.css" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <!-- Redesign additions (see README → styles). Append into styles.css, or keep separate. -->
+    <link rel="stylesheet" href="/styles/gig-additions.css?v=3" />
+    <!-- dual-e ad treatment — /gig/ only, every rule scoped to html[data-variant="dual-e"].
+         ?v= changes with the class names: /styles/ is served with a 24h stale-while-revalidate,
+         and this HTML is not, so new markup must never be paired with a cached old sheet. -->
+    <link rel="stylesheet" href="/styles/gig-ad.css?v=5" />
+    <!-- Advertising: consent gate first (it defines window.mbConsent), then the mediago
+         pixel, which stays silent until the gate says yes. Both are shared classic
+         scripts — there is no build step, so this is how they stay identical on every
+         page. Order matters; do not swap these two lines. -->
+    <script src="/scripts/consent.js"></script>
+    <script src="/scripts/mediago.js"></script>
+  </head>
+  <body data-project="gig">
+    <header class="masthead">
+      <div class="bar">
+        <a class="mark" href="/" data-exit="wordmark">mummysboy</a>
+        <span class="bar__meta">est. 1990</span>
+      </div>
+    </header>
+
+    <!-- vid (2026-10-09): the dual-e page with a full-screen video hero. The 19 s muted
+         loop (light bulb → mopping → window → dog walk) fills the first viewport on every screen,
+         under a dark scrim, with the same headline, readout and badges on top; the masthead
+         floats over it. Everything below the hero is dual-e, unchanged, so the two
+         variants differ only in the hero. Footage: four free Pexels clips (sources and
+         licence in the Gig repo, marketing/media/inbox/pexels/SOURCES.md) — stock people,
+         never to be described as Gig pros. -->
+    <main class="pitch">
+      <!-- ===================== HERO (above the fold) ===================== -->
+      <div class="pitch-inner pitch-top">
+        <article class="hero pitch-vid" data-section="hero">
+          <!-- The loop fills the whole viewport on every screen (object-fit: cover), with the
+               copy on a dark scrim over it. Two cuts of the same scenes: portrait for phones
+               and a landscape crop for wider screens — the inline script below picks one before
+               the video starts loading (the <source media> attribute is ignored by Chrome).
+               Decorative: the copy carries the message, so it is aria-hidden and described once
+               in text below. muted + playsinline are what let it autoplay on iOS;
+               scripts/gig-vid.js pauses it off-screen and never starts it under Reduce Motion or
+               Save-Data. The poster is the first scene, so a blocked autoplay (Low Power Mode)
+               still shows a scene. -->
+          <div class="hero__media pitch-vid__media">
+            <video
+              class="pitch-vid__video"
+              data-hero-video
+              data-src-portrait="/gig/vid/hero-loop-2.mp4"
+              data-poster-portrait="/gig/vid/hero-poster-2.jpg"
+              data-src-wide="/gig/vid/hero-loop-wide-2.mp4"
+              data-poster-wide="/gig/vid/hero-poster-wide-2.jpg"
+              autoplay
+              muted
+              loop
+              playsinline
+              disablepictureinpicture
+              disableremoteplayback
+              preload="auto"
+              aria-hidden="true"
+              tabindex="-1"
+            ></video>
+            <script>
+              (function () {
+                var v = document.currentScript.previousElementSibling;
+                var wide = window.matchMedia("(min-width: 760px) and (orientation: landscape)").matches;
+                v.poster = wide ? v.dataset.posterWide : v.dataset.posterPortrait;
+                v.src = wide ? v.dataset.srcWide : v.dataset.srcPortrait;
+              })();
+            </script>
+            <div class="pitch-vid__scrim" aria-hidden="true"></div>
+          </div>
+
+          <div class="hero__copy pitch-vid__copy">
+            <div class="project__head">
+              <img class="app-icon" src="/gig/shots/app-icon-black.jpg" alt="Gig app icon" width="104" height="104" />
+            </div>
+
+            <p class="eyebrow">/ gig · local + global services · live on iOS + android</p>
+
+            <!-- Static hero copy — authored here, not registry-driven (no project.js on this page). -->
+            <h1 class="title metal">Find a service or provide one.</h1>
+
+            <!-- The two-sided story as typography. Hidden on phones (the fold is the video); back on wider screens. -->
+            <dl class="couplet">
+              <div>
+                <dt>Need a pro</dt>
+                <dd>Describe the job in a sentence — the best matches show up, ranked by rating and distance.</dd>
+              </div>
+              <div>
+                <dt>Be the pro</dt>
+                <dd>List what you do once and get found — nearby or worldwide.</dd>
+              </div>
+            </dl>
+
+            <p class="readout">No commissions. No service fees. <span class="readout__stat">Period.</span></p>
+
+            <div class="cta-row" data-pos="hero">
+              <!-- No target="_blank" — it is dead in the IG/FB in-app browsers, and the click
+                   still beacons an `ios` conversion. See CLAUDE.md → Analytics. -->
+              <a class="store-badge cta-ios-primary" id="iosCta" href="https://apps.apple.com/app/id6758136203">
+                <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
+              </a>
+              <a
+                class="store-badge cta-android-primary"
+                id="androidBtn"
+                href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig"
+              >
+                <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
+              </a>
+              <!-- The web demo: the real app on sample pros (/gig/demo/, built in the Gig repo). -->
+              <a class="pitch-try" href="/gig/demo/" data-exit="demo" aria-label="Try demo: the Gig app in your browser, no download necessary">
+                <img class="pitch-try__logo" src="/gig/shots/app-icon-black-rounded.png" alt="" width="28" height="28" />
+                <span class="pitch-try__text" aria-hidden="true">
+                  <span class="pitch-try__label">Try demo</span>
+                  <span class="pitch-try__sub">No download necessary</span>
+                </span>
+              </a>
+            </div>
+
+            <p class="proof">New on the App Store — early reviews coming in.</p>
+
+            <!-- The video in words, for screen readers and for anyone whose autoplay is off. -->
+            <p class="sr-only">Scenes of someone replacing a ceiling light bulb, someone mopping a kitchen floor, someone wiping a window, and a person walking two dogs on a trail.</p>
+
+            <!-- Desktop-only bridge to the phone (scripts/gig-qr.js draws the code). -->
+            <div class="scan" data-qr>
+              <div class="scan__code" data-qr-code></div>
+              <div class="scan__copy">
+                <p class="scan__label">On a computer?</p>
+                <p class="scan__text">Scan with your phone camera to open this page there — free on iOS and Android.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="pitch-inner">
+        <!-- ===================== SCREENSHOT FLOW ===================== -->
+        <section class="shots-section pitch-flow" data-section="flow" data-reveal aria-labelledby="flow-heading">
+          <h2 class="pitch-h2" id="flow-heading">See it in 30 seconds.</h2>
+          <p class="shots-lede">The full loop — find help, or get found.</p>
+          <!-- Value order, not onboarding order: search → range → work side → profile,
+               with sign-in as the safety closer at the moment of decision. -->
+          <ol class="shots">
+            <li class="shot">
+              <img src="/gig/shots/app-search.webp" alt="Gig search results for &ldquo;Someone to walk my dog while…&rdquo; — nearby pet sitters and dog walkers with prices, ratings, and distance." width="600" height="1304" loading="lazy" />
+              <div class="shot__cap">
+                <span class="shot__step"><b>01</b> &nbsp;Search</span>
+                <span class="shot__text">Type it the way you&rsquo;d say it — the best-matched pros show up, priced up front.</span>
+              </div>
+            </li>
+            <li class="shot">
+              <img src="/gig/shots/app-map.webp" alt="Search-area map centred on San Francisco with a 10-mile radius selected." width="600" height="1304" loading="lazy" />
+              <div class="shot__cap">
+                <span class="shot__step"><b>02</b> &nbsp;Set your range</span>
+                <span class="shot__text">See only help close enough to actually show up.</span>
+              </div>
+            </li>
+            <li class="shot">
+              <img src="/gig/shots/app-my-profile.webp" alt="Your own Gig profile — location, 8 services listed, and links to Instagram, Facebook, TikTok, LinkedIn, and a website." width="600" height="1304" loading="lazy" />
+              <div class="shot__cap">
+                <span class="shot__step"><b>03</b> &nbsp;Flip to the work side</span>
+                <span class="shot__text">Same account: list what you do and show up in searches everywhere, not just nearby.</span>
+              </div>
+            </li>
+            <li class="shot">
+              <img src="/gig/shots/app-provider.webp" alt="A provider&rsquo;s Gig profile — 5.0 rating, 2.4 miles away, responds within minutes, with a Contact button." width="600" height="1304" loading="lazy" />
+              <div class="shot__cap">
+                <span class="shot__step"><b>04</b> &nbsp;See who you&rsquo;re hiring</span>
+                <span class="shot__text">Ratings, services, and how fast they reply — see who you&rsquo;re dealing with before you message.</span>
+              </div>
+            </li>
+            <li class="shot">
+              <img src="/gig/shots/app-login.webp" alt="Gig login screen with the tagline &ldquo;Find help for almost anything&rdquo;, email sign-in, and Google and Apple sign-in." width="600" height="1304" loading="lazy" />
+              <div class="shot__cap">
+                <span class="shot__step"><b>05</b> &nbsp;Sign in</span>
+                <span class="shot__text">Apple, Google, or email — in and set in seconds.</span>
+              </div>
+            </li>
+          </ol>
+        </section>
+
+        <!-- ===================== SAFETY ===================== -->
+        <!-- Real shipped features only. Mutuals are what the linked platforms show, not
+             something Gig computes — keep the wording that way. No "vetted" or "verified
+             pros": Gig runs no background checks (see the FAQ). -->
+        <section class="pitch-safety" data-section="safety" data-reveal aria-labelledby="safety-heading">
+          <div class="pitch-safety__grid">
+            <div>
+              <h2 class="pitch-h2" id="safety-heading">Know who you&rsquo;re dealing with.</h2>
+              <p class="pitch-safety__lede">
+                Every profile can link to Instagram, TikTok, LinkedIn, Facebook, or a website. Check someone
+                out before you ever meet.
+              </p>
+              <ul class="pitch-safety__list">
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H4V4Zm2 2v8h12V6H6Zm2 6 2.5-3 2 2.5L14 9l3 3H8Zm-4 6h16v2H4v-2Z"/></svg>
+                  <div>
+                    <h3>See their real work</h3>
+                    <p>Tap through to their socials or site for photos, posts, and past jobs.</p>
+                  </div>
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm8 0a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7ZM1 20c0-3.9 3.1-7 7-7s7 3.1 7 7H1Zm15-7c3.3 0 6 2.5 6 6v1h-5c0-2.8-1.1-5.2-2.9-6.8.6-.1 1.2-.2 1.9-.2Z"/></svg>
+                  <div>
+                    <h3>Spot mutual connections</h3>
+                    <p>Their Instagram or LinkedIn shows who you both know.</p>
+                  </div>
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.5 2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9L12 2.5Z"/></svg>
+                  <div>
+                    <h3>Ratings both ways</h3>
+                    <p>Customers rate pros and pros rate customers after every job.</p>
+                  </div>
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Zm-1.2 14.2-3.5-3.5 1.4-1.4 2.1 2.1 4.8-4.8 1.4 1.4-6.2 6.2Z"/></svg>
+                  <div>
+                    <h3>Stay in control</h3>
+                    <p>Sign in with Apple or Google, chat in the app, and block or report anytime.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="pitch-safety__media">
+              <img
+                class="pitch-phone"
+                src="/gig/shots/app-reviews.webp"
+                alt="Reviews on a Gig profile — a five-star rating and a written review from a past customer, with a Leave a Review button."
+                width="600"
+                height="1304"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== THE NUMBERS ===================== -->
+        <ul class="pitch-stats" aria-label="Gig in three numbers">
+          <li class="pitch-stat">
+            <span class="pitch-stat__num">0%</span>
+            <span class="pitch-stat__label">commission, on every job</span>
+          </li>
+          <li class="pitch-stat">
+            <span class="pitch-stat__num">$0</span>
+            <span class="pitch-stat__label">to join, list, or hire</span>
+          </li>
+          <li class="pitch-stat">
+            <span class="pitch-stat__num">100%</span>
+            <span class="pitch-stat__label">of the price goes to the pro</span>
+          </li>
+        </ul>
+
+        <!-- ===================== WHAT PEOPLE HIRE FOR ===================== -->
+        <!-- Unsplash stock (free Unsplash License, no attribution required), cropped 4:5.
+             Illustrative of the categories only — never captioned or framed as Gig users. -->
+        <section class="pitch-cats" data-section="categories" data-reveal aria-labelledby="cats-heading">
+          <h2 class="pitch-h2" id="cats-heading">Help for almost anything.</h2>
+          <p class="pitch-cats__lede">A few of the jobs people hire for — and anything else you can describe in a sentence.</p>
+          <ul class="pitch-cats__grid">
+            <li class="pitch-cat">
+              <img src="/gig/shots/hire-cleaning.webp" alt="Someone carrying a cleaning caddy and broom up a flight of stairs at home." width="480" height="600" loading="lazy" decoding="async" />
+              <span class="pitch-cat__label">Cleaning</span>
+            </li>
+            <li class="pitch-cat">
+              <img src="/gig/shots/hire-moving.webp" alt="Two people carrying moving boxes and a plant into a new home." width="480" height="600" loading="lazy" decoding="async" />
+              <span class="pitch-cat__label">Moving</span>
+            </li>
+            <li class="pitch-cat">
+              <img src="/gig/shots/hire-handyman.webp" alt="A worker cutting trim on a miter saw during a home renovation." width="480" height="600" loading="lazy" decoding="async" />
+              <span class="pitch-cat__label">Handyman</span>
+            </li>
+            <li class="pitch-cat">
+              <img src="/gig/shots/hire-tutoring.webp" alt="A student working through a lesson with a tutor at a table." width="480" height="600" loading="lazy" decoding="async" />
+              <span class="pitch-cat__label">Tutoring</span>
+            </li>
+            <li class="pitch-cat">
+              <img src="/gig/shots/hire-pets.webp" alt="Someone walking a dog on a leash along a forest path." width="480" height="600" loading="lazy" decoding="async" />
+              <span class="pitch-cat__label">Pet care</span>
+            </li>
+            <li class="pitch-cat">
+              <img src="/gig/shots/hire-hair.webp" alt="A hairdresser trimming someone&rsquo;s long hair with scissors." width="480" height="600" loading="lazy" decoding="async" />
+              <span class="pitch-cat__label">Hair &amp; beauty</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ===================== MONEY MOMENT ===================== -->
+        <!-- Same claim, same hedge as /gig/compare/ — keep them in step. -->
+        <section class="pitch-money" data-section="spec" data-reveal aria-labelledby="money-heading">
+          <h2 class="pitch-h2" id="money-heading">On a $100 job, where does the money go?</h2>
+          <div class="pitch-money__cols">
+            <div class="pitch-money__col">
+              <p class="pitch-money__who">Typical gig apps</p>
+              <p class="pitch-money__num">~$15+</p>
+              <p class="pitch-money__text">
+                A service fee of around 15% is commonly reported, often with more on top — or a charge per lead,
+                whether you win the job or not.
+              </p>
+            </div>
+            <div class="pitch-money__col pitch-money__col--gig">
+              <p class="pitch-money__who">Gig</p>
+              <p class="pitch-money__num">$0</p>
+              <p class="pitch-money__text">
+                The customer pays the pro directly. Gig never touches the payment, so all $100 stays with the
+                person who did the work.
+              </p>
+            </div>
+          </div>
+          <!-- Quick comparison as an in-place dropdown, not an exit. Native <details>: keyboard
+               and screen-reader support for free, no JS. Rows mirror the matrix on
+               /gig/compare/ — change both together. -->
+          <details class="pitch-cmp">
+            <summary class="pitch-cmp__toggle">
+              See how Gig compares
+              <svg class="pitch-cmp__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="pitch-cmp__panel">
+              <table class="pitch-cmp__table">
+                <caption class="sr-only">What each app takes from a worker's pay, and whether they keep 100%</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">App</th>
+                    <th scope="col">Its cut of your pay</th>
+                    <th scope="col">Keep 100%?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="pitch-cmp__gig">
+                    <th scope="row">Gig</th>
+                    <td>0% — never touches the payment</td>
+                    <td><span class="pitch-cmp__mark pitch-cmp__mark--yes" aria-hidden="true">✓</span> Yes</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">TaskRabbit</th>
+                    <td>~15% service fee (commonly reported) + fees</td>
+                    <td><span class="pitch-cmp__mark" aria-hidden="true">✗</span> No</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Thumbtack</th>
+                    <td>Pay per lead, even if you don&rsquo;t book</td>
+                    <td><span class="pitch-cmp__mark" aria-hidden="true">✗</span> No</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Uber &amp; Lyft</th>
+                    <td>Variable cut; the platform sets the fare</td>
+                    <td><span class="pitch-cmp__mark" aria-hidden="true">✗</span> No</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">DoorDash</th>
+                    <td>The platform sets your pay per delivery</td>
+                    <td><span class="pitch-cmp__mark" aria-hidden="true">✗</span> No</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p class="pitch-cmp__note">
+                Typical, commonly reported terms — fees vary by market and change often.
+                <a href="/gig/compare/" data-exit="compare">Full comparison</a>
+              </p>
+            </div>
+          </details>
+        </section>
+
+        <!-- ===================== BOTH SIDES + MID CTA ===================== -->
+        <section class="pitch-sides" data-section="mid-cta" data-reveal aria-labelledby="sides-heading">
+          <h2 class="pitch-h2" id="sides-heading">One free app. Both sides of the job.</h2>
+          <div class="pitch-cards">
+            <div class="pitch-card">
+              <p class="pitch-card__kicker">Need something done?</p>
+              <h3 class="pitch-card__title">Say it in a sentence. Get matched.</h3>
+              <ul class="pitch-checks">
+                <li>Type it how you&rsquo;d say it — &ldquo;fix my leaking sink.&rdquo;</li>
+                <li>Pros ranked by rating and distance.</li>
+                <li>Price up front, with no platform markup.</li>
+              </ul>
+            </div>
+            <div class="pitch-card">
+              <p class="pitch-card__kicker">Got a skill?</p>
+              <h3 class="pitch-card__title">Get found. Keep 100%.</h3>
+              <ul class="pitch-checks">
+                <li>List your services once, free.</li>
+                <li>No commission, no lead fees, no subscription.</li>
+                <li>Turn on GigFlex to get hired for jobs you didn&rsquo;t list.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cta-row pitch-sides__cta" data-pos="mid">
+            <a class="store-badge cta-ios-primary" href="https://apps.apple.com/app/id6758136203">
+              <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
+            </a>
+            <a
+              class="store-badge cta-android-primary"
+              href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig"
+            >
+              <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <!-- ===================== CLOSING BAND (peak intent) ===================== -->
+      <section class="pitch-band pitch-close" data-section="closing" aria-labelledby="close-heading">
+        <div class="pitch-inner pitch-close__grid">
+          <div>
+            <h2 class="pitch-close__title" id="close-heading">Your first job is one sentence away.</h2>
+            <p class="pitch-close__line">Free to download. Free to join. Nothing taken from what you earn.</p>
+          </div>
+          <div class="get-app__actions">
+            <div class="cta-row" data-pos="closing">
+              <a class="store-badge cta-ios-primary" href="https://apps.apple.com/app/id6758136203">
+                <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
+              </a>
+              <a
+                class="store-badge cta-android-primary"
+                href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig"
+              >
+                <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
+              </a>
+            </div>
+
+            <div class="scan" data-qr>
+              <div class="scan__code" data-qr-code></div>
+              <div class="scan__copy">
+                <p class="scan__label">On a computer?</p>
+                <p class="scan__text">Scan to pick this up on your phone.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="pitch-inner">
+      <!-- Below the measured funnel on purpose. Crawlable copy and internal
+           links for search. No data-section and no store links: a store tap
+           here would beacon as a conversion with no position. -->
+      <section class="seo" aria-labelledby="seo-heading">
+        <div class="prose">
+          <h2 id="seo-heading">A commission-free marketplace for local services</h2>
+          <p>
+            <strong>Gig</strong> connects people who need a job done with people
+            who do that work. It is built for services nearby — cleaning,
+            repairs, tutoring, moving, and the rest — and for work that can be
+            done from anywhere. One free profile covers both sides. You hire, or
+            you offer, from the same account.
+          </p>
+          <p>
+            The number that separates it from a typical services app is the
+            commission: <strong>0%</strong>. Gig never sits in the payment. You
+            and the other person agree a price and settle it directly, so what
+            was quoted is what gets kept.
+          </p>
+
+          <h2>Find local help</h2>
+          <p>
+            Describe the job in your own words. &ldquo;Fix my leaking
+            sink&rdquo; is a better search than &ldquo;plumber.&rdquo; The
+            closest matches surface ranked by relevance, rating, and distance,
+            priced up front, with no platform markup added on top. Message in
+            the app before you commit. How full the results are depends on who
+            is actually near you.
+          </p>
+          <p>
+            The practical version — what to type, and which four signals are
+            worth reading — is in
+            <a class="prose__link" href="/gig/blog/find-local-help-near-you/">how to find local help near you</a>.
+          </p>
+
+          <h2>Offer a service and keep 100%</h2>
+          <p>
+            List what you do once. A profile takes about a minute: your name, a
+            photo, and the service in the words a customer would use. There is
+            no subscription and no fee to be listed. When someone books you,
+            they pay you directly. Gig does not take a cut and does not charge
+            you for the introduction.
+          </p>
+          <p>
+            Open to work you did not think to list? Turn on GigFlex and
+            customers can hire you for those jobs too. Leave it off if you only
+            want what you named.
+          </p>
+
+          <h2>How Gig compares</h2>
+          <p>
+            TaskRabbit, Thumbtack, Uber, Lyft, and DoorDash each stand between
+            a worker and the money, either with a commission, a per-lead
+            charge, or a price the platform sets.
+            <a class="prose__link" href="/gig/compare/">Gig ranks first in that comparison</a>
+            because it is the only one that charges 0% and stays out of the
+            payment. The table has a download link for every app on the list.
+          </p>
+
+          <h2>From the journal</h2>
+          <ul>
+            <li>
+              <a class="prose__link" href="/gig/blog/is-gig-safe/">Is Gig safe — what it protects, and what it doesn't</a>
+            </li>
+            <li>
+              <a class="prose__link" href="/gig/blog/how-easy-is-gig-to-use/">How easy Gig is to set up</a>
+            </li>
+            <li>
+              <a class="prose__link" href="/gig/blog/how-to-make-money-offering-services/">How to make money offering services and keep all of it</a>
+            </li>
+            <li>
+              <a class="prose__link" href="/gig/blog/how-to-get-your-first-local-clients/">How to get your first clients without paying for leads</a>
+            </li>
+            <li>
+              <a class="prose__link" href="/gig/blog/how-to-price-your-services/">How to price a local service</a>
+            </li>
+            <li>
+              <a class="prose__link" href="/gig/blog/commission-free-services-marketplace/">How a commission-free marketplace pays for itself</a>
+            </li>
+            <li>
+              <a class="prose__link" href="/gig/blog/">Every note in the Gig journal</a>
+            </li>
+          </ul>
+
+          <h2>Frequently asked</h2>
+          <div class="faq">
+            <p class="faq__q">What is Gig?</p>
+            <p class="faq__a">
+              Gig is a free marketplace for local services, and for work that
+              can be done from anywhere. One profile lets you hire or offer a
+              service. You describe the job in a sentence, or you list what you
+              do. Gig takes no commission.
+            </p>
+
+            <p class="faq__q">How much commission does Gig take?</p>
+            <p class="faq__a">
+              Zero. Gig charges 0% commission and never touches the payment.
+              The customer pays you directly, so you keep 100%. There is no
+              booking fee and no charge per lead.
+            </p>
+
+            <p class="faq__q">Is Gig free to join?</p>
+            <p class="faq__a">
+              Yes. Gig is free to download on iOS and Android, and free to
+              create a profile on, whether you are hiring or offering a
+              service. There is no subscription and no per-job fee.
+            </p>
+
+            <p class="faq__q">How do you find local help on Gig?</p>
+            <p class="faq__a">
+              Type the job the way you would say it, not a category name.
+              Matches come back ranked by relevance, rating, and distance, with
+              the price up front and no platform fee added. How many people are
+              near you depends on your area.
+            </p>
+
+            <p class="faq__q">Is Gig safe to use?</p>
+            <p class="faq__a">
+              You can sign in with Apple, Google, or email. Ratings run both
+              ways after a job. Profiles can link to Instagram, TikTok,
+              LinkedIn, Facebook, or a website, so you can see someone's work
+              before you meet. Messages stay in the app, and you can block or
+              report at any point. Gig does not run background checks, and it
+              does not hold the payment.
+            </p>
+          </div>
+        </div>
+      </section>
+      </div>
+    </main>
+
+    <!-- Mobile sticky download bar. scripts/gig-sticky.js shows it once the hero badges
+         leave the screen and hides it over the closing band; without JS it never shows. -->
+    <div class="sticky-cta" role="region" aria-label="Download Gig" data-sticky>
+      <div class="cta-row" data-pos="sticky">
+        <a class="store-badge cta-ios-primary" href="https://apps.apple.com/app/id6758136203">
+          <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="40" />
+        </a>
+        <a
+          class="store-badge cta-android-primary"
+          href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig"
+        >
+          <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="40" />
+        </a>
+      </div>
+    </div>
+
+    <footer class="footer" data-section="footer">
+      <div class="bar">
+        <span class="bar__meta">© 1990</span>
+        <nav class="footer-links">
+          <a href="/gig/blog/" data-exit="blog">Blog</a>
+          <a href="/privacy/" data-exit="privacy">Privacy</a>
+          <a href="https://backend-production-9a98f.up.railway.app/privacy" target="_blank" rel="noopener" data-exit="app-privacy">App privacy</a>
+          <a href="https://backend-production-9a98f.up.railway.app/terms" target="_blank" rel="noopener" data-exit="terms">Terms</a>
+          <a href="mailto:support@rightimagedigital.com" data-exit="support">Support</a>
+        </nav>
+        <ul class="social" data-exit="social">
+          <li>
+            <a href="https://www.tiktok.com/@mummysboy348" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"
+                />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.instagram.com/gigbymummysboy" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.facebook.com/profile.php?id=61589961461573" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                />
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- The Android early-access modal lived here until 2026-08-05. Gig shipped to Google
+         Play, so both badges are now plain store links and the invite funnel is retired. -->
+
+    <script type="module" src="/scripts/reveal.js"></script>
+    <!-- No project.js here: variant pages own their copy and <title> (see CLAUDE.md). -->
+    <script type="module" src="/scripts/gig-vid.js"></script>
+    <script type="module" src="/scripts/gig-qr.js"></script>
+    <script type="module" src="/scripts/gig-sticky.js"></script>
+    <script type="module" src="/scripts/gig-analytics.js"></script>
+  </body>
+</html>

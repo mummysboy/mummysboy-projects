@@ -45,6 +45,18 @@
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 
+# The video-hero variant's loops (portrait + landscape) and posters: stable names — rename on change
+# (hero-loop-2.mp4), like every other image here.
+[[headers]]
+  for = "/gig/vid/*.mp4"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
+[[headers]]
+  for = "/gig/vid/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
 # The Gig web demo (/gig/demo/), generated in the Gig repo by
 # mobile/scripts/build-web-demo.mjs — rebuild it there, don't edit it here. On a
 # computer the page shows itself inside a phone frame, so this site (and only this
@@ -121,4 +133,9 @@
 [[redirects]]
   from = "/gig/hire/id=*"
   to = "/gig/hire/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/gig/vid/id=*"
+  to = "/gig/vid/index.html"
   status = 200
