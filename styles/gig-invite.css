@@ -1,8 +1,8 @@
-/* ===== /gig/invite/ — the invitation card (2026-10-09) =================================
-   One screen: the /gig/ hero loop edge to edge, and an invitation card on it — a frosted
-   dark panel with the inviter's monogram, the headline, the code if the link carried one,
-   and the store badges. Dark house tokens (tokens.css); this page does not load
-   gig-additions.css, so nothing here is light. Classes are inv-*.
+/* ===== /gig/invite/ — the invitation stage (2026-10-09) ================================
+   The /gig/ page's hero, swapped: the same loop edge to edge with an invitation card on
+   it — a frosted dark panel with the inviter's photo or the logo, the headline, the code
+   if the link carried one, and the store badges. Everything below the stage is /gig/
+   itself (gig-ad.css, whose rules are scoped to dual-e, vid and invite). Classes are inv-*.
 
    Contrast: the card is 78% black (plus blur) under white text — worst case over the
    brightest footage (luminance ≈ 0.9) the text sits on ≤ 0.2 luminance: white 4.6:1+,
@@ -80,7 +80,8 @@ html[data-variant="invite"] body {
     rgb(11 11 13 / 0.35) 0%,
     rgb(11 11 13 / 0.1) 30%,
     rgb(11 11 13 / 0.35) 65%,
-    rgb(11 11 13 / 0.75) 100%
+    rgb(11 11 13 / 0.8) 92%,
+    #0b0b0d 100% /* lands on the page colour: the stage melts into the demo section below */
   );
 }
 
@@ -343,7 +344,7 @@ html.is-desktop .inv-scan.scan--ready {
 
   .inv-scrim {
     background:
-      linear-gradient(to bottom, rgb(11 11 13 / 0.35) 0%, rgb(11 11 13 / 0.08) 30%, rgb(11 11 13 / 0.45) 100%);
+      linear-gradient(to bottom, rgb(11 11 13 / 0.35) 0%, rgb(11 11 13 / 0.08) 30%, rgb(11 11 13 / 0.5) 85%, #0b0b0d 100%);
   }
 }
 
