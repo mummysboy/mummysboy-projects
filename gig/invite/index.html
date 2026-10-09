@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en" data-variant="invite">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0b0d" />
+
+    <!-- /gig/invite/ — the invitation page (2026-10-09). The link a person shares to bring
+         someone onto Gig: /gig/invite=Name (the macro form — their name in the path, so the
+         desktop QR carries it to the phone), /gig/invite/CODE (their invite code) or
+         /gig/invite/?from=Name. scripts/gig-invite.js reads the name or code and turns the
+         card into "{name} is inviting you to Gig" with their monogram;
+         with nothing to read it stays the plain "You're invited". Noindex + canonical to /gig/
+         (a share landing, not a search page). Analytics: data-variant "invite". -->
+    <title>You’re invited to Gig</title>
+    <meta
+      name="description"
+      content="Someone invited you to Gig — a free app for finding local help, or getting hired for what you do. Gig takes 0%."
+    />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href="https://mummysboy.com/gig/" />
+    <link rel="icon" href="/gig/shots/app-icon-black-rounded.png" type="image/png" sizes="96x96" />
+    <link rel="apple-touch-icon" href="/gig/shots/app-icon-black.jpg" />
+    <meta name="apple-itunes-app" content="app-id=6758136203" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Gig" />
+    <meta property="og:url" content="https://mummysboy.com/gig/invite/" />
+    <meta property="og:title" content="You’re invited to Gig" />
+    <meta
+      property="og:description"
+      content="A free app for finding local help, or getting hired for what you do. No commissions, no service fees. Free on iOS and Android."
+    />
+    <meta property="og:image" content="https://mummysboy.com/gig/share-icon-black.jpg" />
+    <meta property="og:image:secure_url" content="https://mummysboy.com/gig/share-icon-black.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="1024" />
+    <meta property="og:image:alt" content="The Gig app icon." />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="You’re invited to Gig" />
+    <meta
+      name="twitter:description"
+      content="A free app for finding local help, or getting hired for what you do. No commissions, no service fees."
+    />
+    <meta name="twitter:image" content="https://mummysboy.com/gig/share-icon-black.jpg" />
+    <meta name="twitter:image:alt" content="The Gig app icon." />
+
+    <!-- OS class set before paint — read by gig-analytics.js to tag beacons with the device (os field). -->
+    <script>
+      (function () {
+        var ua = navigator.userAgent || "";
+        var cls = "is-desktop";
+        if (/iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) cls = "is-ios";
+        else if (/Android/i.test(ua)) cls = "is-android";
+        document.documentElement.classList.add(cls);
+      })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/styles/tokens.css" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <!-- This page's own sheet (no gig-additions.css: that puts the light theme on every
+         data-variant, and this page is dark like /gig/). -->
+    <link rel="stylesheet" href="/styles/gig-invite.css?v=2" />
+    <!-- Consent gate first (defines window.mbConsent), then the ad pixel, same as every /gig/ page. -->
+    <script src="/scripts/consent.js"></script>
+    <script src="/scripts/mediago.js"></script>
+  </head>
+  <body data-project="gig">
+    <header class="masthead">
+      <div class="bar">
+        <a class="mark" href="/" data-exit="wordmark">mummysboy</a>
+        <span class="bar__meta">est. 1990</span>
+      </div>
+    </header>
+
+    <main class="inv">
+      <!-- The stage: the same loop as /gig/'s hero, edge to edge, with the invitation card on it. -->
+      <section class="inv-stage" data-section="hero">
+        <div class="inv-media" aria-hidden="true">
+          <video
+            class="inv-video"
+            data-hero-video
+            data-src-portrait="/gig/vid/hero-loop-2.mp4"
+            data-poster-portrait="/gig/vid/hero-poster-2.jpg"
+            data-src-wide="/gig/vid/hero-loop-wide-2.mp4"
+            data-poster-wide="/gig/vid/hero-poster-wide-2.jpg"
+            autoplay
+            muted
+            loop
+            playsinline
+            disablepictureinpicture
+            disableremoteplayback
+            preload="auto"
+            tabindex="-1"
+          ></video>
+          <script>
+            (function () {
+              var v = document.currentScript.previousElementSibling;
+              var wide = window.matchMedia("(min-width: 760px) and (orientation: landscape)").matches;
+              v.poster = wide ? v.dataset.posterWide : v.dataset.posterPortrait;
+              v.src = wide ? v.dataset.srcWide : v.dataset.srcPortrait;
+            })();
+          </script>
+          <div class="inv-scrim"></div>
+        </div>
+
+        <article class="inv-card" data-reveal>
+          <!-- Monogram of the inviter (gig-invite.js), or the app icon until there is one. -->
+          <div class="inv-avatar" data-inv-avatar>
+            <img class="inv-avatar__icon" src="/gig/shots/app-icon-black-rounded.png" alt="" width="64" height="64" />
+          </div>
+
+          <p class="inv-eyebrow" data-inv-eyebrow>You’re invited</p>
+          <h1 class="inv-title" data-inv-title>Join Gig.</h1>
+          <p class="inv-line" data-inv-line>
+            A free app for finding local help — and for getting hired for what you do.
+            No commissions, no service fees. Ever.
+          </p>
+
+          <!-- Shown only when the link carries an invite code. -->
+          <div class="inv-code" data-inv-code hidden>
+            <span class="inv-code__label" data-inv-code-label>Your invite code</span>
+            <span class="inv-code__row">
+              <code class="inv-code__value" data-inv-code-value></code>
+              <button class="inv-code__copy" type="button" data-inv-copy aria-label="Copy invite code">Copy</button>
+            </span>
+            <span class="inv-code__hint" data-inv-code-hint>Enter it when you sign up.</span>
+          </div>
+
+          <div class="cta-row inv-cta" data-pos="hero">
+            <!-- No target="_blank" — dead in the IG/FB in-app browsers; the tap still beacons `ios`. -->
+            <a class="store-badge cta-ios-primary" href="https://apps.apple.com/app/id6758136203">
+              <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
+            </a>
+            <a class="store-badge cta-android-primary" href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig">
+              <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
+            </a>
+          </div>
+
+          <p class="inv-demo">
+            Not ready to download? <a href="/gig/demo/" data-exit="demo">Try the demo in your browser.</a>
+          </p>
+
+          <!-- Desktop-only bridge to the phone (scripts/gig-qr.js). The code is in the path, so it travels. -->
+          <div class="scan inv-scan" data-qr>
+            <div class="scan__code" data-qr-code></div>
+            <div class="scan__copy">
+              <p class="scan__label">On a computer?</p>
+              <p class="scan__text">Scan with your phone camera to open this invitation there.</p>
+            </div>
+          </div>
+        </article>
+
+        <p class="sr-only">Background: scenes of someone replacing a ceiling light bulb, someone mopping a kitchen floor, someone wiping a window, and a person walking two dogs on a trail.</p>
+      </section>
+    </main>
+
+    <footer class="footer inv-footer" data-section="footer">
+      <div class="bar">
+        <span class="bar__meta">© 1990</span>
+        <nav class="footer-links">
+          <a href="/gig/" data-exit="gig">About Gig</a>
+          <a href="/privacy/" data-exit="privacy">Privacy</a>
+          <a href="https://backend-production-9a98f.up.railway.app/terms" target="_blank" rel="noopener" data-exit="terms">Terms</a>
+          <a href="mailto:support@rightimagedigital.com" data-exit="support">Support</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script type="module" src="/scripts/reveal.js"></script>
+    <script type="module" src="/scripts/gig-qr.js"></script>
+    <script type="module" src="/scripts/gig-vid.js"></script>
+    <script type="module" src="/scripts/gig-invite.js"></script>
+    <script type="module" src="/scripts/gig-analytics.js"></script>
+  </body>
+</html>

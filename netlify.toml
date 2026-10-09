@@ -140,6 +140,21 @@
   to = "/gig/lander/index.html"
   status = 200
 
+# The invitation page: /gig/invite/CODE (the sharer's invite code in the path — it survives
+# the desktop QR hop, a query string wouldn't) and /gig/invite/id=SRC both serve the page;
+# scripts/gig-invite.js reads the segment. A 200 rewrite never shadows a real file.
+[[redirects]]
+  from = "/gig/invite/*"
+  to = "/gig/invite/index.html"
+  status = 200
+
+# The macro link: /gig/invite=Alex — the sharer's name in the path, read by gig-invite.js
+# ("Alex is inviting you to Gig"). The desktop QR keeps the path, so the name travels too.
+[[redirects]]
+  from = "/gig/invite=*"
+  to = "/gig/invite/index.html"
+  status = 200
+
 # /gig/vid/ was the video-hero page for a day (2026-10-09) before it became /gig/; the
 # folder now holds only that page's media. Send the old page URL home.
 [[redirects]]
