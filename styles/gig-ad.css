@@ -1119,3 +1119,207 @@ html[data-variant="vid"] .pitch-vid ::selection {
       linear-gradient(to bottom, rgb(0 0 0 / 0.3) 0%, rgb(0 0 0 / 0) 35%, rgb(0 0 0 / 0.45) 100%);
   }
 }
+
+/* ---- Try demo section (vid only): the App Store preview in a phone, beside the badge --- */
+html[data-variant="vid"] .pitch-demo {
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+  padding-block: 3rem 0.5rem;
+}
+
+html[data-variant="vid"] .pitch-demo__lede {
+  max-width: 34rem;
+  margin-top: 0.75rem;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--steel);
+}
+
+html[data-variant="vid"] .pitch-demo__cta {
+  margin-top: 1.25rem;
+}
+
+/* The device frame (matches .pitch-phone), clipping the preview to its screen. No chip
+   on the phone: the badge beside it is the labelled control, the phone is a quiet second
+   link. */
+html[data-variant="vid"] .pitch-demo__media {
+  padding-bottom: 0;
+}
+
+html[data-variant="vid"] .pitch-demo__phone {
+  width: 64%;
+  max-width: 250px;
+  aspect-ratio: 886 / 1920;
+  border: 6px solid #1d1d1f;
+  border-radius: 34px;
+  background: #1d1d1f;
+  box-shadow: 0 24px 48px rgb(0 0 0 / 0.28);
+}
+
+html[data-variant="vid"] .pitch-demo__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 28px;
+  background: #1d1d1f;
+}
+
+@media (min-width: 760px) {
+  html[data-variant="vid"] .pitch-demo {
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 3rem;
+    padding-block: 4.5rem 1.5rem;
+  }
+
+  html[data-variant="vid"] .pitch-demo__phone {
+    width: 100%;
+  }
+}
+
+/* ===== /gig/vid/ — dark edition (2026-10-09) ==========================================
+   The hero is dark, full-bleed and bottom-anchored; a white spec sheet after it read as a
+   different page. So this variant renders on the site's native dark palette (tokens.css),
+   undoing the light "App Store" theme that gig-additions.css puts on every data-variant.
+   The cobalt band stays as the one colour moment, green stays for money, and the closing
+   band carries a still from the hero footage under the hero's scrim so the page opens and
+   closes on the same imagery.
+
+   Contrast on #0b0b0d / #141417 (computed): --silver-bright 15.9 / 14.0 · --silver 7.7 /
+   6.8 · --steel 4.9 / 4.5 (quiet labels only) · --volt 13.5 / 11.9 · safety icon blue
+   #8fbcff on its plate 6.6 · cobalt band text unchanged (9.07 / 7.12). */
+html[data-variant="vid"] {
+  --ink: #0b0b0d;
+  --surface: #141417;
+  --surface-hi: #1c1c20;
+  --silver: #a8aeb8;
+  --silver-bright: #e7e9ed;
+  --hairline: #2a2a30;
+  --volt: #2df58a;
+  --volt-dim: #16a35c;
+  --steel: #8a95a3; /* 4.9:1 on --ink — the house #798593 is 4.1 against #141417 cards */
+  --pitch-tint: #152540; /* safety icon plates — deep cobalt on black */
+  --pitch-icon: #8fbcff; /* icon on the plate, 6.6:1 */
+  --money-tint: #0f1d16; /* the Gig $0 card — a green shadow, not a tint */
+}
+
+html[data-variant="vid"] ::selection {
+  background: var(--volt);
+  color: #0b0b0d;
+}
+
+/* The hero's scrim lands on the page colour, so the video melts into the page instead
+   of ending at an edge. */
+html[data-variant="vid"] .pitch-vid__scrim {
+  background: linear-gradient(
+    to bottom,
+    rgb(11 11 13 / 0.3) 0%,
+    rgb(11 11 13 / 0.08) 22%,
+    rgb(11 11 13 / 0.12) 42%,
+    rgb(11 11 13 / 0.6) 62%,
+    rgb(11 11 13 / 0.82) 80%,
+    rgb(11 11 13 / 0.94) 94%,
+    #0b0b0d 100%
+  );
+}
+
+@media (min-width: 760px) {
+  html[data-variant="vid"] .pitch-vid__scrim {
+    background:
+      linear-gradient(to right, rgb(11 11 13 / 0.72) 0%, rgb(11 11 13 / 0.55) 45%, rgb(11 11 13 / 0.2) 100%),
+      linear-gradient(to bottom, rgb(11 11 13 / 0.3) 0%, rgb(11 11 13 / 0) 35%, rgb(11 11 13 / 0.7) 85%, #0b0b0d 100%);
+  }
+}
+
+/* Device bezels and cards: a hairline ring so a black frame still has an edge on black. */
+html[data-variant="vid"] .pitch-phone,
+html[data-variant="vid"] .pitch-demo__phone {
+  border-color: #1d1d1f;
+  box-shadow:
+    0 0 0 1px var(--hairline),
+    0 24px 48px rgb(0 0 0 / 0.6);
+}
+
+html[data-variant="vid"] .pitch-stat,
+html[data-variant="vid"] .pitch-card {
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+
+/* Safety icons: deep cobalt plate, light blue glyph. */
+html[data-variant="vid"] .pitch-safety__list svg {
+  fill: var(--pitch-icon);
+}
+
+/* Money: the Gig card keeps its green ring on a green-black field. */
+html[data-variant="vid"] .pitch-money__col--gig {
+  border-color: var(--volt);
+}
+
+/* Comparison dropdown: a black drop shadow, not the light page's cobalt one. */
+html[data-variant="vid"] .pitch-cmp__panel {
+  background: var(--surface);
+  box-shadow: 0 16px 40px rgb(0 0 0 / 0.5);
+}
+
+html[data-variant="vid"] .pitch-cmp__toggle:hover,
+html[data-variant="vid"] .pitch-cmp[open] .pitch-cmp__toggle {
+  background: var(--surface-hi);
+}
+
+/* Category photos: the label pill stays white — it is the one place a light plate
+   earns its contrast against whatever the photo is doing. Tiles get the hairline ring. */
+html[data-variant="vid"] .pitch-cat {
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+
+/* Closing band: a still from the hero loop under the hero's scrim. Portrait crop on
+   phones, the wide frame on larger screens; the cobalt stays as the fallback colour. */
+html[data-variant="vid"] .pitch-close {
+  position: relative;
+  isolation: isolate;
+  background: var(--pitch-band) url("/gig/vid/close-still-portrait-1.jpg") center / cover no-repeat;
+}
+
+html[data-variant="vid"] .pitch-close::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to bottom,
+    #0b0b0d 0%,
+    rgb(11 11 13 / 0.55) 30%,
+    rgb(11 11 13 / 0.72) 100%
+  );
+}
+
+html[data-variant="vid"] .pitch-close .pitch-close__title,
+html[data-variant="vid"] .pitch-close .pitch-close__line,
+html[data-variant="vid"] .pitch-close .scan__label {
+  text-shadow: 0 2px 14px rgb(0 0 0 / 0.45);
+}
+
+@media (min-width: 760px) {
+  html[data-variant="vid"] .pitch-close {
+    background-image: url("/gig/vid/close-still-1.jpg");
+    padding-block: 6rem;
+  }
+
+  html[data-variant="vid"] .pitch-close::before {
+    background:
+      linear-gradient(to right, rgb(11 11 13 / 0.78) 0%, rgb(11 11 13 / 0.6) 50%, rgb(11 11 13 / 0.3) 100%),
+      linear-gradient(to bottom, #0b0b0d 0%, rgb(11 11 13 / 0) 30%, rgb(11 11 13 / 0.5) 100%);
+  }
+}
+
+/* The SEO block and footer sit on the dark page as on the hub; a hairline above the
+   footer gives the page an end. */
+html[data-variant="vid"] .footer {
+  border-top: 1px solid var(--hairline);
+}
+
+/* Sticky bar: the dark page colour with the hairline, plus a shadow so it lifts. */
+html[data-variant="vid"] .sticky-cta {
+  box-shadow: 0 -8px 24px rgb(0 0 0 / 0.4);
+}

@@ -45,7 +45,7 @@
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 
-# The video-hero variant's loops (portrait + landscape) and posters: stable names — rename on change
+# The /gig/ video hero's loops (portrait + landscape), posters and stills: stable names — rename on change
 # (hero-loop-2.mp4), like every other image here.
 [[headers]]
   for = "/gig/vid/*.mp4"
@@ -136,6 +136,18 @@
   status = 200
 
 [[redirects]]
-  from = "/gig/vid/id=*"
-  to = "/gig/vid/index.html"
+  from = "/gig/lander/id=*"
+  to = "/gig/lander/index.html"
   status = 200
+
+# /gig/vid/ was the video-hero page for a day (2026-10-09) before it became /gig/; the
+# folder now holds only that page's media. Send the old page URL home.
+[[redirects]]
+  from = "/gig/vid"
+  to = "/gig/"
+  status = 301
+
+[[redirects]]
+  from = "/gig/vid/"
+  to = "/gig/"
+  status = 301

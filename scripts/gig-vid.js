@@ -34,6 +34,32 @@ try {
       window.addEventListener("click", retry, { once: true });
     }
   }
+
+  // Lazy section videos (the App Store preview under the hero): no src until the video is
+  // within a screen of the viewport, then play while on screen and pause when not. Under
+  // Reduce Motion or Save-Data they stay on their poster.
+  const lazy = document.querySelectorAll("[data-lazy-video]");
+  if (lazy.length) {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const saveData = !!(navigator.connection && navigator.connection.saveData);
+    if (!reduceMotion && !saveData && "IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const en of entries) {
+            const v = en.target;
+            if (en.isIntersecting) {
+              if (!v.src && v.dataset.src) v.src = v.dataset.src;
+              v.play().catch(() => {});
+            } else {
+              v.pause();
+            }
+          }
+        },
+        { rootMargin: "100% 0px", threshold: 0.01 }
+      );
+      lazy.forEach((v) => io.observe(v));
+    }
+  }
 } catch (_) {
   // The loop plays or shows its poster on its own.
 }

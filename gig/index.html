@@ -1,10 +1,13 @@
 <!doctype html>
-<html lang="en" data-variant="dual-e">
+<html lang="en" data-variant="vid">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0b0d" />
 
-    <!-- Benefit-led title (was "Gig — mummysboy"): lead with what it is, not the parent brand. -->
+    <!-- /gig/ since 2026-10-09: the video-hero page (data-variant "vid" — the id stays with
+         the page, not the path). The previous page (dual-e) lives on at /gig/lander/.
+         Benefit-led title: lead with what it is, not the parent brand. -->
     <title>Gig — Commission-Free Local Services Marketplace | Keep 100%</title>
     <meta
       name="description"
@@ -47,7 +50,6 @@
     />
     <meta name="twitter:image" content="https://mummysboy.com/gig/share-icon-black.jpg" />
     <meta name="twitter:image:alt" content="The Gig app icon." />
-
     <!-- Disambiguates the very generic entity "Gig" for search + answer engines. No faked rating. -->
     <script type="application/ld+json">
       {
@@ -137,6 +139,7 @@
       }
     </script>
 
+
     <!-- OS class set before paint — read by gig-analytics.js to tag beacons with the device (os field). -->
     <script>
       (function () {
@@ -170,7 +173,7 @@
     <!-- dual-e ad treatment — /gig/ only, every rule scoped to html[data-variant="dual-e"].
          ?v= changes with the class names: /styles/ is served with a 24h stale-while-revalidate,
          and this HTML is not, so new markup must never be paired with a cached old sheet. -->
-    <link rel="stylesheet" href="/styles/gig-ad.css?v=4" />
+    <link rel="stylesheet" href="/styles/gig-ad.css?v=7" />
     <!-- Advertising: consent gate first (it defines window.mbConsent), then the mediago
          pixel, which stays silent until the gate says yes. Both are shared classic
          scripts — there is no build step, so this is how they stay identical on every
@@ -186,33 +189,66 @@
       </div>
     </header>
 
-    <!-- dual-c (2026-09-23): the dual-b ad page with the original `dual` hero restored
-         (light background, metal headline, couplet, one phone). Everything below the
-         hero is the ad treatment — a scoped exception to the house design rules at the
-         owner's direction, see styles/gig-ad.css. `dual` rows are the old spec-sheet
-         page, `dual-b` rows the cobalt-band hero; compare dual-c from this date.
-         2026-10-01: classes renamed ad-* → pitch-*. Ad blockers hid every .ad-inner, so
-         before this date dual-c rows include ad-blocker visitors who saw a blank page.
-         dual-d (2026-10-03, about an hour): dual-c plus an outlined "Try it in your browser"
-         pill under the hero badges, opening the web demo at /gig/demo/.
-         dual-e (2026-10-03): the demo CTA redone as a "Try demo" badge styled like the App Store badge,
-         and the desktop hero phone itself opens the demo. Compare dual-e from this date. -->
+    <!-- vid (2026-10-09, /gig/ from the same day): the dual-e page with a full-screen video hero. The 19 s muted
+         loop (light bulb → mopping → window → dog walk) fills the first viewport on every screen,
+         under a dark scrim, with the same headline, readout and badges on top; the masthead
+         floats over it. Everything below the hero is dual-e, unchanged, so the two
+         variants differ only in the hero. Footage: four free Pexels clips (sources and
+         licence in the Gig repo, marketing/media/inbox/pexels/SOURCES.md) — stock people,
+         never to be described as Gig pros. -->
     <main class="pitch">
       <!-- ===================== HERO (above the fold) ===================== -->
       <div class="pitch-inner pitch-top">
-        <article class="hero" data-section="hero">
-          <div class="hero__copy">
+        <article class="hero pitch-vid" data-section="hero">
+          <!-- The loop fills the whole viewport on every screen (object-fit: cover), with the
+               copy on a dark scrim over it. Two cuts of the same scenes: portrait for phones
+               and a landscape crop for wider screens — the inline script below picks one before
+               the video starts loading (the <source media> attribute is ignored by Chrome).
+               Decorative: the copy carries the message, so it is aria-hidden and described once
+               in text below. muted + playsinline are what let it autoplay on iOS;
+               scripts/gig-vid.js pauses it off-screen and never starts it under Reduce Motion or
+               Save-Data. The poster is the first scene, so a blocked autoplay (Low Power Mode)
+               still shows a scene. -->
+          <div class="hero__media pitch-vid__media">
+            <video
+              class="pitch-vid__video"
+              data-hero-video
+              data-src-portrait="/gig/vid/hero-loop-2.mp4"
+              data-poster-portrait="/gig/vid/hero-poster-2.jpg"
+              data-src-wide="/gig/vid/hero-loop-wide-2.mp4"
+              data-poster-wide="/gig/vid/hero-poster-wide-2.jpg"
+              autoplay
+              muted
+              loop
+              playsinline
+              disablepictureinpicture
+              disableremoteplayback
+              preload="auto"
+              aria-hidden="true"
+              tabindex="-1"
+            ></video>
+            <script>
+              (function () {
+                var v = document.currentScript.previousElementSibling;
+                var wide = window.matchMedia("(min-width: 760px) and (orientation: landscape)").matches;
+                v.poster = wide ? v.dataset.posterWide : v.dataset.posterPortrait;
+                v.src = wide ? v.dataset.srcWide : v.dataset.srcPortrait;
+              })();
+            </script>
+            <div class="pitch-vid__scrim" aria-hidden="true"></div>
+          </div>
+
+          <div class="hero__copy pitch-vid__copy">
             <div class="project__head">
               <img class="app-icon" src="/gig/shots/app-icon-black.jpg" alt="Gig app icon" width="104" height="104" />
             </div>
 
             <p class="eyebrow">/ gig · local + global services · live on iOS + android</p>
 
-            <!-- Static hero copy — authored here, not registry-driven (the data-name/data-blurb
-                 hooks are deliberately absent so project.js can't overwrite the variant copy). -->
+            <!-- Static hero copy — authored here, not registry-driven (no project.js on this page). -->
             <h1 class="title metal">Find a service or provide one.</h1>
 
-            <!-- The two-sided story as typography — self-identify in one saccade, no switch. -->
+            <!-- The two-sided story as typography. Hidden on phones (the fold is the video); back on wider screens. -->
             <dl class="couplet">
               <div>
                 <dt>Need a pro</dt>
@@ -239,20 +275,14 @@
               >
                 <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
               </a>
-              <!-- The web demo: the real app on sample pros (/gig/demo/, built in the Gig repo).
-                   Drawn to match the App Store badge, with the Gig icon for Apple's logo.
-                   Same tab, never target="_blank" (dead in in-app browsers); data-exit
-                   beacons the tap as an `exit` labelled "demo". -->
-              <a class="pitch-try" href="/gig/demo/" data-exit="demo" aria-label="Try demo: the Gig app in your browser, no download necessary">
-                <img class="pitch-try__logo" src="/gig/shots/app-icon-black-rounded.png" alt="" width="28" height="28" />
-                <span class="pitch-try__text" aria-hidden="true">
-                  <span class="pitch-try__label">Try demo</span>
-                  <span class="pitch-try__sub">No download necessary</span>
-                </span>
-              </a>
+              <!-- The "Try demo" badge lives in the demo section right under the hero on this
+                   variant, beside the App Store preview — not in this row. -->
             </div>
 
             <p class="proof">New on the App Store — early reviews coming in.</p>
+
+            <!-- The video in words, for screen readers and for anyone whose autoplay is off. -->
+            <p class="sr-only">Scenes of someone replacing a ceiling light bulb, someone mopping a kitchen floor, someone wiping a window, and a person walking two dogs on a trail.</p>
 
             <!-- Desktop-only bridge to the phone (scripts/gig-qr.js draws the code). -->
             <div class="scan" data-qr>
@@ -263,73 +293,59 @@
               </div>
             </div>
           </div>
-
-          <!-- The natural-language "magic moment" — shown beside the copy on wider screens. -->
-          <div class="hero__media">
-            <!-- The phone is the demo's door on wider screens: tap the app to use the app. -->
-            <a class="pitch-try-phone" href="/gig/demo/" data-exit="demo-phone" aria-label="Try demo: the Gig app in your browser, no download necessary">
-              <img
-                class="phone"
-                src="/gig/shots/app-home.webp"
-                alt="Gig home screen asking &ldquo;What do you need help with?&rdquo; above nearby providers with their ratings, distance, and prices."
-                width="600"
-                height="1304"
-                decoding="async"
-              />
-              <span class="pitch-try-phone__chip" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor" /></svg>
-                Try demo
-              </span>
-            </a>
-          </div>
         </article>
       </div>
 
       <div class="pitch-inner">
-        <!-- ===================== SCREENSHOT FLOW ===================== -->
-        <section class="shots-section pitch-flow" data-section="flow" data-reveal aria-labelledby="flow-heading">
-          <h2 class="pitch-h2" id="flow-heading">See it in 30 seconds.</h2>
-          <p class="shots-lede">The full loop — find help, or get found.</p>
-          <!-- Value order, not onboarding order: search → range → work side → profile,
-               with sign-in as the safety closer at the moment of decision. -->
-          <ol class="shots">
-            <li class="shot">
-              <img src="/gig/shots/app-search.webp" alt="Gig search results for &ldquo;Someone to walk my dog while…&rdquo; — nearby pet sitters and dog walkers with prices, ratings, and distance." width="600" height="1304" loading="lazy" />
-              <div class="shot__cap">
-                <span class="shot__step"><b>01</b> &nbsp;Search</span>
-                <span class="shot__text">Type it the way you&rsquo;d say it — the best-matched pros show up, priced up front.</span>
-              </div>
-            </li>
-            <li class="shot">
-              <img src="/gig/shots/app-map.webp" alt="Search-area map centred on San Francisco with a 10-mile radius selected." width="600" height="1304" loading="lazy" />
-              <div class="shot__cap">
-                <span class="shot__step"><b>02</b> &nbsp;Set your range</span>
-                <span class="shot__text">See only help close enough to actually show up.</span>
-              </div>
-            </li>
-            <li class="shot">
-              <img src="/gig/shots/app-my-profile.webp" alt="Your own Gig profile — location, 8 services listed, and links to Instagram, Facebook, TikTok, LinkedIn, and a website." width="600" height="1304" loading="lazy" />
-              <div class="shot__cap">
-                <span class="shot__step"><b>03</b> &nbsp;Flip to the work side</span>
-                <span class="shot__text">Same account: list what you do and show up in searches everywhere, not just nearby.</span>
-              </div>
-            </li>
-            <li class="shot">
-              <img src="/gig/shots/app-provider.webp" alt="A provider&rsquo;s Gig profile — 5.0 rating, 2.4 miles away, responds within minutes, with a Contact button." width="600" height="1304" loading="lazy" />
-              <div class="shot__cap">
-                <span class="shot__step"><b>04</b> &nbsp;See who you&rsquo;re hiring</span>
-                <span class="shot__text">Ratings, services, and how fast they reply — see who you&rsquo;re dealing with before you message.</span>
-              </div>
-            </li>
-            <li class="shot">
-              <img src="/gig/shots/app-login.webp" alt="Gig login screen with the tagline &ldquo;Find help for almost anything&rdquo;, email sign-in, and Google and Apple sign-in." width="600" height="1304" loading="lazy" />
-              <div class="shot__cap">
-                <span class="shot__step"><b>05</b> &nbsp;Sign in</span>
-                <span class="shot__text">Apple, Google, or email — in and set in seconds.</span>
-              </div>
-            </li>
-          </ol>
+        <!-- ===================== TRY DEMO (under the hero) ===================== -->
+        <!-- The App Store preview (the real app's screens on the demo pros, built in the Gig
+             repo: marketing/app-store-1.17) in a phone frame, loading only when it nears the
+             viewport (gig-vid.js, data-lazy-video), beside the "Try demo" badge. The phone
+             itself opens the demo too (data-exit="demo-phone"), with no chip on it — the badge
+             beside it is the one labelled control.
+             data-section "demo" is new to this variant; the exit labels are the same as /gig/. -->
+        <section class="pitch-demo" data-section="demo" data-reveal aria-labelledby="demo-heading">
+          <div class="pitch-demo__copy">
+            <h2 class="pitch-h2" id="demo-heading">Try it before you download.</h2>
+            <p class="pitch-demo__lede">
+              The real app, in your browser, on sample pros — search in your own words, open a
+              profile, post a job. Nothing to install.
+            </p>
+            <div class="cta-row pitch-demo__cta">
+              <!-- The web demo: /gig/demo/, built in the Gig repo. Same tab, never target="_blank"
+                   (dead in in-app browsers); data-exit beacons the tap as an `exit` labelled "demo". -->
+              <a class="pitch-try" href="/gig/demo/" data-exit="demo" aria-label="Try demo: the Gig app in your browser, no download necessary">
+                <img class="pitch-try__logo" src="/gig/shots/app-icon-black-rounded.png" alt="" width="28" height="28" />
+                <span class="pitch-try__text" aria-hidden="true">
+                  <span class="pitch-try__label">Try demo</span>
+                  <span class="pitch-try__sub">No download necessary</span>
+                </span>
+              </a>
+            </div>
+          </div>
+          <div class="pitch-demo__media">
+            <a class="pitch-try-phone pitch-demo__phone" href="/gig/demo/" data-exit="demo-phone" aria-label="Try demo: the Gig app in your browser, no download necessary">
+              <video
+                class="pitch-demo__video"
+                data-lazy-video
+                data-src="/gig/vid/app-preview-1.mp4"
+                muted
+                loop
+                playsinline
+                disablepictureinpicture
+                disableremoteplayback
+                preload="none"
+                poster="/gig/vid/app-preview-poster-1.jpg"
+                aria-hidden="true"
+                tabindex="-1"
+              ></video>
+            </a>
+            <p class="sr-only">A screen recording of the Gig app: typing "Handyman to mount my TV" into the search, opening a pro's profile, and posting a job that reaches five pros.</p>
+          </div>
         </section>
+
+        <!-- No static screenshot flow on this variant: the App Store preview above shows the
+             same loop moving. (So there is no `flow` section hook here.) -->
 
         <!-- ===================== SAFETY ===================== -->
         <!-- Real shipped features only. Mutuals are what the linked platforms show, not
@@ -552,6 +568,8 @@
       </div>
 
       <!-- ===================== CLOSING BAND (peak intent) ===================== -->
+      <!-- Closing band: on this variant a still from the hero loop (the trail) under the hero's
+           scrim, not the blue mosaic — the page opens and closes on the same footage. -->
       <section class="pitch-band pitch-close" data-section="closing" aria-labelledby="close-heading">
         <div class="pitch-inner pitch-close__grid">
           <div>
@@ -711,9 +729,6 @@
           </div>
         </div>
       </section>
-        <nav class="project-nav">
-          <a class="next" data-next href="/"></a>
-        </nav>
       </div>
     </main>
 
@@ -779,7 +794,8 @@
          Play, so both badges are now plain store links and the invite funnel is retired. -->
 
     <script type="module" src="/scripts/reveal.js"></script>
-    <script type="module" src="/scripts/project.js"></script>
+    <!-- No project.js here: variant pages own their copy and <title> (see CLAUDE.md). -->
+    <script type="module" src="/scripts/gig-vid.js"></script>
     <script type="module" src="/scripts/gig-qr.js"></script>
     <script type="module" src="/scripts/gig-sticky.js"></script>
     <script type="module" src="/scripts/gig-analytics.js"></script>
