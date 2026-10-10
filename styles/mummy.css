@@ -256,6 +256,84 @@ html[data-site="mummy"] .pick__fields .field {
   margin-top: 1rem;
 }
 
+/* ---- Money lines ----------------------------------------------------- */
+/* Each line is amount + reason (+ remove once there are two). Stacked on a
+   phone, side by side from 480px. Lines are separated by hairlines, not boxes. */
+html[data-site="mummy"] .item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 0.5rem;
+  align-items: end;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+html[data-site="mummy"] .item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+html[data-site="mummy"] .item__amount,
+html[data-site="mummy"] .item__reason {
+  grid-column: 1;
+}
+
+html[data-site="mummy"] .item__remove {
+  grid-column: 2;
+  grid-row: 2;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: 0.05rem;
+  background: transparent;
+  border: 1px solid var(--steel);
+  border-radius: 8px;
+  color: var(--silver);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+html[data-site="mummy"] .item__remove:hover {
+  color: var(--silver-bright);
+  border-color: var(--silver);
+}
+
+@media (min-width: 480px) {
+  html[data-site="mummy"] .item {
+    grid-template-columns: 9rem 1fr auto;
+  }
+
+  html[data-site="mummy"] .item__amount {
+    grid-column: 1;
+  }
+
+  html[data-site="mummy"] .item__reason {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  html[data-site="mummy"] .item__remove {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}
+
+html[data-site="mummy"] .items__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+html[data-site="mummy"] .items__total {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--silver-bright);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---- Forms ------------------------------------------------------------ */
 html[data-site="mummy"] .field {
   margin-top: 1.25rem;

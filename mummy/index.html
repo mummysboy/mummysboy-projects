@@ -105,39 +105,42 @@
               >
                 <span class="pick__box" aria-hidden="true"></span>
                 <b>Money</b>
-                <span class="pick__hint">How much and what for</span>
+                <span class="pick__hint">One thing or several, each with a reason</span>
               </button>
               <div class="pick__fields" id="moneyFields" hidden>
-                <div class="field">
-                  <label class="field__label" for="amount">Amount (USD)</label>
+                <div class="items" id="moneyItems"></div>
+                <div class="items__foot">
+                  <button class="btn btn--quiet" type="button" id="addMoney" disabled>+ Add another</button>
+                  <p class="items__total" id="moneyTotal" aria-live="polite" hidden></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- One money line. Cloned by mummy.js; the N in the ids is filled in. -->
+            <template id="moneyRowTpl">
+              <div class="item">
+                <div class="field item__amount">
+                  <label class="field__label" for="amount-N">Amount (USD)</label>
                   <div class="amount">
                     <span class="amount__sign" aria-hidden="true">$</span>
                     <input
                       class="input"
-                      id="amount"
+                      id="amount-N"
                       name="amount"
                       type="text"
                       inputmode="decimal"
                       autocomplete="off"
                       placeholder="0.00"
-                      disabled
                     />
                   </div>
                 </div>
-                <div class="field">
-                  <label class="field__label" for="reason">What for?</label>
-                  <input
-                    class="input"
-                    id="reason"
-                    name="reason"
-                    type="text"
-                    maxlength="200"
-                    autocomplete="off"
-                    disabled
-                  />
+                <div class="field item__reason">
+                  <label class="field__label" for="reason-N">What for?</label>
+                  <input class="input" id="reason-N" name="reason" type="text" maxlength="200" autocomplete="off" />
                 </div>
+                <button class="item__remove" type="button" aria-label="Remove this item" hidden>&times;</button>
               </div>
-            </div>
+            </template>
 
             <div class="pick" id="pickCall">
               <button

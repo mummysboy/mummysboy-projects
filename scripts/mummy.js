@@ -42,11 +42,11 @@ function displayName(user) {
   return local ? local.charAt(0).toUpperCase() + local.slice(1) : "there";
 }
 
-const LIMITS = { reason: 200, topic: 300, body: 2000, amount: 99_999_999.99 };
+const LIMITS = { reason: 200, topic: 300, body: 2000, amount: 99_999_999.99, items: 20 };
 
 /** One request can carry any mix of these. Each toggle reveals its fields. */
 const KINDS = {
-  money: { fields: "moneyFields", first: "amount" },
+  money: { fields: "moneyFields", first: "amount-1" },
   call: { fields: "callFields", first: "topic" },
   message: { fields: "messageFields", first: "body" },
 };
@@ -170,12 +170,71 @@ function setKind(kind, on, { focus = false } = {}) {
 
   const fields = $(KINDS[kind].fields);
   fields.hidden = !on;
-  for (const c of fields.querySelectorAll("input, textarea")) {
+  for (const c of fields.querySelectorAll("input, textarea, button")) {
     c.disabled = !on;
     if (!on) c.removeAttribute("aria-invalid");
   }
-  if (on && focus) $(KINDS[kind].first).focus();
+  if (kind === "money" && on) refreshMoneyRows();
+  if (on && focus) $(KINDS[kind].first)?.focus();
 }
+
+// --- Money lines ------------------------------------------------------------
+// Money is a list: several things, each with its own amount and reason, and a
+// running total. One line to start; "+ Add another" for the rest.
+
+let moneySeq = 0;
+
+function addMoneyRow({ focus = false } = {}) {
+  const list = $("moneyItems");
+  if (list.children.length >= LIMITS.items) return;
+  moneySeq += 1;
+  const html = $("moneyRowTpl").innerHTML.replaceAll("-N", `-${moneySeq}`);
+  list.insertAdjacentHTML("beforeend", html);
+  const row = list.lastElementChild;
+  row.querySelector(".item__remove").addEventListener("click", () => {
+    row.remove();
+    refreshMoneyRows();
+    $("addMoney").focus();
+  });
+  for (const input of row.querySelectorAll("input")) {
+    input.addEventListener("input", refreshMoneyTotal);
+  }
+  refreshMoneyRows();
+  if (focus) row.querySelector("input").focus();
+}
+
+/** Remove buttons only when there is something to remove; keep the add
+ *  button within the limit; renumber the first line so focus() finds it. */
+function refreshMoneyRows() {
+  const rows = [...$("moneyItems").children];
+  rows.forEach((row, i) => {
+    row.querySelector(".item__remove").hidden = rows.length < 2;
+    if (i === 0) {
+      // The first line always answers to amount-1 / reason-1.
+      for (const el of row.querySelectorAll("[id], [for]")) {
+        if (el.id) el.id = el.id.replace(/-\d+$/, "-1");
+        if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/-\d+$/, "-1");
+      }
+    }
+  });
+  $("addMoney").hidden = rows.length >= LIMITS.items;
+  refreshMoneyTotal();
+}
+
+function refreshMoneyTotal() {
+  const amounts = [...$("moneyItems").querySelectorAll('input[name="amount"]')]
+    .map((i) => parseAmount(i.value))
+    .filter((n) => n != null);
+  const total = $("moneyTotal");
+  const rows = $("moneyItems").children.length;
+  total.hidden = rows < 2;
+  total.textContent = `Total ${usd(amounts.reduce((a, b) => a + b, 0))}`;
+}
+
+const usd = (n) =>
+  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n);
+
+$("addMoney").addEventListener("click", () => addMoneyRow({ focus: true }));
 
 for (const toggle of document.querySelectorAll(".pick__toggle")) {
   toggle.addEventListener("click", () => {
@@ -190,6 +249,9 @@ function resetForm() {
   for (const el of form.querySelectorAll("[aria-invalid]")) el.removeAttribute("aria-invalid");
   setMsg($("reqMsg"), "");
   setUrgency("soon");
+  $("moneyItems").replaceChildren();
+  moneySeq = 0;
+  addMoneyRow();
   for (const kind of Object.keys(KINDS)) setKind(kind, false);
 }
 
@@ -227,16 +289,22 @@ $("reqForm").addEventListener("submit", async (e) => {
     return;
   }
 
-  const row = { kinds: [...kinds], urgency, reason: null, amount: null, topic: null, body: null };
+  const row = { kinds: [...kinds], urgency, money_items: null, topic: null, body: null };
 
   if (kinds.has("money")) {
-    const amount = parseAmount($("amount").value);
-    if (amount == null) return fail($("amount"), "Put in an amount, like 40 or 12.50.");
-    const reason = textOf("reason");
-    if (!reason) return fail($("reason"), "Say what the money is for.");
-    if (reason.length > LIMITS.reason) return fail($("reason"), "Keep the reason under 200 characters.");
-    row.amount = amount;
-    row.reason = reason;
+    const items = [];
+    for (const line of $("moneyItems").children) {
+      const amountEl = line.querySelector('input[name="amount"]');
+      const reasonEl = line.querySelector('input[name="reason"]');
+      const amount = parseAmount(amountEl.value);
+      if (amount == null) return fail(amountEl, "Put in an amount, like 40 or 12.50.");
+      const reason = reasonEl.value.trim();
+      if (!reason) return fail(reasonEl, "Say what that one is for.");
+      if (reason.length > LIMITS.reason) return fail(reasonEl, "Keep the reason under 200 characters.");
+      items.push({ amount, reason });
+    }
+    if (!items.length) return fail($("addMoney"), "Add at least one thing.");
+    row.money_items = items;
   }
   if (kinds.has("call")) {
     const topic = textOf("topic");

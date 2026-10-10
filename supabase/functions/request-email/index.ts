@@ -62,8 +62,7 @@ type RequestRow = {
   sender_name: string | null;
   kinds: ("money" | "call" | "message")[];
   urgency: "whenever" | "soon" | "urgent";
-  reason: string | null;
-  amount: string | number | null;
+  money_items: { amount: number; reason: string }[] | null;
   topic: string | null;
   body: string | null;
   status: string;
@@ -131,8 +130,10 @@ function alertFor(r: RequestRow) {
   const parts: string[] = [];
   const names: string[] = [];
 
+  const items = r.money_items ?? [];
+  const total = items.reduce((sum, i) => sum + Number(i.amount), 0);
   if (kinds.has("money")) {
-    parts.push(`needs ${usd(r.amount ?? 0)} — ${clip(r.reason ?? "", clipTo)}`);
+    parts.push(`needs ${usd(total)} — ${clip(items.map((i) => i.reason).join(", "), clipTo)}`);
     names.push("Money");
   }
   if (kinds.has("call")) {
@@ -152,8 +153,8 @@ function alertFor(r: RequestRow) {
     ["Urgency", URGENCY_LABEL[r.urgency]],
   ];
   if (kinds.has("money")) {
-    rows.push(["Amount", usd(r.amount ?? 0)]);
-    rows.push(["For", r.reason ?? ""]);
+    rows.push(["Money", items.map((i) => `${usd(i.amount)} — ${i.reason}`).join("\n")]);
+    if (items.length > 1) rows.push(["Total", usd(total)]);
   }
   if (kinds.has("call")) rows.push(["Call about", r.topic ?? ""]);
   if (kinds.has("message")) rows.push(["Message", r.body ?? ""]);

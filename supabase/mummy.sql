@@ -18,6 +18,31 @@
 --   admins           read every request; mark it done
 -- ============================================================================
 
+-- Money is a list of things, each with its own amount and reason, kept as a
+-- JSON array: [{"amount": 40, "reason": "groceries"}, …]. This is the shape
+-- check; the CHECK constraint on the column calls it. Runs as the inserting
+-- role, so authenticated needs EXECUTE (granted below).
+create or replace function public.money_items_ok(items jsonb)
+returns boolean
+language sql
+immutable
+set search_path = ''
+as $$
+  select jsonb_typeof(items) = 'array'
+     and jsonb_array_length(items) between 1 and 20
+     and not exists (
+       select 1
+         from jsonb_array_elements(items) as e
+        where jsonb_typeof(e) <> 'object'
+           or jsonb_typeof(e -> 'amount') <> 'number'
+           or (e ->> 'amount')::numeric <= 0
+           or (e ->> 'amount')::numeric > 99999999.99
+           or jsonb_typeof(e -> 'reason') <> 'string'
+           or btrim(e ->> 'reason') = ''
+           or char_length(e ->> 'reason') > 200
+     );
+$$;
+
 create table if not exists public.requests (
   id           uuid primary key default gen_random_uuid(),
 
@@ -32,9 +57,8 @@ create table if not exists public.requests (
   urgency      text not null default 'soon'
                  check (urgency in ('whenever', 'soon', 'urgent')),
 
-  -- money
-  reason       text check (reason is null or char_length(reason) between 1 and 200),
-  amount       numeric(10, 2) check (amount is null or amount > 0),
+  -- money: one or more lines, see money_items_ok()
+  money_items  jsonb check (money_items is null or public.money_items_ok(money_items)),
   -- call
   topic        text check (topic is null or char_length(topic) between 1 and 300),
   -- message
@@ -52,10 +76,9 @@ create table if not exists public.requests (
   -- A kind that is asked for carries its fields; one that is not carries none.
   -- The page enforces the same rule with friendlier wording; this one holds.
   constraint requests_fields_match_kinds check (
-    (('money'   = any (kinds)) = (amount is not null))
-    and (('money'   = any (kinds)) = (reason is not null))
-    and (('call'    = any (kinds)) = (topic  is not null))
-    and (('message' = any (kinds)) = (body   is not null))
+    (('money'   = any (kinds)) = (money_items is not null))
+    and (('call'    = any (kinds)) = (topic is not null))
+    and (('message' = any (kinds)) = (body  is not null))
   )
 );
 
@@ -83,11 +106,33 @@ alter table public.requests add constraint requests_kinds_check check (
   cardinality(kinds) >= 1
   and kinds <@ array['money', 'call', 'message']::text[]
 );
+
+-- ---- Migration from the second cut (one amount + reason per request) -------
+alter table public.requests add column if not exists money_items jsonb;
+
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns
+     where table_schema = 'public' and table_name = 'requests' and column_name = 'amount'
+  ) then
+    update public.requests
+       set money_items = jsonb_build_array(jsonb_build_object('amount', amount, 'reason', reason))
+     where money_items is null and amount is not null;
+    alter table public.requests drop column amount;
+    alter table public.requests drop column reason;
+  end if;
+end
+$$;
+
+alter table public.requests drop constraint if exists requests_money_items_check;
+alter table public.requests add constraint requests_money_items_check check (
+  money_items is null or public.money_items_ok(money_items)
+);
 alter table public.requests add constraint requests_fields_match_kinds check (
-  (('money'   = any (kinds)) = (amount is not null))
-  and (('money'   = any (kinds)) = (reason is not null))
-  and (('call'    = any (kinds)) = (topic  is not null))
-  and (('message' = any (kinds)) = (body   is not null))
+  (('money'   = any (kinds)) = (money_items is not null))
+  and (('call'    = any (kinds)) = (topic is not null))
+  and (('message' = any (kinds)) = (body  is not null))
 );
 
 create index if not exists requests_user_id_idx on public.requests (user_id);
@@ -131,9 +176,13 @@ revoke all on public.requests from anon;
 revoke all on public.requests from authenticated;
 
 grant select on public.requests to authenticated;
-grant insert (kinds, urgency, reason, amount, topic, body)
+grant insert (kinds, urgency, money_items, topic, body)
   on public.requests to authenticated;
 grant update (status) on public.requests to authenticated;
+
+-- The shape check runs as the inserting role.
+revoke all on function public.money_items_ok(jsonb) from public;
+grant execute on function public.money_items_ok(jsonb) to authenticated;
 
 -- ---- Email ------------------------------------------------------------------
 -- Hand the new row's id — only the id — to the `request-email` edge function.
