@@ -178,13 +178,16 @@ mummysboy/
 ├── irldatingshows/
 │   ├── index.html        # IRL landing page — authored copy + DB-driven event list
 │   └── admin/index.html  # private phone-first ops console (noindex)
+├── mummy/index.html      # private family request page (sign in → Request → money/call/message; noindex)
 ├── privacy/index.html    # the WEBSITE's privacy notice (pixel, analytics, IRL sign-ups)
 ├── qrewards/index.html   # registry-driven placeholder route
 ├── scripts/
 │   ├── main.js           # renders the homepage grid from the registry
 │   ├── project.js        # fills a project page's header from the registry by slug
 │   ├── blog.js           # renders the blog index grid + "more reading" from data/posts.js
-│   ├── irl-db.js         # tiny Supabase client (PostgREST + auth) — no dependency
+│   ├── sb-client.js      # tiny Supabase client factory (PostgREST + auth) — no dependency
+│   ├── irl-db.js         # IRL's instance of sb-client (same exports as before)
+│   ├── mummy.js          # the /mummy/ page: sign-in + the request flow
 │   ├── irl-events.js     # renders the IRL event listing + wires the signup dialog
 │   ├── irl-signup.js     # the participate/watch dialog (one dialog, two modes)
 │   ├── irl-admin.js      # the IRL admin console
@@ -202,8 +205,10 @@ mummysboy/
 │   └── irl-config.js     # IRL's Supabase URL + public key, and its form options
 ├── supabase/
 │   ├── schema.sql        # IRL database: tables, RLS, triggers, grants (idempotent)
+│   ├── mummy.sql         # the `requests` table behind /mummy/ (run after schema.sql; idempotent)
 │   ├── functions/
-│   │   └── signup-email/index.ts  # Deno edge fn: confirmation + alert on a new signup
+│   │   ├── signup-email/index.ts  # Deno edge fn: confirmation + alert on a new signup
+│   │   └── request-email/index.ts # Deno edge fn: emails the owner when a family request lands
 │   └── README.md         # setup order + the security model, read before editing policies
 ├── styles/
 │   ├── tokens.css        # CSS custom properties: palette + font stacks
@@ -211,7 +216,8 @@ mummysboy/
 │   ├── gig-additions.css # Gig landing-page redesign rules (uses the same token palette)
 │   ├── gig-ad.css        # /gig/ ad treatment, scoped to html[data-variant="dual-c"]
 │   ├── irl.css           # IRL identity: ember accent, listings, dialog, forms
-│   └── irl-admin.css     # IRL admin only — never loaded by the public page
+│   ├── irl-admin.css     # IRL admin only — never loaded by the public page
+│   └── mummy.css         # /mummy/ only, scoped to html[data-site="mummy"]
 ├── favicon.svg           # silver dot on near-black
 ├── robots.txt            # allow-all + points at the sitemap
 ├── sitemap.xml           # static sitemap (update when adding a route or post)
@@ -314,8 +320,9 @@ Supabase and are edited from a phone at
 The page's prose is still authored static HTML, so what the site *is* stays crawlable;
 only the listings are client-rendered (an `Event` JSON-LD block is injected for them).
 
-- **Still no dependencies.** `scripts/irl-db.js` is a hand-written Supabase client —
-  `fetch` against PostgREST plus enough GoTrue to keep the admin signed in. Do not
+- **Still no dependencies.** `scripts/sb-client.js` is a hand-written Supabase client
+  factory — `fetch` against PostgREST plus enough GoTrue to keep someone signed in —
+  and `scripts/irl-db.js` is IRL's instance of it (same exports it always had). Do not
   swap it for `supabase-js`; that is the first thing here that would need a bundler.
 - **The database is the authority, not the JS.** `supabase/schema.sql` is the source
   of truth and is idempotent — edit it and re-run the whole file. **Read
@@ -352,6 +359,34 @@ only the listings are client-rendered (an `Event` JSON-LD block is injected for 
 - The admin is `noindex` in both a meta tag and a Netlify header, and stays out of
   `sitemap.xml`. Do not `Disallow` it in `robots.txt` — a crawl block would hide the
   noindex.
+
+## Mummy — the family request page (`/mummy/`)
+
+A private page for the family (2026-10-09): sign in, press **Request**, pick money
+(reason, USD amount, urgency), a phone call (urgency, what about) or a message, send.
+The row lands in `requests` and a trigger emails the owner. Not a project: it is not
+in `data/projects.js`, not in `sitemap.xml`, `noindex` in a meta tag and a Netlify
+header, and not `Disallow`ed in `robots.txt`.
+
+- **Same Supabase project as IRL**, own session. `scripts/mummy.js` creates its client
+  with `createClient({ …, storageKey: "mummy.session", retryAnon: false })`, so signing
+  out here never signs the IRL admin out. Any account in the project may file a request
+  — the `admins` table gates IRL, not this. Accounts are created in the dashboard with
+  User Metadata `{"name": "Mum"}`; sign-ups stay off. Setup is in `supabase/README.md`.
+- **The database stamps who sent it.** `user_id`, `sender_email` and `sender_name` are
+  column defaults read from the JWT, and the insert grant covers only
+  `kind, urgency, reason, amount, topic, body`. The client never sends identity fields;
+  keep it that way. Anon has no grant on `requests`. Family read their own rows only.
+- **Email is fire-and-forget**, same contract as IRL: `private.notify_request()` hands
+  the row id to `supabase/functions/request-email/index.ts`, swallows every error, and
+  the function always answers 200. One email, to the owner, `Reply-To` the sender.
+  Subject lines triage themselves: `[Urgent] Mum needs $40.00 — groceries`.
+- **Design:** house dark tokens, `styles/mummy.css` scoped to `html[data-site="mummy"]`,
+  never `irl.css` (its controls hang off `--ember`). Volt once per visible view (Sign in,
+  Request, Send, the tick). Urgency is a three-up `aria-pressed` segmented control
+  (Whenever / Soon / Urgent, default Soon) carried by fill + weight, never colour alone.
+  View swaps move focus to the new `<h1>`. No `consent.js`, `mediago.js` or analytics —
+  a private signed-in page tracks nothing, and `/privacy/` does not list it.
 
 ## Conventions
 

@@ -117,6 +117,12 @@
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 
+# /mummy/ is the family's private request page — same treatment as the admin.
+[[headers]]
+  for = "/mummy/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
 # supabase/ holds the database definition, not part of the published site. The
 # root is published as-is, so serve nothing from that path — this also keeps a
 # future seed file or local env dropped in there from being fetchable.

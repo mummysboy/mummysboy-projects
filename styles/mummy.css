@@ -1,0 +1,404 @@
+/* /mummy/ — the family request page.
+   Loaded after tokens.css and styles.css, never irl.css (its controls hang off
+   --ember). Everything here is scoped to html[data-site="mummy"] and uses the
+   house tokens. Volt is spent once per visible view: the Sign in button, the
+   Request button, the Send button, the tick on the Sent view. The chooser has
+   none. The global :focus-visible ring is its allowed second job.
+
+   Contrast (WCAG 2.1 AA):
+     silver-bright #e7e9ed on ink 16.4:1 · silver #a8aeb8 on ink 8.6:1
+     steel #798593 on ink 4.6:1, on surface 4.5:1 (labels, hints)
+     ink on volt 13.5:1 (solid buttons) · #e88b8b on ink 8.1:1 (errors)
+     steel borders 4.6:1 on ink — controls are identified by ≥3:1 edges, not
+     by the 1.3:1 hairline (1.4.11). */
+
+/* The `hidden` attribute has to beat the component display rules below — the
+   UA sheet's [hidden]{display:none} loses to .btn{display:inline-flex}. */
+html[data-site="mummy"] [hidden] {
+  display: none !important;
+}
+
+html[data-site="mummy"] .mm-body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Top bar ---------------------------------------------------------- */
+html[data-site="mummy"] .top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(11, 11, 13, 0.94);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--hairline);
+}
+
+html[data-site="mummy"] .top__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+}
+
+html[data-site="mummy"] .mm-mark {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--steel);
+  white-space: nowrap;
+}
+
+html[data-site="mummy"] .mm-mark b {
+  color: var(--silver-bright);
+  font-weight: 500;
+}
+
+/* ---- Layout ----------------------------------------------------------- */
+html[data-site="mummy"] .mm-wrap {
+  flex: 1;
+  width: 100%;
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+html[data-site="mummy"] .view__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.625rem, 6vw, 1.875rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--silver-bright);
+  overflow-wrap: break-word;
+}
+
+/* Headings take focus on a view swap for screen readers; that focus needs no
+   ring — the heading is the whole screen. */
+html[data-site="mummy"] .view__title:focus {
+  outline: none;
+}
+
+html[data-site="mummy"] .mm-lede {
+  margin-top: 0.6rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--silver);
+}
+
+/* ---- Buttons ---------------------------------------------------------- */
+html[data-site="mummy"] .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem; /* ≥44px tap target */
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--steel);
+  border-radius: 8px;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--silver-bright);
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+html[data-site="mummy"] .btn:disabled {
+  color: var(--steel);
+  cursor: default;
+}
+
+html[data-site="mummy"] .btn--solid {
+  background: var(--volt);
+  border-color: var(--volt);
+  color: var(--ink);
+}
+
+html[data-site="mummy"] .btn--solid:hover:not(:disabled) {
+  background: var(--volt-dim);
+  border-color: var(--volt-dim);
+}
+
+html[data-site="mummy"] .btn--ghost:hover:not(:disabled) {
+  border-color: var(--silver);
+}
+
+html[data-site="mummy"] .btn--quiet {
+  padding: 0.5rem 0.75rem;
+  min-height: 2.25rem;
+  border-color: var(--hairline);
+  font-size: 0.6875rem;
+  color: var(--steel);
+}
+
+html[data-site="mummy"] .btn--quiet:hover:not(:disabled) {
+  color: var(--silver-bright);
+  border-color: var(--steel);
+}
+
+html[data-site="mummy"] .btn--wide {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+/* The one button on the home screen. Thumb-sized. */
+html[data-site="mummy"] .btn--big {
+  width: 100%;
+  min-height: 4.25rem;
+  margin-top: 2.25rem;
+  font-size: 1rem;
+  letter-spacing: 0.14em;
+  border-radius: 12px;
+}
+
+html[data-site="mummy"] .link-btn {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem 0.5rem;
+  background: none;
+  border: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--steel);
+  text-align: center;
+  cursor: pointer;
+}
+
+html[data-site="mummy"] .link-btn:hover {
+  color: var(--silver-bright);
+}
+
+/* ---- Chooser ---------------------------------------------------------- */
+html[data-site="mummy"] .picks {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+html[data-site="mummy"] .pick {
+  display: grid;
+  gap: 0.25rem;
+  width: 100%;
+  min-height: 4.5rem;
+  padding: 1rem 1.1rem;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--steel);
+  border-radius: 12px;
+  color: var(--silver-bright);
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+html[data-site="mummy"] .pick:hover {
+  background: var(--surface-hi);
+  border-color: var(--silver);
+}
+
+html[data-site="mummy"] .pick b {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+}
+
+html[data-site="mummy"] .pick span {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+}
+
+html[data-site="mummy"] .picks + .btn {
+  margin-top: 1.5rem;
+}
+
+/* ---- Forms ------------------------------------------------------------ */
+html[data-site="mummy"] .field {
+  margin-top: 1.25rem;
+}
+
+html[data-site="mummy"] fieldset.field {
+  border: 0;
+  min-width: 0;
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+html[data-site="mummy"] fieldset.field > legend {
+  padding: 0;
+}
+
+html[data-site="mummy"] .field__label {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--steel);
+}
+
+html[data-site="mummy"] .input,
+html[data-site="mummy"] .textarea {
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  background: var(--ink);
+  border: 1px solid var(--steel);
+  border-radius: 8px;
+  color: var(--silver-bright);
+  font-family: var(--font-sans);
+  font-size: 1rem; /* ≥16px so iOS Safari doesn't zoom on focus */
+  line-height: 1.4;
+}
+
+html[data-site="mummy"] .textarea {
+  min-height: 5.5rem;
+  resize: vertical;
+}
+
+html[data-site="mummy"] .input::placeholder,
+html[data-site="mummy"] .textarea::placeholder {
+  color: var(--steel);
+}
+
+/* The global :focus-visible volt ring carries focus; brighten the edge too. */
+html[data-site="mummy"] .input:focus,
+html[data-site="mummy"] .textarea:focus {
+  border-color: var(--silver);
+}
+
+html[data-site="mummy"] .input[aria-invalid="true"],
+html[data-site="mummy"] .textarea[aria-invalid="true"] {
+  border-color: #e88b8b;
+}
+
+/* Dollar sign sits inside the amount box; the input keeps its own label. */
+html[data-site="mummy"] .amount {
+  position: relative;
+}
+
+html[data-site="mummy"] .amount__sign {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--silver);
+  pointer-events: none;
+}
+
+html[data-site="mummy"] .amount .input {
+  padding-left: 1.9rem;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Urgency — three-up segmented control. Selection is carried by fill, border
+   and weight plus aria-pressed, never colour alone, and spends no volt. */
+html[data-site="mummy"] .seg {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+html[data-site="mummy"] .seg__btn {
+  min-height: 2.75rem;
+  padding: 0.6rem 0.4rem;
+  background: transparent;
+  border: 1px solid var(--steel);
+  border-radius: 8px;
+  color: var(--silver);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+html[data-site="mummy"] .seg__btn:hover {
+  color: var(--silver-bright);
+}
+
+html[data-site="mummy"] .seg__btn[aria-pressed="true"] {
+  background: var(--silver-bright);
+  border-color: var(--silver-bright);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+html[data-site="mummy"] .actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+/* Form-level status line. */
+html[data-site="mummy"] .formmsg {
+  min-height: 1.2rem;
+  margin-top: 0.85rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+html[data-site="mummy"] .formmsg--err {
+  color: #e88b8b;
+}
+
+html[data-site="mummy"] .formmsg--ok {
+  color: var(--silver);
+}
+
+/* ---- Sent ------------------------------------------------------------- */
+/* .af-success / .af-check come from styles.css (the Android modal's tick). */
+html[data-site="mummy"] .view--done {
+  text-align: center;
+  padding-top: 2.5rem;
+}
+
+html[data-site="mummy"] .view--done .view__title {
+  margin-bottom: 0.4rem;
+}
+
+html[data-site="mummy"] .view--done .btn {
+  margin-top: 2rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-site="mummy"] .af-success,
+  html[data-site="mummy"] .af-check__circle,
+  html[data-site="mummy"] .af-check__tick {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  html[data-site="mummy"] .btn,
+  html[data-site="mummy"] .pick,
+  html[data-site="mummy"] .seg__btn {
+    transition: none;
+  }
+}

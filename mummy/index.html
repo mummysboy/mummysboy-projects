@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en" data-site="mummy">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <title>Family</title>
+    <!-- Private page for the family. Keep it out of search, and out of sitemap.xml.
+         It must not be Disallow-ed in robots.txt either — a crawl block would hide this. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- Add to Home Screen: this is meant to live on a phone home screen. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Family" />
+    <meta name="theme-color" content="#0b0b0d" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <link rel="stylesheet" href="/styles/tokens.css" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/styles/mummy.css" />
+    <!-- No consent.js / mediago.js / analytics: a private signed-in page tracks nothing. -->
+  </head>
+  <body class="mm-body">
+    <header class="top">
+      <div class="top__row">
+        <span class="mm-mark"><b>mummysboy</b> family</span>
+        <button class="btn btn--quiet" id="signOut" type="button" hidden>Sign out</button>
+      </div>
+    </header>
+
+    <main class="mm-wrap">
+      <!-- ---------- Sign in ---------- -->
+      <section class="view" id="signinView" hidden>
+        <h1 class="view__title" tabindex="-1">Sign in</h1>
+        <p class="mm-lede">Your account is the one Isaac set up for you.</p>
+
+        <form id="signinForm" novalidate>
+          <div class="field">
+            <label class="field__label" for="s-email">Email</label>
+            <input
+              class="input"
+              id="s-email"
+              name="email"
+              type="email"
+              inputmode="email"
+              autocomplete="username"
+              required
+            />
+          </div>
+          <div class="field">
+            <label class="field__label" for="s-pass">Password</label>
+            <input
+              class="input"
+              id="s-pass"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <button class="btn btn--solid btn--wide" id="signinSubmit" type="submit">Sign in</button>
+          <p class="formmsg" id="signinMsg" role="status" aria-live="polite"></p>
+        </form>
+
+        <button class="link-btn" id="magicBtn" type="button">
+          Email me a sign-in link instead
+        </button>
+      </section>
+
+      <!-- ---------- Home ---------- -->
+      <section class="view" id="homeView" hidden>
+        <h1 class="view__title" tabindex="-1">Hi, <span id="who"></span></h1>
+        <p class="mm-lede">Need something? Isaac gets an email the moment you send it.</p>
+        <button class="btn btn--solid btn--big" id="requestBtn" type="button">Request</button>
+      </section>
+
+      <!-- ---------- What kind ---------- -->
+      <section class="view" id="chooserView" hidden>
+        <h1 class="view__title" tabindex="-1">What do you need?</h1>
+        <div class="picks" role="group" aria-label="Kind of request">
+          <button class="pick" type="button" data-kind="money">
+            <b>Money</b>
+            <span>Reason, amount and how soon</span>
+          </button>
+          <button class="pick" type="button" data-kind="call">
+            <b>A phone call</b>
+            <span>What it's about and how soon</span>
+          </button>
+          <button class="pick" type="button" data-kind="message">
+            <b>A message</b>
+            <span>Just say it</span>
+          </button>
+        </div>
+        <button class="btn btn--ghost" type="button" data-back="home">Back</button>
+      </section>
+
+      <!-- ---------- The form ---------- -->
+      <section class="view" id="formView" hidden>
+        <form id="reqForm" novalidate>
+          <h1 class="view__title" id="formTitle" tabindex="-1">Request</h1>
+
+          <fieldset class="field" id="urgencyField">
+            <legend class="field__label">How soon?</legend>
+            <div class="seg" id="urgencySeg">
+              <button class="seg__btn" type="button" data-urgency="whenever" aria-pressed="false">Whenever</button>
+              <button class="seg__btn" type="button" data-urgency="soon" aria-pressed="true">Soon</button>
+              <button class="seg__btn" type="button" data-urgency="urgent" aria-pressed="false">Urgent</button>
+            </div>
+          </fieldset>
+
+          <div class="field" id="amountField">
+            <label class="field__label" for="amount">Amount (USD)</label>
+            <div class="amount">
+              <span class="amount__sign" aria-hidden="true">$</span>
+              <input
+                class="input"
+                id="amount"
+                name="amount"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                placeholder="0.00"
+              />
+            </div>
+          </div>
+
+          <div class="field" id="reasonField">
+            <label class="field__label" for="reason">What for?</label>
+            <input
+              class="input"
+              id="reason"
+              name="reason"
+              type="text"
+              maxlength="200"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="field" id="topicField">
+            <label class="field__label" for="topic">What should the call be about?</label>
+            <textarea class="textarea" id="topic" name="topic" maxlength="300" rows="3"></textarea>
+          </div>
+
+          <div class="field" id="bodyField">
+            <label class="field__label" for="body">Your message</label>
+            <textarea class="textarea" id="body" name="body" maxlength="2000" rows="6"></textarea>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn--solid" id="reqSubmit" type="submit">Send</button>
+            <button class="btn btn--ghost" type="button" data-back="chooser">Back</button>
+          </div>
+          <p class="formmsg" id="reqMsg" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <!-- ---------- Sent ---------- -->
+      <section class="view view--done" id="doneView" hidden>
+        <div class="af-success">
+          <svg class="af-check" viewBox="0 0 52 52" aria-hidden="true">
+            <circle class="af-check__circle" cx="26" cy="26" r="24" />
+            <path class="af-check__tick" d="M15 27l7 7 15-16" />
+          </svg>
+          <h1 class="view__title" tabindex="-1">Sent</h1>
+          <p class="af-success__text">Isaac gets an email now.</p>
+        </div>
+        <button class="btn btn--ghost" type="button" data-back="home">Back</button>
+      </section>
+    </main>
+
+    <script type="module" src="/scripts/mummy.js"></script>
+  </body>
+</html>
