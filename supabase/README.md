@@ -213,7 +213,15 @@ how soon, each); each row emails the owner. Setup, after the IRL steps above:
    the same `verify_jwt` reasoning as `signup-email`: the database calls it, and
    the `x-irl-secret` header is what authenticates the call.
 
-6. **The clock.** `mummy.sql` enables `pg_cron` and schedules `mummy-dispatch`
+6. **Claude summaries (optional).** Phone-call topics and messages are sent to
+   Claude for a one- or two-sentence précis before the email goes out; the email
+   carries the précis and tucks their own words behind a "View full message"
+   drop-down. Set the secret
+   `ANTHROPIC_API_KEY` (Edge Functions → Secrets, or
+   `supabase secrets set ANTHROPIC_API_KEY=… --project-ref <ref>`). Without it,
+   or if the call fails or times out, the email simply carries the original
+   text — a summary is never allowed to cost a delivery.
+7. **The clock.** `mummy.sql` enables `pg_cron` and schedules `mummy-dispatch`
    every minute. If the extension cannot be created from SQL on your plan, turn
    it on under Database → Extensions first, then re-run the file. Check it with
    `select jobname, schedule, active from cron.job;`.

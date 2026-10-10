@@ -42,7 +42,7 @@ function displayName(user) {
   return local ? local.charAt(0).toUpperCase() + local.slice(1) : "there";
 }
 
-const LIMITS = { reason: 16, topic: 300, body: 2000, amount: 99_999_999.99, items: 20 };
+const LIMITS = { reason: 20, topic: 300, body: 2000, amount: 99_999_999.99, items: 20 };
 
 /** One request can carry any mix of these. Each toggle reveals its fields. */
 const KINDS = {
@@ -145,22 +145,25 @@ for (const back of document.querySelectorAll("[data-back]")) {
   back.addEventListener("click", () => show(back.dataset.back));
 }
 
-// "How soon?" is a three-way toggle that lives in each money line and in the
-// call card. One delegated handler covers every copy, including ones cloned
+// "How soon?" is a two-way toggle at the foot of the money card and in the
+// call and message cards. One delegated handler covers every copy, including ones cloned
 // later; a copy's value is whichever button is pressed.
-/** What each choice means for when Pundy sees it, shown under the control. */
+/** What each choice means for when Pundy sees it, shown under the control.
+ *  Nothing is chosen for you: a request cannot be sent until the money, the
+ *  call and the message each have an answer. */
 const SEG_NOTE = {
-  whenever: "Gets sent 7pm Tue or Thu",
-  soon: "Gets sent 7pm today",
-  urgent: "Gets sent now",
+  soon: "Pundy gets it at 7pm tonight",
+  urgent: "Pundy gets it right away",
 };
+const SEG_UNSET = "Pick one";
 
 function setSeg(seg, value) {
   for (const b of seg.querySelectorAll(".seg__btn")) {
     b.setAttribute("aria-pressed", String(b.dataset.urgency === value));
   }
+  seg.removeAttribute("aria-invalid");
   const note = seg.parentElement.querySelector("[data-seg-note]");
-  if (note) note.textContent = SEG_NOTE[value] || "";
+  if (note) note.textContent = SEG_NOTE[value] || SEG_UNSET;
 }
 
 document.addEventListener("click", (e) => {
@@ -168,12 +171,20 @@ document.addEventListener("click", (e) => {
   if (b) setSeg(b.closest("[data-seg]"), b.dataset.urgency);
 });
 
+/** The chosen urgency, or null when nothing has been picked yet. */
 function segValue(seg) {
-  return seg.querySelector('.seg__btn[aria-pressed="true"]')?.dataset.urgency || "soon";
+  return seg.querySelector('.seg__btn[aria-pressed="true"]')?.dataset.urgency || null;
 }
 
 function resetSeg(seg) {
-  setSeg(seg, "soon");
+  setSeg(seg, null);
+}
+
+/** Flag an unanswered "How soon?" and put focus on its first button. */
+function failSeg(seg) {
+  seg.setAttribute("aria-invalid", "true");
+  setMsg($("reqMsg"), "Say how soon.", "err");
+  seg.querySelector(".seg__btn").focus();
 }
 
 /** Turn a kind on or off: its fields show/hide, and disabled controls leave
@@ -266,6 +277,7 @@ function resetForm() {
   form.reset();
   for (const el of form.querySelectorAll("[aria-invalid]")) el.removeAttribute("aria-invalid");
   setMsg($("reqMsg"), "");
+  resetSeg($("moneySoon").querySelector("[data-seg]"));
   resetSeg($("callSoon").querySelector("[data-seg]"));
   resetSeg($("messageSoon").querySelector("[data-seg]"));
   $("moneyItems").replaceChildren();
@@ -311,6 +323,9 @@ $("reqForm").addEventListener("submit", async (e) => {
   const row = { kinds: [...kinds], money_items: null, topic: null, body: null, message_urgency: null };
 
   if (kinds.has("money")) {
+    // One "how soon" for the whole money request; every line carries it.
+    const moneySeg = $("moneySoon").querySelector("[data-seg]");
+    const moneyUrgency = segValue(moneySeg);
     const items = [];
     for (const line of $("moneyItems").children) {
       const amountEl = line.querySelector('input[name="amount"]');
@@ -319,10 +334,11 @@ $("reqForm").addEventListener("submit", async (e) => {
       if (amount == null) return fail(amountEl, "Put in an amount, like 40 or 12.50.");
       const reason = reasonEl.value.trim();
       if (!reason) return fail(reasonEl, "Say what that one is for.");
-      if (reason.length > LIMITS.reason) return fail(reasonEl, "Keep it to 16 characters.");
-      items.push({ amount, reason, urgency: segValue(line.querySelector("[data-seg]")) });
+      if (reason.length > LIMITS.reason) return fail(reasonEl, "Keep it to 20 characters.");
+      items.push({ amount, reason, urgency: moneyUrgency });
     }
     if (!items.length) return fail($("addMoney"), "Add at least one thing.");
+    if (!moneyUrgency) return failSeg(moneySeg);
     row.money_items = items;
   }
   if (kinds.has("call")) {
@@ -330,14 +346,18 @@ $("reqForm").addEventListener("submit", async (e) => {
     if (!topic) return fail($("topic"), "Say what the call should be about.");
     if (topic.length > LIMITS.topic) return fail($("topic"), "Keep it under 300 characters.");
     row.topic = topic;
-    row.urgency = segValue($("callSoon").querySelector("[data-seg]")); // the `urgency` column is the call's
+    const seg = $("callSoon").querySelector("[data-seg]");
+    row.urgency = segValue(seg); // the `urgency` column is the call's
+    if (!row.urgency) return failSeg(seg);
   }
   if (kinds.has("message")) {
     const body = textOf("body");
     if (!body) return fail($("body"), "Write the message first.");
     if (body.length > LIMITS.body) return fail($("body"), "Keep it under 2000 characters.");
     row.body = body;
-    row.message_urgency = segValue($("messageSoon").querySelector("[data-seg]"));
+    const seg = $("messageSoon").querySelector("[data-seg]");
+    row.message_urgency = segValue(seg);
+    if (!row.message_urgency) return failSeg(seg);
   }
 
   btn.disabled = true;

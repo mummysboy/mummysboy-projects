@@ -39,7 +39,7 @@ as $$
            or (e ->> 'amount')::numeric > 99999999.99
            or jsonb_typeof(e -> 'reason') <> 'string'
            or btrim(e ->> 'reason') = ''
-           or char_length(e ->> 'reason') > 16
+           or char_length(e ->> 'reason') > 20
            or jsonb_typeof(e -> 'urgency') <> 'string'
            or (e ->> 'urgency') not in ('whenever', 'soon', 'urgent')
      );

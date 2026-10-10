@@ -18,6 +18,7 @@
  */
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
+const CLAUDE_ENDPOINT = "https://api.anthropic.com/v1/messages";
 
 /** The owner's clock. The timestamp is for them, not the sender. */
 const OWNER_TZ = "America/Los_Angeles";
@@ -74,7 +75,72 @@ type Delivery = {
   due_at: string;
   created_at: string;
   request: { sender_email: string; sender_name: string | null } | null;
+  summary?: string; // Claude's précis of a call topic or message, filled in here
 };
+
+/**
+ * Ask Claude for a short summary of what a call should be about or what a
+ * message says, so the email leads with the gist. Plain HTTP on purpose: the
+ * function has no imports (see CLAUDE.md → Stack), and this is one request.
+ *
+ * Every failure returns null and the email carries the original words: a
+ * missing key, a timeout, a refusal, a bad status — none of them may cost a
+ * delivery. Opus 5.5 at low effort is plenty for a two-sentence précis;
+ * `fallbacks: "default"` lets the API re-route a refused request itself.
+ */
+async function summarize(kind: "call" | "message", who: string, text: string): Promise<string | null> {
+  const key = env("ANTHROPIC_API_KEY");
+  if (!key || !text.trim()) return null;
+
+  const what = kind === "call" ? "what the phone call is for" : "what it says";
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 20_000);
+  try {
+    const res = await fetch(CLAUDE_ENDPOINT, {
+      method: "POST",
+      signal: ctrl.signal,
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": key,
+        "anthropic-version": "2023-06-01",
+        "anthropic-beta": "server-side-fallback-2026-07-01",
+      },
+      body: JSON.stringify({
+        model: "claude-opus-5-5",
+        max_tokens: 1024,
+        fallbacks: "default",
+        output_config: { effort: "low" },
+        system:
+          `You condense a note from a family member (${who}) to their son, Pundy, into ${what}. ` +
+          `Be terse and dry: the fewest words that carry the facts. One line per separate point, ` +
+          `no full sentences needed, no pleasantries, no softening, no commentary, no advice. ` +
+          `Keep names, times, amounts and places exactly. Drop greetings, sign-offs and asides ` +
+          `with no action or fact in them. Output only the condensed note, nothing else.`,
+        messages: [{ role: "user", content: text }],
+      }),
+    });
+    if (!res.ok) {
+      console.error("claude failed", res.status, await res.text());
+      return null;
+    }
+    const data = await res.json();
+    if (data.stop_reason === "refusal") {
+      console.error("claude refused", data.stop_details);
+      return null;
+    }
+    const out = (data.content ?? [])
+      .filter((b: { type: string }) => b.type === "text")
+      .map((b: { text: string }) => b.text)
+      .join("")
+      .trim();
+    return out || null;
+  } catch (err) {
+    console.error("claude call failed", err);
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 const isSynthetic = (email: string) => email.toLowerCase().endsWith(`@${USERNAME_DOMAIN}`);
 
@@ -140,17 +206,19 @@ function digestFor(bucket: Urgency, ds: Delivery[]) {
   if (money.length) {
     parts.push(`needs ${usd(total)} — ${clip(money.map((d) => d.item.reason ?? "").join(", "), clipTo)}`);
   }
+  const callText = (d: Delivery) => d.summary ?? d.item.topic ?? "";
+  const messageText = (d: Delivery) => d.summary ?? d.item.body ?? "";
   if (calls.length) {
     parts.push(
       calls.length === 1
-        ? `wants a call — ${clip(calls[0].item.topic ?? "", clipTo)}`
+        ? `wants a call — ${clip(callText(calls[0]), clipTo)}`
         : `wants ${calls.length} calls`,
     );
   }
   if (messages.length) {
     parts.push(
       messages.length === 1 && !many
-        ? `sent a message — "${clip(messages[0].item.body ?? "", clipTo)}"`
+        ? `sent a message — ${clip(messageText(messages[0]), clipTo)}`
         : messages.length === 1
           ? "sent a message"
           : `sent ${messages.length} messages`,
@@ -174,8 +242,18 @@ function digestFor(bucket: Urgency, ds: Delivery[]) {
     rows.push(["Money", money.map((d) => `${usd(d.item.amount ?? 0)} — ${d.item.reason ?? ""}`).join("\n")]);
     if (money.length > 1) rows.push(["Total", usd(total)]);
   }
-  for (const c of calls) rows.push(["Call about", c.item.topic ?? ""]);
-  for (const m of messages) rows.push(["Message", m.item.body ?? ""]);
+  // The summary is what the email says. The original words sit behind a
+  // "View full message" drop-down (a <details> in the HTML; a trailer in the
+  // plain text), so they are there when needed and out of the way when not.
+  const full: [string, string][] = [];
+  for (const c of calls) {
+    rows.push(["Call about", callText(c)]);
+    if (c.summary) full.push(["Call", c.item.topic ?? ""]);
+  }
+  for (const m of messages) {
+    rows.push(["Message", messageText(m)]);
+    if (m.summary) full.push(["Message", m.item.body ?? ""]);
+  }
   rows.push([
     "Asked",
     [...new Set(ds.map((d) => whenLabel(d.created_at)))].join(", "),
@@ -190,6 +268,7 @@ function digestFor(bucket: Urgency, ds: Delivery[]) {
       ...(intro ? [intro, ""] : []),
       ...rows.map(([k, v]) => `${k}: ${v}`),
       ...(replyable ? ["", "Reply to this email to answer them."] : []),
+      ...full.flatMap(([k, v]) => ["", `--- Full ${k.toLowerCase()} ---`, v]),
     ].join("\n"),
     html: wrap([
       ...(intro ? [`<p style="margin:0 0 1em;color:#4a5260">${esc(intro)}</p>`] : []),
@@ -203,6 +282,11 @@ function digestFor(bucket: Urgency, ds: Delivery[]) {
       ...(replyable
         ? [`<p style="margin:1.4em 0 0;color:#4a5260">Reply to this email to answer them.</p>`]
         : []),
+      ...full.map(
+        ([k, v]) =>
+          `<details style="margin:1.2em 0 0"><summary style="cursor:pointer;color:#4a5260">View full ${esc(k.toLowerCase())}</summary>` +
+          `<p style="margin:0.6em 0 0;white-space:pre-wrap">${esc(v)}</p></details>`,
+      ),
     ]),
     replyTo: replyable ? senders.filter((e) => !isSynthetic(e))[0] : undefined,
   };
@@ -278,6 +362,18 @@ Deno.serve(async (req) => {
       console.error("MUMMY_MAIL_FROM / MUMMY_ALERT_TO not set");
       return new Response("ok", { status: 200 });
     }
+
+    // Calls and messages get a précis from Claude first (in parallel; a
+    // failure just leaves the original words).
+    await Promise.all(
+      deliveries
+        .filter((d) => d.kind === "call" || d.kind === "message")
+        .map(async (d) => {
+          const text = d.kind === "call" ? d.item.topic ?? "" : d.item.body ?? "";
+          const s = await summarize(d.kind as "call" | "message", senderName(d), text);
+          if (s) d.summary = s;
+        }),
+    );
 
     // One email per urgency present in the batch.
     const groups = new Map<Urgency, Delivery[]>();

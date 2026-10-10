@@ -363,8 +363,8 @@ only the listings are client-rendered (an `Event` JSON-LD block is injected for 
 ## Mummy — the family request page (`/mummy/`)
 
 A private page for the family (2026-10-09): sign in, press **Request**, tick any mix of
-money (one or more lines, each a USD amount, a reason of at most 16 characters and how
-soon, with a running total), a phone call (what about, how soon) and a message (what, how soon), send. One request row
+money (one or more lines, each a USD amount and a reason of at most 20 characters, with
+a running total and one "how soon" for the lot), a phone call (what about, how soon) and a message (what, how soon), send. One request row
 (`kinds text[]`, `money_items jsonb`), one email.
 The row lands in `requests` and a trigger emails the owner. Not a project: it is not
 in `data/projects.js`, not in `sitemap.xml`, `noindex` in a meta tag and a Netlify
@@ -392,22 +392,34 @@ header, and not `Disallow`ed in `robots.txt`.
   minute by a pg_cron job `mummy-dispatch`) claims due rows and hands their ids to
   `supabase/functions/request-email/index.ts`, which sends one digest per urgency and
   marks them sent; unsent claims are retried after ten minutes. Same fire-and-forget
-  contract as IRL: errors swallowed, function always answers 200. The "Gets sent …"
+  contract as IRL: errors swallowed, function always answers 200. **Calls and messages
+  are summarised by Claude first** (`summarize()` in the function: plain `fetch` to the
+  Messages API, `claude-opus-5-5`, low effort, `fallbacks: "default"`; secret
+  `ANTHROPIC_API_KEY`); the email carries the précis, with their own words behind a
+  "View full message" `<details>` drop-down (a trailer in the plain-text part). No key, a timeout, a refusal or an error → the original text, never
+  a lost email. The "Gets sent …"
   note under each How soon control states this schedule — keep the two in step.
   Subject lines triage themselves: an urgent email is titled **"Madre is caliente"**
   (the owner's choice, 2026-10-09); the 7pm and Tue/Thu digests read
   `[Today] Mummy needs $60.00 — groceries, bus fare · wants a call — the boiler`.
 - **Design:** house dark tokens, `styles/mummy.css` scoped to `html[data-site="mummy"]`,
-  never `irl.css` (its controls hang off `--ember`). Volt once per visible view (Sign in,
-  Request, Send, the tick). "How soon?" is a three-up `aria-pressed` segmented control
-  (Whenever / Soon / Urgent, default Soon) carried by fill + weight, never colour alone;
-  one per money line, one in the call card and one in the message card (the `urgency`
-  column is the call's, `message_urgency` the message's, each money line carries its own
-  in `money_items`). The email's subject prefix is the most
+  never `irl.css` (its controls hang off `--ember`). **Built for older eyes** (owner's
+  ask, 2026-10-09): an 18px base, labels/buttons/notes in plain sentence-case Inter
+  rather than the hub's small spaced-capitals mono, nothing dimmer than `--silver`,
+  `--silver` borders, ~58px tap targets — and **it runs light** (owner's ask the same
+  evening: readable in daylight): a "Daylight" block re-declares the house tokens to a
+  white page with near-black text and a darker green (`#16a35c`, 3.3:1 edge, 5.7:1
+  under near-black text). Those two blocks sit last in the stylesheet and override the
+  rules above them; keep them last. The contrast figures are in the stylesheet. Volt once per visible view (Sign in,
+  Request, Send, the tick). "How soon?" is a two-up `aria-pressed` segmented control
+  (labelled "Tonight 7pm" / "Now", stored as `soon` / `urgent`, no default — each one must be answered before Send; the database still accepts `whenever` and the Tue/Thu
+  delivery path is kept, but the page no longer offers it) carried by fill + weight, never colour alone;
+  one at the foot of the money card (applied to every line — each stored line still
+  carries it in `money_items`), one in the call card and one in the message card (the
+  `urgency` column is the call's, `message_urgency` the message's). The email's subject prefix is the most
   pressing of them.
   View swaps move focus to the new `<h1>`. No `consent.js`, `mediago.js` or analytics —
   a private signed-in page tracks nothing, and `/privacy/` does not list it.
-
 ## Conventions
 
 - Plain ES modules; no TypeScript. Type the registry with the JSDoc typedef in `data/projects.js` so editors still autocomplete.

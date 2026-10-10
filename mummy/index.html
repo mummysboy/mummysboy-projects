@@ -14,7 +14,7 @@
     <!-- Add to Home Screen: this is meant to live on a phone home screen. -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Family" />
-    <meta name="theme-color" content="#0b0b0d" />
+    <meta name="theme-color" content="#ffffff" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -112,6 +112,14 @@
                   <button class="btn btn--quiet" type="button" id="addMoney" disabled>+ Add another</button>
                   <p class="items__total" id="moneyTotal" aria-live="polite" hidden></p>
                 </div>
+                <fieldset class="field" id="moneySoon">
+                  <legend class="field__label">How soon?</legend>
+                  <div class="seg" data-seg>
+                    <button class="seg__btn" disabled type="button" data-urgency="soon" aria-pressed="false">Tonight 7pm</button>
+                    <button class="seg__btn" disabled type="button" data-urgency="urgent" aria-pressed="false">Now</button>
+                  </div>
+                  <p class="seg__note" data-seg-note aria-live="polite">Pick one</p>
+                </fieldset>
               </div>
             </div>
 
@@ -135,17 +143,16 @@
                 </div>
                 <div class="field item__reason">
                   <label class="field__label" for="reason-N">What for?</label>
-                  <input class="input" id="reason-N" name="reason" type="text" maxlength="16" autocomplete="off" placeholder="groceries" />
+                  <input
+                    class="input"
+                    id="reason-N"
+                    name="reason"
+                    type="text"
+                    maxlength="20"
+                    autocomplete="off"
+                    placeholder="groceries"
+                  />
                 </div>
-                <fieldset class="field item__soon">
-                  <legend class="field__label">How soon?</legend>
-                  <div class="seg" data-seg>
-                    <button class="seg__btn" type="button" data-urgency="whenever" aria-pressed="false">Whenever</button>
-                    <button class="seg__btn" type="button" data-urgency="soon" aria-pressed="true">Soon</button>
-                    <button class="seg__btn" type="button" data-urgency="urgent" aria-pressed="false">Urgent</button>
-                  </div>
-                  <p class="seg__note" data-seg-note aria-live="polite">Gets sent 7pm today</p>
-                </fieldset>
                 <button class="item__remove" type="button" aria-label="Remove this item" hidden>&times;</button>
               </div>
             </template>
@@ -170,11 +177,10 @@
                 <fieldset class="field" id="callSoon">
                   <legend class="field__label">How soon?</legend>
                   <div class="seg" data-seg>
-                    <button class="seg__btn" disabled type="button" data-urgency="whenever" aria-pressed="false">Whenever</button>
-                    <button class="seg__btn" disabled type="button" data-urgency="soon" aria-pressed="true">Soon</button>
-                    <button class="seg__btn" disabled type="button" data-urgency="urgent" aria-pressed="false">Urgent</button>
+                    <button class="seg__btn" disabled type="button" data-urgency="soon" aria-pressed="false">Tonight 7pm</button>
+                    <button class="seg__btn" disabled type="button" data-urgency="urgent" aria-pressed="false">Now</button>
                   </div>
-                  <p class="seg__note" data-seg-note aria-live="polite">Gets sent 7pm today</p>
+                  <p class="seg__note" data-seg-note aria-live="polite">Pick one</p>
                 </fieldset>
               </div>
             </div>
@@ -199,11 +205,10 @@
                 <fieldset class="field" id="messageSoon">
                   <legend class="field__label">How soon?</legend>
                   <div class="seg" data-seg>
-                    <button class="seg__btn" disabled type="button" data-urgency="whenever" aria-pressed="false">Whenever</button>
-                    <button class="seg__btn" disabled type="button" data-urgency="soon" aria-pressed="true">Soon</button>
-                    <button class="seg__btn" disabled type="button" data-urgency="urgent" aria-pressed="false">Urgent</button>
+                    <button class="seg__btn" disabled type="button" data-urgency="soon" aria-pressed="false">Tonight 7pm</button>
+                    <button class="seg__btn" disabled type="button" data-urgency="urgent" aria-pressed="false">Now</button>
                   </div>
-                  <p class="seg__note" data-seg-note aria-live="polite">Gets sent 7pm today</p>
+                  <p class="seg__note" data-seg-note aria-live="polite">Pick one</p>
                 </fieldset>
               </div>
             </div>
