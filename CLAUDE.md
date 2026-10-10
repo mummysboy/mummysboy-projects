@@ -371,8 +371,13 @@ header, and not `Disallow`ed in `robots.txt`.
 - **Same Supabase project as IRL**, own session. `scripts/mummy.js` creates its client
   with `createClient({ …, storageKey: "mummy.session", retryAnon: false })`, so signing
   out here never signs the IRL admin out. Any account in the project may file a request
-  — the `admins` table gates IRL, not this. Accounts are created in the dashboard with
-  User Metadata `{"name": "Mum"}`; sign-ups stay off. Setup is in `supabase/README.md`.
+  — the `admins` table gates IRL, not this. **Sign-in is by username:** the page maps
+  `mummy` to `mummy@mummysboy.com` (a mailbox-less address under the site's own domain)
+  because Supabase Auth only knows emails; one shared login (`mummy`) for now. Accounts
+  are created in the dashboard, auto-confirmed, optionally with User Metadata
+  `{"name": "Mummy"}` (else the capitalised username is the name); sign-ups stay off.
+  No magic-link fallback — a username has nowhere to receive one. Setup is in
+  `supabase/README.md`.
 - **The database stamps who sent it.** `user_id`, `sender_email` and `sender_name` are
   column defaults read from the JWT, and the insert grant covers only
   `kind, urgency, reason, amount, topic, body`. The client never sends identity fields;

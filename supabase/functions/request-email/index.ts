@@ -70,6 +70,17 @@ type RequestRow = {
   created_at: string;
 };
 
+/** Usernames are stored as addresses under the site's own domain (see
+ *  scripts/mummy.js). Such an address has no mailbox, so it is never a Reply-To. */
+const USERNAME_DOMAIN = "mummysboy.com";
+const isSynthetic = (email: string) => email.toLowerCase().endsWith(`@${USERNAME_DOMAIN}`);
+
+/** "mummy@mummysboy.com" → "Mummy". */
+function nameFromEmail(email: string): string {
+  const local = email.split("@")[0] ?? "";
+  return local ? local.charAt(0).toUpperCase() + local.slice(1) : email;
+}
+
 const usd = (n: string | number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
     Number(n),
@@ -106,14 +117,16 @@ const URGENCY_LABEL: Record<RequestRow["urgency"], string> = {
 };
 
 function alertFor(r: RequestRow) {
-  const who = (r.sender_name ?? "").trim() || r.sender_email;
+  const who = (r.sender_name ?? "").trim() || nameFromEmail(r.sender_email);
   // "Soon" is the default and the common case, so it earns no prefix; the two
   // ends of the scale do — that is what lets the subject line triage itself.
   const prefix =
     r.urgency === "urgent" ? "[Urgent] " : r.urgency === "whenever" ? "[Whenever] " : "";
 
   let subject: string;
-  const rows: [string, string][] = [["From", `${who} <${r.sender_email}>`]];
+  const rows: [string, string][] = [
+    ["From", isSynthetic(r.sender_email) ? who : `${who} <${r.sender_email}>`],
+  ];
 
   if (r.kind === "money") {
     subject = `${prefix}${who} needs ${usd(r.amount ?? 0)} — ${clip(r.reason ?? "", 60)}`;
@@ -138,8 +151,7 @@ function alertFor(r: RequestRow) {
     subject,
     text: [
       ...rows.map(([k, v]) => `${k}: ${v}`),
-      "",
-      "Reply to this email to answer them.",
+      ...(isSynthetic(r.sender_email) ? [] : ["", "Reply to this email to answer them."]),
     ].join("\n"),
     html: wrap([
       `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse">`,
@@ -149,7 +161,9 @@ function alertFor(r: RequestRow) {
           `<td style="padding:2px 0;vertical-align:top;white-space:pre-wrap">${esc(v)}</td></tr>`,
       ),
       `</table>`,
-      `<p style="margin:1.4em 0 0;color:#4a5260">Reply to this email to answer them.</p>`,
+      ...(isSynthetic(r.sender_email)
+        ? []
+        : [`<p style="margin:1.4em 0 0;color:#4a5260">Reply to this email to answer them.</p>`]),
     ]),
   };
 }
@@ -207,7 +221,7 @@ Deno.serve(async (req) => {
     await send({
       from,
       to: [alertTo],
-      reply_to: row.sender_email,
+      ...(isSynthetic(row.sender_email) ? {} : { reply_to: row.sender_email }),
       subject: alert.subject,
       text: alert.text,
       html: alert.html,

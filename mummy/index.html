@@ -47,18 +47,20 @@
       <!-- ---------- Sign in ---------- -->
       <section class="view" id="signinView" hidden>
         <h1 class="view__title" tabindex="-1">Sign in</h1>
-        <p class="mm-lede">Your account is the one Isaac set up for you.</p>
+        <p class="mm-lede">The username and password Isaac gave you.</p>
 
         <form id="signinForm" novalidate>
           <div class="field">
-            <label class="field__label" for="s-email">Email</label>
+            <label class="field__label" for="s-user">Username</label>
             <input
               class="input"
-              id="s-email"
-              name="email"
-              type="email"
-              inputmode="email"
+              id="s-user"
+              name="username"
+              type="text"
               autocomplete="username"
+              autocapitalize="none"
+              autocorrect="off"
+              spellcheck="false"
               required
             />
           </div>
@@ -77,10 +79,6 @@
           <button class="btn btn--solid btn--wide" id="signinSubmit" type="submit">Sign in</button>
           <p class="formmsg" id="signinMsg" role="status" aria-live="polite"></p>
         </form>
-
-        <button class="link-btn" id="magicBtn" type="button">
-          Email me a sign-in link instead
-        </button>
       </section>
 
       <!-- ---------- Home ---------- -->

@@ -25,6 +25,23 @@ const { auth, db } = createClient({
 
 const $ = (id) => document.getElementById(id);
 
+/**
+ * Sign-in is by username, but Supabase Auth only knows emails, so a username
+ * is an address under the site's own domain: "mummy" → mummy@mummysboy.com.
+ * Nothing is ever sent to it (the domain has no mailbox), it is just the key
+ * the account is stored under. A real address still works if someone has one.
+ */
+const USERNAME_DOMAIN = "mummysboy.com";
+const toEmail = (u) => (u.includes("@") ? u : `${u.toLowerCase()}@${USERNAME_DOMAIN}`);
+
+/** "Mummy" from user metadata, else from the username part of the address. */
+function displayName(user) {
+  const meta = (user.user_metadata?.name || "").trim();
+  if (meta) return meta;
+  const local = (user.email || "").split("@")[0];
+  return local ? local.charAt(0).toUpperCase() + local.slice(1) : "there";
+}
+
 const LIMITS = { reason: 200, topic: 300, body: 2000, amount: 99_999_999.99 };
 
 const TITLES = {
@@ -81,7 +98,7 @@ async function boot() {
     return;
   }
 
-  $("who").textContent = user.user_metadata?.name || user.email || "there";
+  $("who").textContent = displayName(user);
   signOutBtn.hidden = false;
   show("home");
 }
@@ -92,11 +109,11 @@ $("signinForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const msg = $("signinMsg");
   const btn = $("signinSubmit");
-  const email = $("s-email").value.trim();
+  const username = $("s-user").value.trim();
   const password = $("s-pass").value;
 
-  if (!email || !password) {
-    setMsg(msg, "Email and password, please.", "err");
+  if (!username || !password) {
+    setMsg(msg, "Username and password, please.", "err");
     return;
   }
 
@@ -105,7 +122,7 @@ $("signinForm").addEventListener("submit", async (e) => {
   setMsg(msg, "");
 
   try {
-    await auth.signIn(email, password);
+    await auth.signIn(toEmail(username), password);
     $("s-pass").value = "";
     await boot();
   } catch (err) {
@@ -117,26 +134,6 @@ $("signinForm").addEventListener("submit", async (e) => {
   } finally {
     btn.disabled = false;
     btn.textContent = "Sign in";
-  }
-});
-
-$("magicBtn").addEventListener("click", async () => {
-  const msg = $("signinMsg");
-  const email = $("s-email").value.trim();
-  if (!email) {
-    setMsg(msg, "Put your email in first.", "err");
-    $("s-email").focus();
-    return;
-  }
-  try {
-    await auth.sendMagicLink(email, location.origin + location.pathname);
-    setMsg(msg, "Link sent. Check your email on this device.", "ok");
-  } catch (err) {
-    setMsg(
-      msg,
-      err instanceof DbError && err.message ? err.message : "Could not send it.",
-      "err",
-    );
   }
 });
 

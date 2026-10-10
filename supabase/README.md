@@ -194,20 +194,21 @@ message; each row emails the owner. Setup, after the IRL steps above:
 1. **Run `mummy.sql`** — SQL Editor → paste the whole file → Run. Idempotent,
    like `schema.sql`; it depends on `schema.sql` having run first (it reuses the
    `private` schema, `is_admin()`, pg_net and the `irl_webhook_secret`).
-2. **Create each family account** — Authentication → Users → Add user, with their
-   email and a password you hand them. Set **User Metadata** to
-   `{"name": "Mum"}`: that name is what the email subject says and what the
-   page greets them with. Sign-ups stay off; you create every account.
-   A family account has no `admins` row, so it gets nothing on IRL.
-3. **Allow the magic-link landing** — Authentication → URL Configuration →
-   Redirect URLs → add `https://mummysboy.com/mummy/`. Without it the "email me
-   a sign-in link" fallback sends a link that lands on the wrong page.
-4. **Set the function's secrets** — Edge Functions → Secrets:
+2. **Create the family login** — the page signs in by *username*, which it turns
+   into an address under the site's own domain (`mummy` → `mummy@mummysboy.com`;
+   nothing is ever sent there). Authentication → Users → Add user → Create new
+   user, with that address, the password you will hand out, and **Auto Confirm
+   User** on. Optionally set User Metadata `{"name": "Mummy"}`; without it the
+   page and the email use the capitalised username. Sign-ups stay off; you
+   create every account. A family account has no `admins` row, so it gets
+   nothing on IRL. (A real email address works as a username too.)
+3. **Set the function's secrets** — Edge Functions → Secrets:
    `MUMMY_MAIL_FROM` (an address on the verified `outreach.rightimagedigital.com`
    subdomain, e.g. `Family <family@outreach.rightimagedigital.com>`) and
-   `MUMMY_ALERT_TO` (your inbox). `RESEND_API_KEY` is already there. Reply-To on
-   every alert is the family member's own address, so Reply just works.
-5. **Deploy the function** — `supabase functions deploy request-email --no-verify-jwt`,
+   `MUMMY_ALERT_TO` (your inbox). `RESEND_API_KEY` is already there. When the
+   sender has a real address it is the alert's Reply-To; a username login has
+   no mailbox, so those alerts carry none.
+4. **Deploy the function** — `supabase functions deploy request-email --no-verify-jwt`,
    the same `verify_jwt` reasoning as `signup-email`: the database calls it, and
    the `x-irl-secret` header is what authenticates the call.
 
