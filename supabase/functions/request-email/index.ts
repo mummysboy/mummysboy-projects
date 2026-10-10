@@ -20,6 +20,10 @@
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 const CLAUDE_ENDPOINT = "https://api.anthropic.com/v1/messages";
 
+/** How far below the summary the full transcript sits: this many blank lines,
+ *  so it never shows in a preview or on the first screen. Owner's choice. */
+const TRANSCRIPT_GAP = 200;
+
 /** The owner's clock. The timestamp is for them, not the sender. */
 const OWNER_TZ = "America/Los_Angeles";
 
@@ -268,6 +272,7 @@ function digestFor(bucket: Urgency, ds: Delivery[]) {
       ...(intro ? [intro, ""] : []),
       ...rows.map(([k, v]) => `${k}: ${v}`),
       ...(replyable ? ["", "Reply to this email to answer them."] : []),
+      ...(full.length ? ["\n".repeat(TRANSCRIPT_GAP)] : []),
       ...full.flatMap(([k, v]) => ["", `--- Full ${k.toLowerCase()} ---`, v]),
     ].join("\n"),
     html: wrap([
@@ -282,6 +287,7 @@ function digestFor(bucket: Urgency, ds: Delivery[]) {
       ...(replyable
         ? [`<p style="margin:1.4em 0 0;color:#4a5260">Reply to this email to answer them.</p>`]
         : []),
+      ...(full.length ? ["<br>".repeat(TRANSCRIPT_GAP)] : []),
       ...full.map(
         ([k, v]) =>
           `<details style="margin:1.2em 0 0"><summary style="cursor:pointer;color:#4a5260">View full ${esc(k.toLowerCase())}</summary>` +

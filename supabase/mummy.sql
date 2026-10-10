@@ -260,6 +260,27 @@ revoke all on public.deliveries from anon;
 revoke all on public.deliveries from authenticated;
 grant select on public.deliveries to authenticated;
 
+-- ---- Decisions on money (the /pundy/ dashboard) ---------------------------
+-- Each money line (one deliveries row of kind 'money') can be approved — as
+-- asked, or at a different amount — or denied. Spending is the sum of
+-- approved amounts by the time of the decision. Admins only.
+alter table public.deliveries add column if not exists decision text
+  not null default 'pending' check (decision in ('pending', 'approved', 'denied'));
+alter table public.deliveries add column if not exists approved_amount numeric(10, 2)
+  check (approved_amount is null or approved_amount >= 0);
+alter table public.deliveries add column if not exists decided_at timestamptz;
+
+create index if not exists deliveries_spend_idx
+  on public.deliveries (decided_at) where decision = 'approved';
+
+drop policy if exists "admins may decide deliveries" on public.deliveries;
+create policy "admins may decide deliveries"
+  on public.deliveries for update to authenticated
+  using ((select public.is_admin()))
+  with check ((select public.is_admin()));
+
+grant update (decision, approved_amount, decided_at) on public.deliveries to authenticated;
+
 -- "7pm Pacific" means America/Los_Angeles: PST in winter, PDT in summer.
 create or replace function private.next_due(urgency text, from_ts timestamptz)
 returns timestamptz

@@ -1,0 +1,442 @@
+/* /pundy/ — the owner's dashboard. Loaded after mummy.css, which it shares
+   (light page, big plain type, the .seg and .btn controls). This file only adds
+   the request list. Tokens only. */
+
+html[data-site="pundy"] .pd-wrap {
+  max-width: 52rem;
+}
+
+html[data-site="pundy"] .pd-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+html[data-site="pundy"] .pd-filter {
+  flex: 1;
+  min-width: 14rem;
+  max-width: 18rem;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+html[data-site="pundy"] .pd-filter .seg__btn {
+  min-height: 2.5rem;
+  font-size: 0.9375rem;
+}
+
+html[data-site="pundy"] .pd-state {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: var(--silver);
+}
+
+html[data-site="pundy"] .pd-list {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---- One request ------------------------------------------------------ */
+html[data-site="pundy"] .req {
+  padding: 1rem 1.1rem 1.1rem;
+  background: var(--surface);
+  border: 1px solid var(--silver);
+  border-radius: 12px;
+}
+
+html[data-site="pundy"] .req--done {
+  border-color: var(--hairline);
+}
+
+html[data-site="pundy"] .req--done .req__who,
+html[data-site="pundy"] .req--done .req__text,
+html[data-site="pundy"] .req--done .req__lines {
+  color: var(--steel);
+}
+
+html[data-site="pundy"] .req__top,
+html[data-site="pundy"] .req__head,
+html[data-site="pundy"] .req__foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+html[data-site="pundy"] .req__who {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.25rem;
+  color: var(--silver-bright);
+}
+
+html[data-site="pundy"] .req__when,
+html[data-site="pundy"] .req__meta,
+html[data-site="pundy"] .req__status {
+  font-size: 0.9375rem;
+  color: var(--silver);
+  white-space: nowrap;
+}
+
+html[data-site="pundy"] .req__part {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--hairline);
+}
+
+html[data-site="pundy"] .req__kind {
+  font-weight: 500;
+  color: var(--silver-bright);
+}
+
+html[data-site="pundy"] .req__lines {
+  margin: 0.4rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--silver-bright);
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-site="pundy"] .req__lines b {
+  font-weight: 500;
+}
+
+html[data-site="pundy"] .req__total {
+  margin-top: 0.3rem;
+  font-size: 0.9375rem;
+  color: var(--silver);
+}
+
+html[data-site="pundy"] .req__text {
+  margin-top: 0.4rem;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--silver-bright);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+html[data-site="pundy"] .req__foot {
+  align-items: center;
+  margin-top: 1rem;
+}
+
+html[data-site="pundy"] .req__foot .btn {
+  min-height: 2.75rem;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.9375rem;
+}
+
+/* ---- Layout ------------------------------------------------------------ */
+html[data-site="pundy"] .pd-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+html[data-site="pundy"] .pd-range {
+  margin-top: 1.25rem;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+html[data-site="pundy"] .pd-range .seg__btn {
+  min-height: 2.75rem;
+  font-size: 0.9375rem;
+}
+
+/* ---- Stat tiles ------------------------------------------------------- */
+html[data-site="pundy"] .tiles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 700px) {
+  html[data-site="pundy"] .tiles {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+html[data-site="pundy"] .tile {
+  padding: 0.9rem 1rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--silver);
+  border-radius: 12px;
+  min-width: 0;
+}
+
+html[data-site="pundy"] .tile--hero {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 700px) {
+  html[data-site="pundy"] .tile--hero {
+    grid-column: auto;
+  }
+}
+
+html[data-site="pundy"] .tile__label {
+  font-size: 0.9375rem;
+  color: var(--silver);
+}
+
+html[data-site="pundy"] .tile__value {
+  margin-top: 0.3rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1.75rem;
+  line-height: 1.1;
+  color: var(--silver-bright);
+  overflow-wrap: anywhere;
+}
+
+html[data-site="pundy"] .tile--hero .tile__value {
+  font-size: 2.75rem; /* the one hero figure on the view */
+}
+
+html[data-site="pundy"] .tile__sub {
+  margin-top: 0.3rem;
+  font-size: 0.875rem;
+  color: var(--silver);
+}
+
+/* ---- Chart --------------------------------------------------------------- */
+html[data-site="pundy"] .chart {
+  margin-top: 1rem;
+  padding: 1rem 1.1rem 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--silver);
+  border-radius: 12px;
+}
+
+html[data-site="pundy"] .chart__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+html[data-site="pundy"] .chart__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.125rem;
+  color: var(--silver-bright);
+}
+
+html[data-site="pundy"] .chart__sub {
+  font-size: 0.875rem;
+  color: var(--silver);
+}
+
+html[data-site="pundy"] .chart__plot {
+  margin-top: 0.75rem;
+}
+
+html[data-site="pundy"] .chart__plot svg {
+  display: block;
+  width: 100%;
+  height: 200px;
+}
+
+html[data-site="pundy"] .chart__grid {
+  stroke: var(--hairline);
+  stroke-width: 1;
+}
+
+html[data-site="pundy"] .chart__axis {
+  stroke: var(--silver);
+  stroke-width: 1;
+}
+
+html[data-site="pundy"] .bar__hit {
+  fill: transparent;
+}
+
+html[data-site="pundy"] .bar__mark {
+  fill: var(--volt);
+}
+
+html[data-site="pundy"] .bar:hover .bar__mark,
+html[data-site="pundy"] .bar:focus .bar__mark {
+  fill: var(--volt-dim);
+}
+
+html[data-site="pundy"] .bar:focus {
+  outline: none;
+}
+
+html[data-site="pundy"] .bar:focus .bar__hit {
+  fill: var(--surface-hi);
+}
+
+html[data-site="pundy"] .bar__label {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  fill: var(--silver);
+}
+
+html[data-site="pundy"] .bar__value {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  fill: var(--silver-bright);
+}
+
+html[data-site="pundy"] .chart__tip {
+  min-height: 1.4rem;
+  margin-top: 0.25rem;
+  font-size: 0.9375rem;
+  color: var(--silver-bright);
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-site="pundy"] .chart__tip[hidden] {
+  display: block !important; /* keep the row height so the chart doesn't jump */
+  visibility: hidden;
+}
+
+html[data-site="pundy"] .chart__table {
+  margin-top: 0.5rem;
+  font-size: 0.9375rem;
+}
+
+html[data-site="pundy"] .chart__table summary {
+  cursor: pointer;
+  color: var(--silver);
+}
+
+html[data-site="pundy"] .chart__table table {
+  width: 100%;
+  margin-top: 0.5rem;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-site="pundy"] .chart__table th,
+html[data-site="pundy"] .chart__table td {
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+  border-top: 1px solid var(--hairline);
+  color: var(--silver-bright);
+}
+
+html[data-site="pundy"] .chart__table th[scope="col"] {
+  color: var(--silver);
+  font-weight: 500;
+  border-top: 0;
+}
+
+html[data-site="pundy"] .chart__table td:nth-child(2),
+html[data-site="pundy"] .chart__table td:nth-child(3),
+html[data-site="pundy"] .chart__table th[scope="col"]:nth-child(2),
+html[data-site="pundy"] .chart__table th[scope="col"]:nth-child(3) {
+  text-align: right;
+}
+
+/* ---- Requests ----------------------------------------------------------- */
+html[data-site="pundy"] .reqs {
+  margin-top: 1.5rem;
+}
+
+/* ---- Money lines with decisions ---------------------------------------- */
+html[data-site="pundy"] .lines {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+html[data-site="pundy"] .line {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--hairline);
+}
+
+html[data-site="pundy"] .line:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+html[data-site="pundy"] .line__asked {
+  font-size: 1.0625rem;
+  color: var(--silver-bright);
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-site="pundy"] .line__asked b {
+  font-weight: 500;
+}
+
+html[data-site="pundy"] .line__ctl {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+html[data-site="pundy"] .line__amt .input {
+  min-height: 2.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+html[data-site="pundy"] .btn--mini {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.9375rem;
+}
+
+html[data-site="pundy"] .line--approved,
+html[data-site="pundy"] .line--denied {
+  grid-template-columns: 1fr auto auto;
+}
+
+html[data-site="pundy"] .line__state {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--silver-bright);
+  white-space: nowrap;
+}
+
+html[data-site="pundy"] .line--denied .line__asked,
+html[data-site="pundy"] .line--denied .line__state {
+  color: var(--steel);
+  text-decoration: line-through;
+}
+
+html[data-site="pundy"] .line__change {
+  min-height: 2.5rem;
+  padding: 0.4rem 0.7rem;
+  background: transparent;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  color: var(--silver);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+html[data-site="pundy"] .line__change:hover {
+  color: var(--silver-bright);
+  border-color: var(--silver);
+}
+
+@media (min-width: 560px) {
+  html[data-site="pundy"] .line {
+    grid-template-columns: 1fr auto;
+  }
+}

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en" data-site="pundy">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <title>Pundy</title>
+    <!-- Private dashboard. Keep it out of search, and out of sitemap.xml. It must
+         not be Disallow-ed in robots.txt either — a crawl block would hide this. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Pundy" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <link rel="stylesheet" href="/styles/tokens.css" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/styles/mummy.css" />
+    <link rel="stylesheet" href="/styles/pundy.css" />
+    <!-- No consent.js / mediago.js / analytics: a private signed-in page tracks nothing. -->
+  </head>
+  <body class="mm-body">
+    <header class="top">
+      <div class="top__row">
+        <span class="mm-mark"><b>mummysboy</b> pundy</span>
+        <button class="btn btn--quiet" id="signOut" type="button" hidden>Sign out</button>
+      </div>
+    </header>
+
+    <main class="mm-wrap pd-wrap">
+      <!-- ---------- Sign in ---------- -->
+      <section class="view" id="signinView" hidden>
+        <h1 class="view__title" tabindex="-1">Sign in</h1>
+        <p class="mm-lede">Your dashboard login.</p>
+
+        <form id="signinForm" novalidate>
+          <div class="field">
+            <label class="field__label" for="s-user">Username</label>
+            <input
+              class="input"
+              id="s-user"
+              name="username"
+              type="text"
+              autocomplete="username"
+              autocapitalize="none"
+              autocorrect="off"
+              spellcheck="false"
+              required
+            />
+          </div>
+          <div class="field">
+            <label class="field__label" for="s-pass">Password</label>
+            <input
+              class="input"
+              id="s-pass"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <button class="btn btn--solid btn--wide" id="signinSubmit" type="submit">Sign in</button>
+          <p class="formmsg" id="signinMsg" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <!-- ---------- Dashboard ---------- -->
+      <section class="view" id="dashView" hidden>
+        <div class="pd-head">
+          <h1 class="view__title" tabindex="-1">Dashboard</h1>
+          <button class="btn btn--quiet" id="refresh" type="button">Refresh</button>
+        </div>
+
+        <!-- Period for the money figures -->
+        <div class="seg pd-range" role="group" aria-label="Period">
+          <button class="seg__btn" type="button" data-range="week" aria-pressed="true">This week</button>
+          <button class="seg__btn" type="button" data-range="month" aria-pressed="false">Month</button>
+          <button class="seg__btn" type="button" data-range="year" aria-pressed="false">Year</button>
+          <button class="seg__btn" type="button" data-range="all" aria-pressed="false">All time</button>
+        </div>
+
+        <!-- Stat tiles -->
+        <div class="tiles" aria-live="polite">
+          <div class="tile tile--hero">
+            <p class="tile__label">Spent</p>
+            <p class="tile__value" id="tSpent">—</p>
+            <p class="tile__sub" id="tSpentSub"></p>
+          </div>
+          <div class="tile">
+            <p class="tile__label">To decide</p>
+            <p class="tile__value" id="tPending">—</p>
+            <p class="tile__sub" id="tPendingSub"></p>
+          </div>
+          <div class="tile">
+            <p class="tile__label">Open requests</p>
+            <p class="tile__value" id="tOpen">—</p>
+            <p class="tile__sub" id="tOpenSub"></p>
+          </div>
+          <div class="tile">
+            <p class="tile__label">Denied</p>
+            <p class="tile__value" id="tDenied">—</p>
+            <p class="tile__sub" id="tDeniedSub"></p>
+          </div>
+        </div>
+
+        <!-- Spending by month -->
+        <section class="chart" aria-labelledby="chartTitle">
+          <div class="chart__head">
+            <h2 class="chart__title" id="chartTitle">Spending by month</h2>
+            <p class="chart__sub">Approved amounts, last 12 months</p>
+          </div>
+          <div class="chart__plot" id="chartPlot"></div>
+          <div class="chart__tip" id="chartTip" role="status" aria-live="polite" hidden></div>
+          <details class="chart__table">
+            <summary>Show as a table</summary>
+            <table id="chartTable">
+              <caption class="sr-only">Approved spending by month</caption>
+              <thead><tr><th scope="col">Month</th><th scope="col">Approved</th><th scope="col">Things</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </details>
+        </section>
+
+        <!-- Requests -->
+        <section class="reqs" aria-labelledby="reqsTitle">
+          <div class="pd-bar">
+            <h2 class="chart__title" id="reqsTitle">Requests</h2>
+            <div class="seg pd-filter" role="group" aria-label="Show">
+              <button class="seg__btn" type="button" data-filter="open" aria-pressed="true">Open</button>
+              <button class="seg__btn" type="button" data-filter="done" aria-pressed="false">Done</button>
+              <button class="seg__btn" type="button" data-filter="all" aria-pressed="false">All</button>
+            </div>
+          </div>
+          <p class="pd-state" id="dashState" role="status" aria-live="polite"></p>
+          <ol class="pd-list" id="reqList"></ol>
+        </section>
+      </section>
+
+    </main>
+
+    <script type="module" src="/scripts/pundy.js"></script>
+  </body>
+</html>

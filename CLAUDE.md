@@ -179,6 +179,7 @@ mummysboy/
 │   ├── index.html        # IRL landing page — authored copy + DB-driven event list
 │   └── admin/index.html  # private phone-first ops console (noindex)
 ├── mummy/index.html      # private family request page (sign in → Request → money/call/message; noindex)
+├── pundy/index.html      # the owner's dashboard of those requests (admin sign-in; noindex)
 ├── privacy/index.html    # the WEBSITE's privacy notice (pixel, analytics, IRL sign-ups)
 ├── qrewards/index.html   # registry-driven placeholder route
 ├── scripts/
@@ -188,6 +189,7 @@ mummysboy/
 │   ├── sb-client.js      # tiny Supabase client factory (PostgREST + auth) — no dependency
 │   ├── irl-db.js         # IRL's instance of sb-client (same exports as before)
 │   ├── mummy.js          # the /mummy/ page: sign-in + the request flow
+│   ├── pundy.js          # the /pundy/ dashboard: admin sign-in, list, mark done
 │   ├── irl-events.js     # renders the IRL event listing + wires the signup dialog
 │   ├── irl-signup.js     # the participate/watch dialog (one dialog, two modes)
 │   ├── irl-admin.js      # the IRL admin console
@@ -206,6 +208,7 @@ mummysboy/
 ├── supabase/
 │   ├── schema.sql        # IRL database: tables, RLS, triggers, grants (idempotent)
 │   ├── mummy.sql         # the `requests` table behind /mummy/ (run after schema.sql; idempotent)
+│   ├── mummy-dummy.sql   # a year of made-up requests for the /pundy/ dashboard (backdated < 2026-10-09; email trigger off)
 │   ├── functions/
 │   │   ├── signup-email/index.ts  # Deno edge fn: confirmation + alert on a new signup
 │   │   └── request-email/index.ts # Deno edge fn: emails the owner when a family request lands
@@ -217,7 +220,8 @@ mummysboy/
 │   ├── gig-ad.css        # /gig/ ad treatment, scoped to html[data-variant="dual-c"]
 │   ├── irl.css           # IRL identity: ember accent, listings, dialog, forms
 │   ├── irl-admin.css     # IRL admin only — never loaded by the public page
-│   └── mummy.css         # /mummy/ only, scoped to html[data-site="mummy"]
+│   ├── mummy.css         # /mummy/ and /pundy/, scoped to html:is([data-site="mummy"], [data-site="pundy"])
+│   └── pundy.css         # /pundy/ only: the request list
 ├── favicon.svg           # silver dot on near-black
 ├── robots.txt            # allow-all + points at the sitemap
 ├── sitemap.xml           # static sitemap (update when adding a route or post)
@@ -420,6 +424,31 @@ header, and not `Disallow`ed in `robots.txt`.
   pressing of them.
   View swaps move focus to the new `<h1>`. No `consent.js`, `mediago.js` or analytics —
   a private signed-in page tracks nothing, and `/privacy/` does not list it.
+### Pundy — the owner's dashboard (`/pundy/`)
+
+`/pundy/` (2026-10-09) is a dashboard: a period switch (this week / month / year / all
+time), four stat tiles (Spent — the one hero figure — / To decide / Open requests /
+Denied), a "Spending by month" bar chart for the last 12 months (one series, one hue,
+thin rounded bars, hover and focus tooltip, a table view in a `<details>`), then every
+request newest first with Open / Done / All filters and a Mark done / Reopen button.
+`supabase/mummy-dummy.sql` seeds a year of made-up requests (all backdated before
+2026-10-09 so `delete … where created_at < '2026-10-09'` removes them; it disables the
+email trigger while inserting). Sign-in is by username like `/mummy/`
+(`pundy` → `pundy@mummysboy.com`); power is a row in `admins`, exactly as the IRL
+console, so the `pundy` account is in that table and a family login gets "No access". Its own session key is `pundy.session`. It reads `requests` embedded with
+`deliveries(kind,urgency,item,due_at,sent_at)` through the admin policies in `mummy.sql`
+and shows, per thing, how soon it was wanted and whether it has gone ("sent 7:25 PM" /
+"goes 7:00 PM"). **Money decisions:** every money line (a `deliveries` row of kind
+`money`) is approved as asked, approved at an edited amount, or denied — columns
+`decision` / `approved_amount` / `decided_at`, written through the "admins may decide
+deliveries" policy and a column-level update grant; "Change" sets it back to pending. A
+**Spending** panel sums approved amounts by `decided_at` for this week (from Monday),
+this month, this year or all time, in Pacific time. The other write is `requests.status`
+(Mark done / Reopen). Everything injected uses `esc()`. It shares
+`styles/mummy.css` (the light, large-type look — that sheet is scoped to both sites) and
+adds `styles/pundy.css` for the list. Private like `/mummy/`: noindex meta + Netlify
+header, not in the sitemap, not Disallowed, no consent/analytics scripts.
+
 ## Conventions
 
 - Plain ES modules; no TypeScript. Type the registry with the JSDoc typedef in `data/projects.js` so editors still autocomplete.

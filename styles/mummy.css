@@ -1,6 +1,6 @@
 /* /mummy/ — the family request page.
    Loaded after tokens.css and styles.css, never irl.css (its controls hang off
-   --ember). Everything here is scoped to html[data-site="mummy"] and uses the
+   --ember). Everything here is scoped to html:is([data-site="mummy"], [data-site="pundy"]) and uses the
    house tokens. Volt is spent once per visible view: the Sign in button, the
    Request button, the Send button, the tick on the Sent view. The chooser has
    none. The global :focus-visible ring is its allowed second job.
@@ -14,18 +14,18 @@
 
 /* The `hidden` attribute has to beat the component display rules below — the
    UA sheet's [hidden]{display:none} loses to .btn{display:inline-flex}. */
-html[data-site="mummy"] [hidden] {
+html:is([data-site="mummy"], [data-site="pundy"]) [hidden] {
   display: none !important;
 }
 
-html[data-site="mummy"] .mm-body {
+html:is([data-site="mummy"], [data-site="pundy"]) .mm-body {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
 
 /* ---- Top bar ---------------------------------------------------------- */
-html[data-site="mummy"] .top {
+html:is([data-site="mummy"], [data-site="pundy"]) .top {
   position: sticky;
   top: 0;
   z-index: 20;
@@ -34,7 +34,7 @@ html[data-site="mummy"] .top {
   border-bottom: 1px solid var(--hairline);
 }
 
-html[data-site="mummy"] .top__row {
+html:is([data-site="mummy"], [data-site="pundy"]) .top__row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -44,7 +44,7 @@ html[data-site="mummy"] .top__row {
   padding: 0.75rem 1rem;
 }
 
-html[data-site="mummy"] .mm-mark {
+html:is([data-site="mummy"], [data-site="pundy"]) .mm-mark {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -53,13 +53,13 @@ html[data-site="mummy"] .mm-mark {
   white-space: nowrap;
 }
 
-html[data-site="mummy"] .mm-mark b {
+html:is([data-site="mummy"], [data-site="pundy"]) .mm-mark b {
   color: var(--silver-bright);
   font-weight: 500;
 }
 
 /* ---- Layout ----------------------------------------------------------- */
-html[data-site="mummy"] .mm-wrap {
+html:is([data-site="mummy"], [data-site="pundy"]) .mm-wrap {
   flex: 1;
   width: 100%;
   max-width: 26rem;
@@ -67,7 +67,7 @@ html[data-site="mummy"] .mm-wrap {
   padding: 2rem 1rem 3rem;
 }
 
-html[data-site="mummy"] .view__title {
+html:is([data-site="mummy"], [data-site="pundy"]) .view__title {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: clamp(1.625rem, 6vw, 1.875rem);
@@ -79,11 +79,11 @@ html[data-site="mummy"] .view__title {
 
 /* Headings take focus on a view swap for screen readers; that focus needs no
    ring — the heading is the whole screen. */
-html[data-site="mummy"] .view__title:focus {
+html:is([data-site="mummy"], [data-site="pundy"]) .view__title:focus {
   outline: none;
 }
 
-html[data-site="mummy"] .mm-lede {
+html:is([data-site="mummy"], [data-site="pundy"]) .mm-lede {
   margin-top: 0.6rem;
   font-size: 0.9375rem;
   line-height: 1.6;
@@ -91,7 +91,7 @@ html[data-site="mummy"] .mm-lede {
 }
 
 /* ---- Buttons ---------------------------------------------------------- */
-html[data-site="mummy"] .btn {
+html:is([data-site="mummy"], [data-site="pundy"]) .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -114,27 +114,27 @@ html[data-site="mummy"] .btn {
     color 160ms ease;
 }
 
-html[data-site="mummy"] .btn:disabled {
+html:is([data-site="mummy"], [data-site="pundy"]) .btn:disabled {
   color: var(--steel);
   cursor: default;
 }
 
-html[data-site="mummy"] .btn--solid {
+html:is([data-site="mummy"], [data-site="pundy"]) .btn--solid {
   background: var(--volt);
   border-color: var(--volt);
   color: var(--ink);
 }
 
-html[data-site="mummy"] .btn--solid:hover:not(:disabled) {
+html:is([data-site="mummy"], [data-site="pundy"]) .btn--solid:hover:not(:disabled) {
   background: var(--volt-dim);
   border-color: var(--volt-dim);
 }
 
-html[data-site="mummy"] .btn--ghost:hover:not(:disabled) {
+html:is([data-site="mummy"], [data-site="pundy"]) .btn--ghost:hover:not(:disabled) {
   border-color: var(--silver);
 }
 
-html[data-site="mummy"] .btn--quiet {
+html:is([data-site="mummy"], [data-site="pundy"]) .btn--quiet {
   padding: 0.5rem 0.75rem;
   min-height: 2.25rem;
   border-color: var(--hairline);
@@ -142,18 +142,18 @@ html[data-site="mummy"] .btn--quiet {
   color: var(--steel);
 }
 
-html[data-site="mummy"] .btn--quiet:hover:not(:disabled) {
+html:is([data-site="mummy"], [data-site="pundy"]) .btn--quiet:hover:not(:disabled) {
   color: var(--silver-bright);
   border-color: var(--steel);
 }
 
-html[data-site="mummy"] .btn--wide {
+html:is([data-site="mummy"], [data-site="pundy"]) .btn--wide {
   width: 100%;
   margin-top: 1.5rem;
 }
 
 /* The one button on the home screen. Thumb-sized. */
-html[data-site="mummy"] .btn--big {
+html:is([data-site="mummy"], [data-site="pundy"]) .btn--big {
   width: 100%;
   min-height: 4.25rem;
   margin-top: 2.25rem;
@@ -166,24 +166,24 @@ html[data-site="mummy"] .btn--big {
 /* Each is a card whose header is a toggle; on, its fields unfold inside the
    card. State is carried by the box glyph, the border and aria-pressed —
    never colour alone, and no volt. */
-html[data-site="mummy"] .picks {
+html:is([data-site="mummy"], [data-site="pundy"]) .picks {
   display: grid;
   gap: 0.75rem;
   margin-top: 1.5rem;
 }
 
-html[data-site="mummy"] .pick {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick {
   background: var(--surface);
   border: 1px solid var(--steel);
   border-radius: 12px;
   transition: border-color 160ms ease;
 }
 
-html[data-site="mummy"] .pick--on {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick--on {
   border-color: var(--silver-bright);
 }
 
-html[data-site="mummy"] .pick__toggle {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick__toggle {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
@@ -201,11 +201,11 @@ html[data-site="mummy"] .pick__toggle {
   cursor: pointer;
 }
 
-html[data-site="mummy"] .pick__toggle:hover {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick__toggle:hover {
   background: var(--surface-hi);
 }
 
-html[data-site="mummy"] .pick__box {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick__box {
   grid-row: 1 / 3;
   width: 1.375rem;
   height: 1.375rem;
@@ -223,23 +223,23 @@ html[data-site="mummy"] .pick__box {
     border-color 160ms ease;
 }
 
-html[data-site="mummy"] .pick__toggle[aria-pressed="true"] .pick__box {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick__toggle[aria-pressed="true"] .pick__box {
   background: var(--silver-bright);
   border-color: var(--silver-bright);
 }
 
-html[data-site="mummy"] .pick__toggle[aria-pressed="true"] .pick__box::after {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick__toggle[aria-pressed="true"] .pick__box::after {
   content: "\2713";
 }
 
-html[data-site="mummy"] .pick__toggle b {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick__toggle b {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: 1.125rem;
   letter-spacing: -0.01em;
 }
 
-html[data-site="mummy"] .pick__hint {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick__hint {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   text-transform: uppercase;
@@ -247,19 +247,19 @@ html[data-site="mummy"] .pick__hint {
   color: var(--steel);
 }
 
-html[data-site="mummy"] .pick__fields {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick__fields {
   padding: 0 1.1rem 1.1rem;
   border-top: 1px solid var(--hairline);
 }
 
-html[data-site="mummy"] .pick__fields .field {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick__fields .field {
   margin-top: 1rem;
 }
 
 /* ---- Money lines ----------------------------------------------------- */
 /* Each line is amount + reason (+ remove once there are two). Stacked on a
    phone, side by side from 480px. Lines are separated by hairlines, not boxes. */
-html[data-site="mummy"] .item {
+html:is([data-site="mummy"], [data-site="pundy"]) .item {
   display: grid;
   grid-template-columns: 1fr auto;
   column-gap: 0.5rem;
@@ -268,17 +268,17 @@ html[data-site="mummy"] .item {
   border-bottom: 1px solid var(--hairline);
 }
 
-html[data-site="mummy"] .item:last-child {
+html:is([data-site="mummy"], [data-site="pundy"]) .item:last-child {
   border-bottom: 0;
   padding-bottom: 0;
 }
 
-html[data-site="mummy"] .item__amount,
-html[data-site="mummy"] .item__reason {
+html:is([data-site="mummy"], [data-site="pundy"]) .item__amount,
+html:is([data-site="mummy"], [data-site="pundy"]) .item__reason {
   grid-column: 1;
 }
 
-html[data-site="mummy"] .item__remove {
+html:is([data-site="mummy"], [data-site="pundy"]) .item__remove {
   grid-column: 2;
   grid-row: 2;
   width: 2.75rem;
@@ -293,32 +293,32 @@ html[data-site="mummy"] .item__remove {
   cursor: pointer;
 }
 
-html[data-site="mummy"] .item__remove:hover {
+html:is([data-site="mummy"], [data-site="pundy"]) .item__remove:hover {
   color: var(--silver-bright);
   border-color: var(--silver);
 }
 
 @media (min-width: 480px) {
-  html[data-site="mummy"] .item {
+  html:is([data-site="mummy"], [data-site="pundy"]) .item {
     grid-template-columns: 9rem 1fr auto;
   }
 
-  html[data-site="mummy"] .item__amount {
+  html:is([data-site="mummy"], [data-site="pundy"]) .item__amount {
     grid-column: 1;
   }
 
-  html[data-site="mummy"] .item__reason {
+  html:is([data-site="mummy"], [data-site="pundy"]) .item__reason {
     grid-column: 2;
     grid-row: 1;
   }
 
-  html[data-site="mummy"] .item__remove {
+  html:is([data-site="mummy"], [data-site="pundy"]) .item__remove {
     grid-column: 3;
     grid-row: 1;
   }
 }
 
-html[data-site="mummy"] .items__foot {
+html:is([data-site="mummy"], [data-site="pundy"]) .items__foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -326,7 +326,7 @@ html[data-site="mummy"] .items__foot {
   margin-top: 1rem;
 }
 
-html[data-site="mummy"] .items__total {
+html:is([data-site="mummy"], [data-site="pundy"]) .items__total {
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   letter-spacing: 0.04em;
@@ -335,11 +335,11 @@ html[data-site="mummy"] .items__total {
 }
 
 /* ---- Forms ------------------------------------------------------------ */
-html[data-site="mummy"] .field {
+html:is([data-site="mummy"], [data-site="pundy"]) .field {
   margin-top: 1.25rem;
 }
 
-html[data-site="mummy"] fieldset.field {
+html:is([data-site="mummy"], [data-site="pundy"]) fieldset.field {
   border: 0;
   min-width: 0;
   padding: 0;
@@ -347,11 +347,11 @@ html[data-site="mummy"] fieldset.field {
   margin-right: 0;
 }
 
-html[data-site="mummy"] fieldset.field > legend {
+html:is([data-site="mummy"], [data-site="pundy"]) fieldset.field > legend {
   padding: 0;
 }
 
-html[data-site="mummy"] .field__label {
+html:is([data-site="mummy"], [data-site="pundy"]) .field__label {
   display: block;
   margin-bottom: 0.45rem;
   font-family: var(--font-mono);
@@ -361,8 +361,8 @@ html[data-site="mummy"] .field__label {
   color: var(--steel);
 }
 
-html[data-site="mummy"] .input,
-html[data-site="mummy"] .textarea {
+html:is([data-site="mummy"], [data-site="pundy"]) .input,
+html:is([data-site="mummy"], [data-site="pundy"]) .textarea {
   width: 100%;
   padding: 0.8rem 0.9rem;
   background: var(--ink);
@@ -374,33 +374,33 @@ html[data-site="mummy"] .textarea {
   line-height: 1.4;
 }
 
-html[data-site="mummy"] .textarea {
+html:is([data-site="mummy"], [data-site="pundy"]) .textarea {
   min-height: 5.5rem;
   resize: vertical;
 }
 
-html[data-site="mummy"] .input::placeholder,
-html[data-site="mummy"] .textarea::placeholder {
+html:is([data-site="mummy"], [data-site="pundy"]) .input::placeholder,
+html:is([data-site="mummy"], [data-site="pundy"]) .textarea::placeholder {
   color: var(--steel);
 }
 
 /* The global :focus-visible volt ring carries focus; brighten the edge too. */
-html[data-site="mummy"] .input:focus,
-html[data-site="mummy"] .textarea:focus {
+html:is([data-site="mummy"], [data-site="pundy"]) .input:focus,
+html:is([data-site="mummy"], [data-site="pundy"]) .textarea:focus {
   border-color: var(--silver);
 }
 
-html[data-site="mummy"] .input[aria-invalid="true"],
-html[data-site="mummy"] .textarea[aria-invalid="true"] {
+html:is([data-site="mummy"], [data-site="pundy"]) .input[aria-invalid="true"],
+html:is([data-site="mummy"], [data-site="pundy"]) .textarea[aria-invalid="true"] {
   border-color: #e88b8b;
 }
 
 /* Dollar sign sits inside the amount box; the input keeps its own label. */
-html[data-site="mummy"] .amount {
+html:is([data-site="mummy"], [data-site="pundy"]) .amount {
   position: relative;
 }
 
-html[data-site="mummy"] .amount__sign {
+html:is([data-site="mummy"], [data-site="pundy"]) .amount__sign {
   position: absolute;
   left: 0.9rem;
   top: 50%;
@@ -411,7 +411,7 @@ html[data-site="mummy"] .amount__sign {
   pointer-events: none;
 }
 
-html[data-site="mummy"] .amount .input {
+html:is([data-site="mummy"], [data-site="pundy"]) .amount .input {
   padding-left: 1.9rem;
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
@@ -419,13 +419,13 @@ html[data-site="mummy"] .amount .input {
 
 /* Urgency — two-up segmented control. Selection is carried by fill, border
    and weight plus aria-pressed, never colour alone, and spends no volt. */
-html[data-site="mummy"] .seg {
+html:is([data-site="mummy"], [data-site="pundy"]) .seg {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
 }
 
-html[data-site="mummy"] .seg__btn {
+html:is([data-site="mummy"], [data-site="pundy"]) .seg__btn {
   min-height: 2.75rem;
   padding: 0.6rem 0.4rem;
   background: transparent;
@@ -443,18 +443,18 @@ html[data-site="mummy"] .seg__btn {
     color 160ms ease;
 }
 
-html[data-site="mummy"] .seg__btn:hover {
+html:is([data-site="mummy"], [data-site="pundy"]) .seg__btn:hover {
   color: var(--silver-bright);
 }
 
-html[data-site="mummy"] .seg__btn[aria-pressed="true"] {
+html:is([data-site="mummy"], [data-site="pundy"]) .seg__btn[aria-pressed="true"] {
   background: var(--silver-bright);
   border-color: var(--silver-bright);
   color: var(--ink);
   font-weight: 500;
 }
 
-html[data-site="mummy"] .seg__note {
+html:is([data-site="mummy"], [data-site="pundy"]) .seg__note {
   margin-top: 0.5rem;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
@@ -462,7 +462,7 @@ html[data-site="mummy"] .seg__note {
   color: var(--silver);
 }
 
-html[data-site="mummy"] .actions {
+html:is([data-site="mummy"], [data-site="pundy"]) .actions {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 0.75rem;
@@ -470,52 +470,52 @@ html[data-site="mummy"] .actions {
 }
 
 /* Form-level status line. */
-html[data-site="mummy"] .seg[aria-invalid="true"] .seg__btn {
+html:is([data-site="mummy"], [data-site="pundy"]) .seg[aria-invalid="true"] .seg__btn {
   border-color: #e88b8b;
 }
 
-html[data-site="mummy"] .formmsg {
+html:is([data-site="mummy"], [data-site="pundy"]) .formmsg {
   min-height: 1.2rem;
   margin-top: 0.85rem;
   font-size: 0.8125rem;
   line-height: 1.5;
 }
 
-html[data-site="mummy"] .formmsg--err {
+html:is([data-site="mummy"], [data-site="pundy"]) .formmsg--err {
   color: #e88b8b;
 }
 
-html[data-site="mummy"] .formmsg--ok {
+html:is([data-site="mummy"], [data-site="pundy"]) .formmsg--ok {
   color: var(--silver);
 }
 
 /* ---- Sent ------------------------------------------------------------- */
 /* .af-success / .af-check come from styles.css (the Android modal's tick). */
-html[data-site="mummy"] .view--done {
+html:is([data-site="mummy"], [data-site="pundy"]) .view--done {
   text-align: center;
   padding-top: 2.5rem;
 }
 
-html[data-site="mummy"] .view--done .view__title {
+html:is([data-site="mummy"], [data-site="pundy"]) .view--done .view__title {
   margin-bottom: 0.4rem;
 }
 
-html[data-site="mummy"] .view--done .btn {
+html:is([data-site="mummy"], [data-site="pundy"]) .view--done .btn {
   margin-top: 2rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-site="mummy"] .af-success,
-  html[data-site="mummy"] .af-check__circle,
-  html[data-site="mummy"] .af-check__tick {
+  html:is([data-site="mummy"], [data-site="pundy"]) .af-success,
+  html:is([data-site="mummy"], [data-site="pundy"]) .af-check__circle,
+  html:is([data-site="mummy"], [data-site="pundy"]) .af-check__tick {
     animation: none;
     stroke-dashoffset: 0;
   }
 
-  html[data-site="mummy"] .btn,
-  html[data-site="mummy"] .pick,
-  html[data-site="mummy"] .pick__box,
-  html[data-site="mummy"] .seg__btn {
+  html:is([data-site="mummy"], [data-site="pundy"]) .btn,
+  html:is([data-site="mummy"], [data-site="pundy"]) .pick,
+  html:is([data-site="mummy"], [data-site="pundy"]) .pick__box,
+  html:is([data-site="mummy"], [data-site="pundy"]) .seg__btn {
     transition: none;
   }
 }
@@ -526,34 +526,34 @@ html[data-site="mummy"] .view--done .btn {
    buttons in plain sentence case, text no dimmer than --silver (8.8:1 on
    ink), borders bright enough to see, and tap targets around 58px.
    Everything below overrides the rules above; keep it last in the file. */
-html[data-site="mummy"] {
+html:is([data-site="mummy"], [data-site="pundy"]) {
   font-size: 112.5%; /* 18px base — every rem below scales with it */
 }
 
-html[data-site="mummy"] .mm-wrap {
+html:is([data-site="mummy"], [data-site="pundy"]) .mm-wrap {
   max-width: 30rem;
 }
 
-html[data-site="mummy"] .view__title {
+html:is([data-site="mummy"], [data-site="pundy"]) .view__title {
   font-size: clamp(1.875rem, 7vw, 2.25rem);
   line-height: 1.2;
 }
 
-html[data-site="mummy"] .mm-lede {
+html:is([data-site="mummy"], [data-site="pundy"]) .mm-lede {
   font-size: 1.0625rem;
   line-height: 1.55;
   color: var(--silver-bright);
 }
 
-html[data-site="mummy"] .mm-mark {
+html:is([data-site="mummy"], [data-site="pundy"]) .mm-mark {
   font-size: 0.8125rem;
   letter-spacing: 0.12em;
   color: var(--silver);
 }
 
 /* Labels: readable words, not a code voice. */
-html[data-site="mummy"] .field__label,
-html[data-site="mummy"] fieldset.field > legend {
+html:is([data-site="mummy"], [data-site="pundy"]) .field__label,
+html:is([data-site="mummy"], [data-site="pundy"]) fieldset.field > legend {
   margin-bottom: 0.5rem;
   font-family: var(--font-sans);
   font-size: 1rem;
@@ -563,24 +563,24 @@ html[data-site="mummy"] fieldset.field > legend {
   color: var(--silver-bright);
 }
 
-html[data-site="mummy"] .input,
-html[data-site="mummy"] .textarea {
+html:is([data-site="mummy"], [data-site="pundy"]) .input,
+html:is([data-site="mummy"], [data-site="pundy"]) .textarea {
   padding: 0.95rem 1rem;
   font-size: 1.125rem;
   border-color: var(--silver);
 }
 
-html[data-site="mummy"] .amount__sign {
+html:is([data-site="mummy"], [data-site="pundy"]) .amount__sign {
   font-size: 1.125rem;
   color: var(--silver-bright);
 }
 
-html[data-site="mummy"] .amount .input {
+html:is([data-site="mummy"], [data-site="pundy"]) .amount .input {
   padding-left: 2.1rem;
 }
 
 /* Buttons: bigger, plain words, strong edges. */
-html[data-site="mummy"] .btn {
+html:is([data-site="mummy"], [data-site="pundy"]) .btn {
   min-height: 3.25rem;
   padding: 0.85rem 1.4rem;
   border-color: var(--silver);
@@ -592,34 +592,34 @@ html[data-site="mummy"] .btn {
   border-radius: 10px;
 }
 
-html[data-site="mummy"] .btn--quiet {
+html:is([data-site="mummy"], [data-site="pundy"]) .btn--quiet {
   min-height: 2.75rem;
   font-size: 0.9375rem;
   color: var(--silver);
 }
 
-html[data-site="mummy"] .btn--big {
+html:is([data-site="mummy"], [data-site="pundy"]) .btn--big {
   min-height: 4.75rem;
   font-size: 1.375rem;
   letter-spacing: 0;
 }
 
 /* The three cards. */
-html[data-site="mummy"] .pick {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick {
   border-color: var(--silver);
 }
 
-html[data-site="mummy"] .pick__toggle {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick__toggle {
   min-height: 4.75rem;
   padding: 1.1rem 1.2rem;
   column-gap: 1rem;
 }
 
-html[data-site="mummy"] .pick__toggle b {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick__toggle b {
   font-size: 1.375rem;
 }
 
-html[data-site="mummy"] .pick__hint {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick__hint {
   font-family: var(--font-sans);
   font-size: 0.9375rem;
   text-transform: none;
@@ -627,23 +627,23 @@ html[data-site="mummy"] .pick__hint {
   color: var(--silver);
 }
 
-html[data-site="mummy"] .pick__box {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick__box {
   width: 1.75rem;
   height: 1.75rem;
   border-color: var(--silver);
   font-size: 1.125rem;
 }
 
-html[data-site="mummy"] .pick__fields {
+html:is([data-site="mummy"], [data-site="pundy"]) .pick__fields {
   padding: 0 1.2rem 1.2rem;
 }
 
 /* How soon: two big plain buttons and a plain note. */
-html[data-site="mummy"] .seg {
+html:is([data-site="mummy"], [data-site="pundy"]) .seg {
   gap: 0.6rem;
 }
 
-html[data-site="mummy"] .seg__btn {
+html:is([data-site="mummy"], [data-site="pundy"]) .seg__btn {
   min-height: 3.25rem;
   border-color: var(--silver);
   color: var(--silver-bright);
@@ -655,7 +655,7 @@ html[data-site="mummy"] .seg__btn {
   border-radius: 10px;
 }
 
-html[data-site="mummy"] .seg__note {
+html:is([data-site="mummy"], [data-site="pundy"]) .seg__note {
   margin-top: 0.6rem;
   font-family: var(--font-sans);
   font-size: 1rem;
@@ -663,13 +663,13 @@ html[data-site="mummy"] .seg__note {
   color: var(--silver);
 }
 
-html[data-site="mummy"] .items__total {
+html:is([data-site="mummy"], [data-site="pundy"]) .items__total {
   font-family: var(--font-sans);
   font-size: 1.0625rem;
   letter-spacing: 0;
 }
 
-html[data-site="mummy"] .item__remove {
+html:is([data-site="mummy"], [data-site="pundy"]) .item__remove {
   width: 3.25rem;
   height: 3.25rem;
   border-color: var(--silver);
@@ -677,16 +677,16 @@ html[data-site="mummy"] .item__remove {
   font-size: 1.5rem;
 }
 
-html[data-site="mummy"] .formmsg {
+html:is([data-site="mummy"], [data-site="pundy"]) .formmsg {
   font-size: 1rem;
 }
 
-html[data-site="mummy"] .af-success__text {
+html:is([data-site="mummy"], [data-site="pundy"]) .af-success__text {
   font-size: 1.125rem;
 }
 
 @media (min-width: 480px) {
-  html[data-site="mummy"] .item {
+  html:is([data-site="mummy"], [data-site="pundy"]) .item {
     grid-template-columns: 10rem 1fr auto;
   }
 }
@@ -701,7 +701,7 @@ html[data-site="mummy"] .af-success__text {
      on hover green #13914f 4.6:1
      error #b3261e 6.0:1 · borders #c9ced6 on white 1.6:1 are decorative
      only — control edges use --silver (#3a404b). */
-html[data-site="mummy"] {
+html:is([data-site="mummy"], [data-site="pundy"]) {
   --ink: #ffffff;
   --surface: #ffffff; /* cards sit on the page in white; their border does the work */
   --surface-hi: #f4f5f7;
@@ -714,23 +714,23 @@ html[data-site="mummy"] {
   color-scheme: light;
 }
 
-html[data-site="mummy"] .top {
+html:is([data-site="mummy"], [data-site="pundy"]) .top {
   background: rgba(255, 255, 255, 0.94);
 }
 
-html[data-site="mummy"] .input[aria-invalid="true"],
-html[data-site="mummy"] .textarea[aria-invalid="true"],
-html[data-site="mummy"] .seg[aria-invalid="true"] .seg__btn {
+html:is([data-site="mummy"], [data-site="pundy"]) .input[aria-invalid="true"],
+html:is([data-site="mummy"], [data-site="pundy"]) .textarea[aria-invalid="true"],
+html:is([data-site="mummy"], [data-site="pundy"]) .seg[aria-invalid="true"] .seg__btn {
   border-color: #b3261e;
 }
 
-html[data-site="mummy"] .formmsg--err {
+html:is([data-site="mummy"], [data-site="pundy"]) .formmsg--err {
   color: #b3261e;
 }
 
 /* The solid green buttons keep near-black text: 5.7:1 on the green, 4.6:1
    on the hover green. White on either would fall short of AA. */
-html[data-site="mummy"] .btn--solid,
-html[data-site="mummy"] .btn--solid:hover:not(:disabled) {
+html:is([data-site="mummy"], [data-site="pundy"]) .btn--solid,
+html:is([data-site="mummy"], [data-site="pundy"]) .btn--solid:hover:not(:disabled) {
   color: #111318;
 }

@@ -226,6 +226,10 @@ how soon, each); each row emails the owner. Setup, after the IRL steps above:
    it on under Database → Extensions first, then re-run the file. Check it with
    `select jobname, schedule, active from cron.job;`.
 
+The owner reads everything at `mummysboy.com/pundy/`, signing in as the username
+`pundy` (`pundy@mummysboy.com`, created like the family login, with a row in
+`admins` — that row is what unlocks it).
+
 When a request lands, each thing in it becomes a `deliveries` row with a due
 time — urgent now, soon at the next 7pm Pacific, whenever at the next Tuesday or
 Thursday 7pm Pacific — the message included. The dispatcher sends what is due (the
@@ -237,7 +241,7 @@ Security model for the new tables:
 | Table | Public (anon) | Family (any signed-in user) | Admin |
 |---|---|---|---|
 | `requests` | **no grant at all** | insert as themselves; read their own rows | read all; set `status` |
-| `deliveries` | **no grant at all** | **no grant at all** | read |
+| `deliveries` | **no grant at all** | **no grant at all** | read; decide money lines (`decision`, `approved_amount`, `decided_at`) |
 
 Family can insert only `kinds, urgency, money_items, topic, body, message_urgency` — the column
 grant stops at that list. `user_id`, `sender_email` and `sender_name` are filled

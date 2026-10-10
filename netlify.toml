@@ -123,6 +123,12 @@
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 
+# /pundy/ is the owner's dashboard for those requests — same treatment.
+[[headers]]
+  for = "/pundy/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
 # supabase/ holds the database definition, not part of the published site. The
 # root is published as-is, so serve nothing from that path — this also keeps a
 # future seed file or local env dropped in there from being fetchable.
