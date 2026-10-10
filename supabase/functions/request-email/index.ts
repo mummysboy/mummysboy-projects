@@ -60,7 +60,7 @@ type RequestRow = {
   user_id: string;
   sender_email: string;
   sender_name: string | null;
-  kind: "money" | "call" | "message";
+  kinds: ("money" | "call" | "message")[];
   urgency: "whenever" | "soon" | "urgent";
   reason: string | null;
   amount: string | number | null;
@@ -123,27 +123,40 @@ function alertFor(r: RequestRow) {
   const prefix =
     r.urgency === "urgent" ? "[Urgent] " : r.urgency === "whenever" ? "[Whenever] " : "";
 
-  let subject: string;
+  // One request may ask for several things; the subject lists them in a fixed
+  // order so a scan of the inbox reads the same way every time.
+  const kinds = new Set(r.kinds ?? []);
+  const many = kinds.size > 1;
+  const clipTo = many ? 36 : 60;
+  const parts: string[] = [];
+  const names: string[] = [];
+
+  if (kinds.has("money")) {
+    parts.push(`needs ${usd(r.amount ?? 0)} — ${clip(r.reason ?? "", clipTo)}`);
+    names.push("Money");
+  }
+  if (kinds.has("call")) {
+    parts.push(`wants a call — ${clip(r.topic ?? "", clipTo)}`);
+    names.push("Phone call");
+  }
+  if (kinds.has("message")) {
+    parts.push(many ? "sent a message" : `sent a message — "${clip(r.body ?? "", clipTo)}"`);
+    names.push("Message");
+  }
+
+  const subject = `${prefix}${who} ${parts.join(" · ")}`;
+
   const rows: [string, string][] = [
     ["From", isSynthetic(r.sender_email) ? who : `${who} <${r.sender_email}>`],
+    ["Asking for", names.join(", ")],
+    ["Urgency", URGENCY_LABEL[r.urgency]],
   ];
-
-  if (r.kind === "money") {
-    subject = `${prefix}${who} needs ${usd(r.amount ?? 0)} — ${clip(r.reason ?? "", 60)}`;
-    rows.push(["Kind", "Money"]);
-    rows.push(["Urgency", URGENCY_LABEL[r.urgency]]);
+  if (kinds.has("money")) {
     rows.push(["Amount", usd(r.amount ?? 0)]);
-    rows.push(["Reason", r.reason ?? ""]);
-  } else if (r.kind === "call") {
-    subject = `${prefix}${who} wants a call — ${clip(r.topic ?? "", 60)}`;
-    rows.push(["Kind", "Phone call"]);
-    rows.push(["Urgency", URGENCY_LABEL[r.urgency]]);
-    rows.push(["About", r.topic ?? ""]);
-  } else {
-    subject = `${who} sent a message — "${clip(r.body ?? "", 60)}"`;
-    rows.push(["Kind", "Message"]);
-    rows.push(["Message", r.body ?? ""]);
+    rows.push(["For", r.reason ?? ""]);
   }
+  if (kinds.has("call")) rows.push(["Call about", r.topic ?? ""]);
+  if (kinds.has("message")) rows.push(["Message", r.body ?? ""]);
 
   rows.push(["Sent", whenLabel(r.created_at)]);
 

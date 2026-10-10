@@ -88,30 +88,97 @@
         <button class="btn btn--solid btn--big" id="requestBtn" type="button">Request</button>
       </section>
 
-      <!-- ---------- What kind ---------- -->
-      <section class="view" id="chooserView" hidden>
-        <h1 class="view__title" tabindex="-1">What do you need?</h1>
-        <div class="picks" role="group" aria-label="Kind of request">
-          <button class="pick" type="button" data-kind="money">
-            <b>Money</b>
-            <span>Reason, amount and how soon</span>
-          </button>
-          <button class="pick" type="button" data-kind="call">
-            <b>A phone call</b>
-            <span>What it's about and how soon</span>
-          </button>
-          <button class="pick" type="button" data-kind="message">
-            <b>A message</b>
-            <span>Just say it</span>
-          </button>
-        </div>
-        <button class="btn btn--ghost" type="button" data-back="home">Back</button>
-      </section>
-
-      <!-- ---------- The form ---------- -->
+      <!-- ---------- The request ---------- -->
       <section class="view" id="formView" hidden>
         <form id="reqForm" novalidate>
-          <h1 class="view__title" id="formTitle" tabindex="-1">Request</h1>
+          <h1 class="view__title" tabindex="-1">What do you need?</h1>
+          <p class="mm-lede">Pick one or more. It all goes in one email.</p>
+
+          <div class="picks" role="group" aria-label="What to ask for">
+            <div class="pick" id="pickMoney">
+              <button
+                class="pick__toggle"
+                type="button"
+                data-kind="money"
+                aria-pressed="false"
+                aria-controls="moneyFields"
+              >
+                <span class="pick__box" aria-hidden="true"></span>
+                <b>Money</b>
+                <span class="pick__hint">How much and what for</span>
+              </button>
+              <div class="pick__fields" id="moneyFields" hidden>
+                <div class="field">
+                  <label class="field__label" for="amount">Amount (USD)</label>
+                  <div class="amount">
+                    <span class="amount__sign" aria-hidden="true">$</span>
+                    <input
+                      class="input"
+                      id="amount"
+                      name="amount"
+                      type="text"
+                      inputmode="decimal"
+                      autocomplete="off"
+                      placeholder="0.00"
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="reason">What for?</label>
+                  <input
+                    class="input"
+                    id="reason"
+                    name="reason"
+                    type="text"
+                    maxlength="200"
+                    autocomplete="off"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="pick" id="pickCall">
+              <button
+                class="pick__toggle"
+                type="button"
+                data-kind="call"
+                aria-pressed="false"
+                aria-controls="callFields"
+              >
+                <span class="pick__box" aria-hidden="true"></span>
+                <b>A phone call</b>
+                <span class="pick__hint">What it's about</span>
+              </button>
+              <div class="pick__fields" id="callFields" hidden>
+                <div class="field">
+                  <label class="field__label" for="topic">What should the call be about?</label>
+                  <textarea class="textarea" id="topic" name="topic" maxlength="300" rows="3" disabled></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="pick" id="pickMessage">
+              <button
+                class="pick__toggle"
+                type="button"
+                data-kind="message"
+                aria-pressed="false"
+                aria-controls="messageFields"
+              >
+                <span class="pick__box" aria-hidden="true"></span>
+                <b>A message</b>
+                <span class="pick__hint">Just say it</span>
+              </button>
+              <div class="pick__fields" id="messageFields" hidden>
+                <div class="field">
+                  <label class="field__label" for="body">Your message</label>
+                  <textarea class="textarea" id="body" name="body" maxlength="2000" rows="5" disabled></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <fieldset class="field" id="urgencyField">
             <legend class="field__label">How soon?</legend>
@@ -122,47 +189,9 @@
             </div>
           </fieldset>
 
-          <div class="field" id="amountField">
-            <label class="field__label" for="amount">Amount (USD)</label>
-            <div class="amount">
-              <span class="amount__sign" aria-hidden="true">$</span>
-              <input
-                class="input"
-                id="amount"
-                name="amount"
-                type="text"
-                inputmode="decimal"
-                autocomplete="off"
-                placeholder="0.00"
-              />
-            </div>
-          </div>
-
-          <div class="field" id="reasonField">
-            <label class="field__label" for="reason">What for?</label>
-            <input
-              class="input"
-              id="reason"
-              name="reason"
-              type="text"
-              maxlength="200"
-              autocomplete="off"
-            />
-          </div>
-
-          <div class="field" id="topicField">
-            <label class="field__label" for="topic">What should the call be about?</label>
-            <textarea class="textarea" id="topic" name="topic" maxlength="300" rows="3"></textarea>
-          </div>
-
-          <div class="field" id="bodyField">
-            <label class="field__label" for="body">Your message</label>
-            <textarea class="textarea" id="body" name="body" maxlength="2000" rows="6"></textarea>
-          </div>
-
           <div class="actions">
             <button class="btn btn--solid" id="reqSubmit" type="submit">Send</button>
-            <button class="btn btn--ghost" type="button" data-back="chooser">Back</button>
+            <button class="btn btn--ghost" type="button" data-back="home">Back</button>
           </div>
           <p class="formmsg" id="reqMsg" role="status" aria-live="polite"></p>
         </form>

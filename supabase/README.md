@@ -188,8 +188,8 @@ RLS alone.
 ## Family requests (`/mummy/`)
 
 The same project also holds the family request page. A family member signs in at
-`mummysboy.com/mummy/`, presses Request, and files money / a phone call / a
-message; each row emails the owner. Setup, after the IRL steps above:
+`mummysboy.com/mummy/`, presses Request, and asks for any mix of money / a phone
+call / a message in one go; each row emails the owner. Setup, after the IRL steps above:
 
 1. **Run `mummy.sql`** — SQL Editor → paste the whole file → Run. Idempotent,
    like `schema.sql`; it depends on `schema.sql` having run first (it reuses the
@@ -218,7 +218,7 @@ Security model for the new table:
 |---|---|---|---|
 | `requests` | **no grant at all** | insert as themselves; read their own rows | read all; set `status` |
 
-Family can insert only `kind, urgency, reason, amount, topic, body` — the column
+Family can insert only `kinds, urgency, reason, amount, topic, body` — the column
 grant stops at that list. `user_id`, `sender_email` and `sender_name` are filled
 from the caller's JWT by column defaults, so a payload that tries to set them
 fails on permission before RLS even looks. There is no delete path for anyone.

@@ -362,8 +362,9 @@ only the listings are client-rendered (an `Event` JSON-LD block is injected for 
 
 ## Mummy — the family request page (`/mummy/`)
 
-A private page for the family (2026-10-09): sign in, press **Request**, pick money
-(reason, USD amount, urgency), a phone call (urgency, what about) or a message, send.
+A private page for the family (2026-10-09): sign in, press **Request**, tick any mix of
+money (USD amount, reason), a phone call (what about) and a message, set one urgency,
+send. One request row (`kinds text[]`), one email.
 The row lands in `requests` and a trigger emails the owner. Not a project: it is not
 in `data/projects.js`, not in `sitemap.xml`, `noindex` in a meta tag and a Netlify
 header, and not `Disallow`ed in `robots.txt`.
@@ -380,12 +381,13 @@ header, and not `Disallow`ed in `robots.txt`.
   `supabase/README.md`.
 - **The database stamps who sent it.** `user_id`, `sender_email` and `sender_name` are
   column defaults read from the JWT, and the insert grant covers only
-  `kind, urgency, reason, amount, topic, body`. The client never sends identity fields;
+  `kinds, urgency, reason, amount, topic, body`, and a CHECK ties each kind to its
+  fields. The client never sends identity fields;
   keep it that way. Anon has no grant on `requests`. Family read their own rows only.
 - **Email is fire-and-forget**, same contract as IRL: `private.notify_request()` hands
   the row id to `supabase/functions/request-email/index.ts`, swallows every error, and
   the function always answers 200. One email, to the owner, `Reply-To` the sender.
-  Subject lines triage themselves: `[Urgent] Mum needs $40.00 — groceries`.
+  Subject lines triage themselves: `[Urgent] Mummy needs $40.00 — groceries · wants a call — the boiler`.
 - **Design:** house dark tokens, `styles/mummy.css` scoped to `html[data-site="mummy"]`,
   never `irl.css` (its controls hang off `--ember`). Volt once per visible view (Sign in,
   Request, Send, the tick). Urgency is a three-up `aria-pressed` segmented control

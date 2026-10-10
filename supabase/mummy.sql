@@ -2,8 +2,8 @@
 -- Family requests — the table behind /mummy/.
 --
 -- A family member signs in (an ordinary account in this project, created in
--- the dashboard; sign-ups are off) and files a request: money, a phone call, or
--- a message. Each insert fires an email to the owner via the `request-email`
+-- the dashboard; sign-ups are off) and files a request: money, a phone call,
+-- a message — any mix of the three in one go. Each insert fires an email to the owner via the `request-email`
 -- edge function, the same way a show sign-up emails IRL.
 --
 -- Run AFTER schema.sql, in the SQL editor, as the whole file. It is idempotent.
@@ -28,7 +28,7 @@ create table if not exists public.requests (
   sender_email text not null default auth.email(),
   sender_name  text default (auth.jwt() -> 'user_metadata' ->> 'name'),
 
-  kind         text not null check (kind in ('money', 'call', 'message')),
+  kinds        text[] not null,
   urgency      text not null default 'soon'
                  check (urgency in ('whenever', 'soon', 'urgent')),
 
@@ -43,18 +43,51 @@ create table if not exists public.requests (
   status       text not null default 'open' check (status in ('open', 'done')),
   created_at   timestamptz not null default now(),
 
-  -- Each kind carries exactly its own fields. The page enforces the same rule
-  -- with friendlier wording; this is the one that actually holds.
-  constraint requests_fields_match_kind check (
-    case kind
-      when 'money'   then amount is not null and reason is not null
-                          and topic is null and body is null
-      when 'call'    then topic is not null
-                          and amount is null and reason is null and body is null
-      when 'message' then body is not null
-                          and amount is null and reason is null and topic is null
-    end
+  -- At least one kind, all of them known.
+  constraint requests_kinds_check check (
+    cardinality(kinds) >= 1
+    and kinds <@ array['money', 'call', 'message']::text[]
+  ),
+
+  -- A kind that is asked for carries its fields; one that is not carries none.
+  -- The page enforces the same rule with friendlier wording; this one holds.
+  constraint requests_fields_match_kinds check (
+    (('money'   = any (kinds)) = (amount is not null))
+    and (('money'   = any (kinds)) = (reason is not null))
+    and (('call'    = any (kinds)) = (topic  is not null))
+    and (('message' = any (kinds)) = (body   is not null))
   )
+);
+
+-- ---- Migration from the first cut (2026-10-09, one `kind` per request) ----
+-- Safe to run on a fresh table too: every step is guarded.
+alter table public.requests add column if not exists kinds text[];
+
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns
+     where table_schema = 'public' and table_name = 'requests' and column_name = 'kind'
+  ) then
+    update public.requests set kinds = array[kind] where kinds is null;
+    alter table public.requests drop column kind;
+  end if;
+end
+$$;
+
+alter table public.requests alter column kinds set not null;
+alter table public.requests drop constraint if exists requests_fields_match_kind;
+alter table public.requests drop constraint if exists requests_kinds_check;
+alter table public.requests drop constraint if exists requests_fields_match_kinds;
+alter table public.requests add constraint requests_kinds_check check (
+  cardinality(kinds) >= 1
+  and kinds <@ array['money', 'call', 'message']::text[]
+);
+alter table public.requests add constraint requests_fields_match_kinds check (
+  (('money'   = any (kinds)) = (amount is not null))
+  and (('money'   = any (kinds)) = (reason is not null))
+  and (('call'    = any (kinds)) = (topic  is not null))
+  and (('message' = any (kinds)) = (body   is not null))
 );
 
 create index if not exists requests_user_id_idx on public.requests (user_id);
@@ -98,7 +131,7 @@ revoke all on public.requests from anon;
 revoke all on public.requests from authenticated;
 
 grant select on public.requests to authenticated;
-grant insert (kind, urgency, reason, amount, topic, body)
+grant insert (kinds, urgency, reason, amount, topic, body)
   on public.requests to authenticated;
 grant update (status) on public.requests to authenticated;
 

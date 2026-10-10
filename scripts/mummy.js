@@ -1,8 +1,8 @@
 /**
  * /mummy/ — the family request page.
  *
- * Sign in, press Request, pick money / a call / a message, fill in the two or
- * three fields, send. The row lands in `requests` (supabase/mummy.sql) and a
+ * Sign in, press Request, tick any of money / a call / a message, fill in
+ * their fields, send — one request, one email, however many things are in it. The row lands in `requests` (supabase/mummy.sql) and a
  * trigger emails Isaac. Nothing else happens here: no analytics, no history.
  *
  * Same Supabase project as IRL, but its own session (`mummy.session`), so
@@ -44,30 +44,23 @@ function displayName(user) {
 
 const LIMITS = { reason: 200, topic: 300, body: 2000, amount: 99_999_999.99 };
 
-const TITLES = {
-  money: "How much, and what for?",
-  call: "What's the call about?",
-  message: "What do you want to say?",
-};
-
-/** Which fields each kind shows. Everything else is hidden and disabled. */
-const FIELDS = {
-  money: ["urgencyField", "amountField", "reasonField"],
-  call: ["urgencyField", "topicField"],
-  message: ["bodyField"],
+/** One request can carry any mix of these. Each toggle reveals its fields. */
+const KINDS = {
+  money: { fields: "moneyFields", first: "amount" },
+  call: { fields: "callFields", first: "topic" },
+  message: { fields: "messageFields", first: "body" },
 };
 
 const views = {
   signin: $("signinView"),
   home: $("homeView"),
-  chooser: $("chooserView"),
   form: $("formView"),
   done: $("doneView"),
 };
 
 const signOutBtn = $("signOut");
 
-let kind = null;
+const kinds = new Set();
 let urgency = "soon";
 
 // --- Views ------------------------------------------------------------------
@@ -142,13 +135,12 @@ signOutBtn.addEventListener("click", async () => {
   location.reload();
 });
 
-// --- Home → chooser → form --------------------------------------------------
+// --- Home → form ------------------------------------------------------------
 
-$("requestBtn").addEventListener("click", () => show("chooser"));
-
-for (const pick of document.querySelectorAll(".pick")) {
-  pick.addEventListener("click", () => configureForm(pick.dataset.kind));
-}
+$("requestBtn").addEventListener("click", () => {
+  resetForm();
+  show("form");
+});
 
 for (const back of document.querySelectorAll("[data-back]")) {
   back.addEventListener("click", () => show(back.dataset.back));
@@ -166,27 +158,39 @@ $("urgencySeg").addEventListener("click", (e) => {
   if (b) setUrgency(b.dataset.urgency);
 });
 
-function configureForm(next) {
-  kind = next;
+/** Turn a kind on or off: its fields show/hide, and disabled controls leave
+ *  the tab order and never submit — belt to the hidden attribute's braces. */
+function setKind(kind, on, { focus = false } = {}) {
+  if (on) kinds.add(kind);
+  else kinds.delete(kind);
+
+  const toggle = document.querySelector(`.pick__toggle[data-kind="${kind}"]`);
+  toggle.setAttribute("aria-pressed", String(on));
+  toggle.closest(".pick").classList.toggle("pick--on", on);
+
+  const fields = $(KINDS[kind].fields);
+  fields.hidden = !on;
+  for (const c of fields.querySelectorAll("input, textarea")) {
+    c.disabled = !on;
+    if (!on) c.removeAttribute("aria-invalid");
+  }
+  if (on && focus) $(KINDS[kind].first).focus();
+}
+
+for (const toggle of document.querySelectorAll(".pick__toggle")) {
+  toggle.addEventListener("click", () => {
+    const kind = toggle.dataset.kind;
+    setKind(kind, !kinds.has(kind), { focus: true });
+  });
+}
+
+function resetForm() {
   const form = $("reqForm");
   form.reset();
   for (const el of form.querySelectorAll("[aria-invalid]")) el.removeAttribute("aria-invalid");
   setMsg($("reqMsg"), "");
   setUrgency("soon");
-
-  $("formTitle").textContent = TITLES[kind];
-
-  const wanted = new Set(FIELDS[kind]);
-  for (const id of ["urgencyField", "amountField", "reasonField", "topicField", "bodyField"]) {
-    const field = $(id);
-    const on = wanted.has(id);
-    field.hidden = !on;
-    // Disabled controls leave the tab order and never submit — belt to the
-    // hidden attribute's braces.
-    for (const c of field.querySelectorAll("input, textarea, button")) c.disabled = !on;
-  }
-
-  show("form");
+  for (const kind of Object.keys(KINDS)) setKind(kind, false);
 }
 
 // --- Validation + submit ----------------------------------------------------
@@ -212,33 +216,39 @@ function textOf(id) {
 
 $("reqForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  if (!kind) return show("chooser");
 
   const msg = $("reqMsg");
   const btn = $("reqSubmit");
   for (const el of e.currentTarget.querySelectorAll("[aria-invalid]")) el.removeAttribute("aria-invalid");
 
-  const row = { kind, urgency, reason: null, amount: null, topic: null, body: null };
+  if (kinds.size === 0) {
+    setMsg(msg, "Pick at least one thing to ask for.", "err");
+    document.querySelector(".pick__toggle").focus();
+    return;
+  }
 
-  if (kind === "money") {
+  const row = { kinds: [...kinds], urgency, reason: null, amount: null, topic: null, body: null };
+
+  if (kinds.has("money")) {
     const amount = parseAmount($("amount").value);
     if (amount == null) return fail($("amount"), "Put in an amount, like 40 or 12.50.");
     const reason = textOf("reason");
-    if (!reason) return fail($("reason"), "Say what it's for.");
+    if (!reason) return fail($("reason"), "Say what the money is for.");
     if (reason.length > LIMITS.reason) return fail($("reason"), "Keep the reason under 200 characters.");
     row.amount = amount;
     row.reason = reason;
-  } else if (kind === "call") {
+  }
+  if (kinds.has("call")) {
     const topic = textOf("topic");
     if (!topic) return fail($("topic"), "Say what the call should be about.");
     if (topic.length > LIMITS.topic) return fail($("topic"), "Keep it under 300 characters.");
     row.topic = topic;
-  } else {
+  }
+  if (kinds.has("message")) {
     const body = textOf("body");
-    if (!body) return fail($("body"), "Write something first.");
+    if (!body) return fail($("body"), "Write the message first.");
     if (body.length > LIMITS.body) return fail($("body"), "Keep it under 2000 characters.");
     row.body = body;
-    row.urgency = "soon"; // not asked for a message; the default is honest
   }
 
   btn.disabled = true;
@@ -247,7 +257,7 @@ $("reqForm").addEventListener("submit", async (e) => {
 
   try {
     await db.insert("requests", row);
-    $("reqForm").reset();
+    resetForm();
     show("done");
   } catch (err) {
     if (err instanceof DbError && (err.status === 401 || err.status === 403)) {

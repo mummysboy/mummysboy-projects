@@ -162,7 +162,10 @@ html[data-site="mummy"] .btn--big {
   border-radius: 12px;
 }
 
-/* ---- Chooser ---------------------------------------------------------- */
+/* ---- The three things you can ask for -------------------------------- */
+/* Each is a card whose header is a toggle; on, its fields unfold inside the
+   card. State is carried by the box glyph, the border and aria-pressed —
+   never colour alone, and no volt. */
 html[data-site="mummy"] .picks {
   display: grid;
   gap: 0.75rem;
@@ -170,35 +173,73 @@ html[data-site="mummy"] .picks {
 }
 
 html[data-site="mummy"] .pick {
-  display: grid;
-  gap: 0.25rem;
-  width: 100%;
-  min-height: 4.5rem;
-  padding: 1rem 1.1rem;
-  text-align: left;
   background: var(--surface);
   border: 1px solid var(--steel);
   border-radius: 12px;
+  transition: border-color 160ms ease;
+}
+
+html[data-site="mummy"] .pick--on {
+  border-color: var(--silver-bright);
+}
+
+html[data-site="mummy"] .pick__toggle {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 0.85rem;
+  row-gap: 0.2rem;
+  align-items: center;
+  width: 100%;
+  min-height: 4.25rem;
+  padding: 1rem 1.1rem;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: 12px;
   color: var(--silver-bright);
   cursor: pointer;
+}
+
+html[data-site="mummy"] .pick__toggle:hover {
+  background: var(--surface-hi);
+}
+
+html[data-site="mummy"] .pick__box {
+  grid-row: 1 / 3;
+  width: 1.375rem;
+  height: 1.375rem;
+  border: 1px solid var(--steel);
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1;
+  color: var(--ink);
   transition:
     background-color 160ms ease,
     border-color 160ms ease;
 }
 
-html[data-site="mummy"] .pick:hover {
-  background: var(--surface-hi);
-  border-color: var(--silver);
+html[data-site="mummy"] .pick__toggle[aria-pressed="true"] .pick__box {
+  background: var(--silver-bright);
+  border-color: var(--silver-bright);
 }
 
-html[data-site="mummy"] .pick b {
+html[data-site="mummy"] .pick__toggle[aria-pressed="true"] .pick__box::after {
+  content: "\2713";
+}
+
+html[data-site="mummy"] .pick__toggle b {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: 1.125rem;
   letter-spacing: -0.01em;
 }
 
-html[data-site="mummy"] .pick span {
+html[data-site="mummy"] .pick__hint {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   text-transform: uppercase;
@@ -206,8 +247,13 @@ html[data-site="mummy"] .pick span {
   color: var(--steel);
 }
 
-html[data-site="mummy"] .picks + .btn {
-  margin-top: 1.5rem;
+html[data-site="mummy"] .pick__fields {
+  padding: 0 1.1rem 1.1rem;
+  border-top: 1px solid var(--hairline);
+}
+
+html[data-site="mummy"] .pick__fields .field {
+  margin-top: 1rem;
 }
 
 /* ---- Forms ------------------------------------------------------------ */
@@ -378,6 +424,7 @@ html[data-site="mummy"] .view--done .btn {
 
   html[data-site="mummy"] .btn,
   html[data-site="mummy"] .pick,
+  html[data-site="mummy"] .pick__box,
   html[data-site="mummy"] .seg__btn {
     transition: none;
   }
