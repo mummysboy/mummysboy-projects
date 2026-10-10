@@ -47,7 +47,7 @@
       <!-- ---------- Sign in ---------- -->
       <section class="view" id="signinView" hidden>
         <h1 class="view__title" tabindex="-1">Sign in</h1>
-        <p class="mm-lede">The username and password Isaac gave you.</p>
+        <p class="mm-lede">The username and password Pundy gave you.</p>
 
         <form id="signinForm" novalidate>
           <div class="field">
@@ -84,7 +84,7 @@
       <!-- ---------- Home ---------- -->
       <section class="view" id="homeView" hidden>
         <h1 class="view__title" tabindex="-1">Hi, <span id="who"></span></h1>
-        <p class="mm-lede">Need something? Isaac gets an email the moment you send it.</p>
+        <p class="mm-lede">Need something? Say how soon, and Pundy gets an email.</p>
         <button class="btn btn--solid btn--big" id="requestBtn" type="button">Request</button>
       </section>
 
@@ -92,7 +92,6 @@
       <section class="view" id="formView" hidden>
         <form id="reqForm" novalidate>
           <h1 class="view__title" tabindex="-1">What do you need?</h1>
-          <p class="mm-lede">Pick one or more. It all goes in one email.</p>
 
           <div class="picks" role="group" aria-label="What to ask for">
             <div class="pick" id="pickMoney">
@@ -105,7 +104,7 @@
               >
                 <span class="pick__box" aria-hidden="true"></span>
                 <b>Money</b>
-                <span class="pick__hint">One thing or several, each with a reason</span>
+                <span class="pick__hint">One thing or several, each with a reason and how soon</span>
               </button>
               <div class="pick__fields" id="moneyFields" hidden>
                 <div class="items" id="moneyItems"></div>
@@ -136,8 +135,17 @@
                 </div>
                 <div class="field item__reason">
                   <label class="field__label" for="reason-N">What for?</label>
-                  <input class="input" id="reason-N" name="reason" type="text" maxlength="200" autocomplete="off" />
+                  <input class="input" id="reason-N" name="reason" type="text" maxlength="16" autocomplete="off" placeholder="groceries" />
                 </div>
+                <fieldset class="field item__soon">
+                  <legend class="field__label">How soon?</legend>
+                  <div class="seg" data-seg>
+                    <button class="seg__btn" type="button" data-urgency="whenever" aria-pressed="false">Whenever</button>
+                    <button class="seg__btn" type="button" data-urgency="soon" aria-pressed="true">Soon</button>
+                    <button class="seg__btn" type="button" data-urgency="urgent" aria-pressed="false">Urgent</button>
+                  </div>
+                  <p class="seg__note" data-seg-note aria-live="polite">Gets sent 7pm today</p>
+                </fieldset>
                 <button class="item__remove" type="button" aria-label="Remove this item" hidden>&times;</button>
               </div>
             </template>
@@ -152,13 +160,22 @@
               >
                 <span class="pick__box" aria-hidden="true"></span>
                 <b>A phone call</b>
-                <span class="pick__hint">What it's about</span>
+                <span class="pick__hint">What it's about and how soon</span>
               </button>
               <div class="pick__fields" id="callFields" hidden>
                 <div class="field">
                   <label class="field__label" for="topic">What should the call be about?</label>
                   <textarea class="textarea" id="topic" name="topic" maxlength="300" rows="3" disabled></textarea>
                 </div>
+                <fieldset class="field" id="callSoon">
+                  <legend class="field__label">How soon?</legend>
+                  <div class="seg" data-seg>
+                    <button class="seg__btn" disabled type="button" data-urgency="whenever" aria-pressed="false">Whenever</button>
+                    <button class="seg__btn" disabled type="button" data-urgency="soon" aria-pressed="true">Soon</button>
+                    <button class="seg__btn" disabled type="button" data-urgency="urgent" aria-pressed="false">Urgent</button>
+                  </div>
+                  <p class="seg__note" data-seg-note aria-live="polite">Gets sent 7pm today</p>
+                </fieldset>
               </div>
             </div>
 
@@ -172,25 +189,25 @@
               >
                 <span class="pick__box" aria-hidden="true"></span>
                 <b>A message</b>
-                <span class="pick__hint">Just say it</span>
+                <span class="pick__hint">Just say it, and how soon</span>
               </button>
               <div class="pick__fields" id="messageFields" hidden>
                 <div class="field">
                   <label class="field__label" for="body">Your message</label>
                   <textarea class="textarea" id="body" name="body" maxlength="2000" rows="5" disabled></textarea>
                 </div>
+                <fieldset class="field" id="messageSoon">
+                  <legend class="field__label">How soon?</legend>
+                  <div class="seg" data-seg>
+                    <button class="seg__btn" disabled type="button" data-urgency="whenever" aria-pressed="false">Whenever</button>
+                    <button class="seg__btn" disabled type="button" data-urgency="soon" aria-pressed="true">Soon</button>
+                    <button class="seg__btn" disabled type="button" data-urgency="urgent" aria-pressed="false">Urgent</button>
+                  </div>
+                  <p class="seg__note" data-seg-note aria-live="polite">Gets sent 7pm today</p>
+                </fieldset>
               </div>
             </div>
           </div>
-
-          <fieldset class="field" id="urgencyField">
-            <legend class="field__label">How soon?</legend>
-            <div class="seg" id="urgencySeg">
-              <button class="seg__btn" type="button" data-urgency="whenever" aria-pressed="false">Whenever</button>
-              <button class="seg__btn" type="button" data-urgency="soon" aria-pressed="true">Soon</button>
-              <button class="seg__btn" type="button" data-urgency="urgent" aria-pressed="false">Urgent</button>
-            </div>
-          </fieldset>
 
           <div class="actions">
             <button class="btn btn--solid" id="reqSubmit" type="submit">Send</button>
@@ -208,7 +225,7 @@
             <path class="af-check__tick" d="M15 27l7 7 15-16" />
           </svg>
           <h1 class="view__title" tabindex="-1">Sent</h1>
-          <p class="af-success__text">Isaac gets an email now.</p>
+          <p class="af-success__text">On its way to Pundy at the time you picked.</p>
         </div>
         <button class="btn btn--ghost" type="button" data-back="home">Back</button>
       </section>

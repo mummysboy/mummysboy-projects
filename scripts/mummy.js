@@ -3,7 +3,7 @@
  *
  * Sign in, press Request, tick any of money / a call / a message, fill in
  * their fields, send — one request, one email, however many things are in it. The row lands in `requests` (supabase/mummy.sql) and a
- * trigger emails Isaac. Nothing else happens here: no analytics, no history.
+ * trigger emails Pundy. Nothing else happens here: no analytics, no history.
  *
  * Same Supabase project as IRL, but its own session (`mummy.session`), so
  * signing out here never signs the admin console out, and vice versa. Any
@@ -42,7 +42,7 @@ function displayName(user) {
   return local ? local.charAt(0).toUpperCase() + local.slice(1) : "there";
 }
 
-const LIMITS = { reason: 200, topic: 300, body: 2000, amount: 99_999_999.99, items: 20 };
+const LIMITS = { reason: 16, topic: 300, body: 2000, amount: 99_999_999.99, items: 20 };
 
 /** One request can carry any mix of these. Each toggle reveals its fields. */
 const KINDS = {
@@ -61,7 +61,6 @@ const views = {
 const signOutBtn = $("signOut");
 
 const kinds = new Set();
-let urgency = "soon";
 
 // --- Views ------------------------------------------------------------------
 
@@ -146,17 +145,36 @@ for (const back of document.querySelectorAll("[data-back]")) {
   back.addEventListener("click", () => show(back.dataset.back));
 }
 
-function setUrgency(value) {
-  urgency = value;
-  for (const b of $("urgencySeg").querySelectorAll(".seg__btn")) {
+// "How soon?" is a three-way toggle that lives in each money line and in the
+// call card. One delegated handler covers every copy, including ones cloned
+// later; a copy's value is whichever button is pressed.
+/** What each choice means for when Pundy sees it, shown under the control. */
+const SEG_NOTE = {
+  whenever: "Gets sent 7pm Tue or Thu",
+  soon: "Gets sent 7pm today",
+  urgent: "Gets sent now",
+};
+
+function setSeg(seg, value) {
+  for (const b of seg.querySelectorAll(".seg__btn")) {
     b.setAttribute("aria-pressed", String(b.dataset.urgency === value));
   }
+  const note = seg.parentElement.querySelector("[data-seg-note]");
+  if (note) note.textContent = SEG_NOTE[value] || "";
 }
 
-$("urgencySeg").addEventListener("click", (e) => {
-  const b = e.target.closest(".seg__btn");
-  if (b) setUrgency(b.dataset.urgency);
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-seg] .seg__btn");
+  if (b) setSeg(b.closest("[data-seg]"), b.dataset.urgency);
 });
+
+function segValue(seg) {
+  return seg.querySelector('.seg__btn[aria-pressed="true"]')?.dataset.urgency || "soon";
+}
+
+function resetSeg(seg) {
+  setSeg(seg, "soon");
+}
 
 /** Turn a kind on or off: its fields show/hide, and disabled controls leave
  *  the tab order and never submit — belt to the hidden attribute's braces. */
@@ -248,7 +266,8 @@ function resetForm() {
   form.reset();
   for (const el of form.querySelectorAll("[aria-invalid]")) el.removeAttribute("aria-invalid");
   setMsg($("reqMsg"), "");
-  setUrgency("soon");
+  resetSeg($("callSoon").querySelector("[data-seg]"));
+  resetSeg($("messageSoon").querySelector("[data-seg]"));
   $("moneyItems").replaceChildren();
   moneySeq = 0;
   addMoneyRow();
@@ -289,7 +308,7 @@ $("reqForm").addEventListener("submit", async (e) => {
     return;
   }
 
-  const row = { kinds: [...kinds], urgency, money_items: null, topic: null, body: null };
+  const row = { kinds: [...kinds], money_items: null, topic: null, body: null, message_urgency: null };
 
   if (kinds.has("money")) {
     const items = [];
@@ -300,8 +319,8 @@ $("reqForm").addEventListener("submit", async (e) => {
       if (amount == null) return fail(amountEl, "Put in an amount, like 40 or 12.50.");
       const reason = reasonEl.value.trim();
       if (!reason) return fail(reasonEl, "Say what that one is for.");
-      if (reason.length > LIMITS.reason) return fail(reasonEl, "Keep the reason under 200 characters.");
-      items.push({ amount, reason });
+      if (reason.length > LIMITS.reason) return fail(reasonEl, "Keep it to 16 characters.");
+      items.push({ amount, reason, urgency: segValue(line.querySelector("[data-seg]")) });
     }
     if (!items.length) return fail($("addMoney"), "Add at least one thing.");
     row.money_items = items;
@@ -311,12 +330,14 @@ $("reqForm").addEventListener("submit", async (e) => {
     if (!topic) return fail($("topic"), "Say what the call should be about.");
     if (topic.length > LIMITS.topic) return fail($("topic"), "Keep it under 300 characters.");
     row.topic = topic;
+    row.urgency = segValue($("callSoon").querySelector("[data-seg]")); // the `urgency` column is the call's
   }
   if (kinds.has("message")) {
     const body = textOf("body");
     if (!body) return fail($("body"), "Write the message first.");
     if (body.length > LIMITS.body) return fail($("body"), "Keep it under 2000 characters.");
     row.body = body;
+    row.message_urgency = segValue($("messageSoon").querySelector("[data-seg]"));
   }
 
   btn.disabled = true;

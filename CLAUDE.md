@@ -363,8 +363,8 @@ only the listings are client-rendered (an `Event` JSON-LD block is injected for 
 ## Mummy — the family request page (`/mummy/`)
 
 A private page for the family (2026-10-09): sign in, press **Request**, tick any mix of
-money (one or more lines, each a USD amount and a reason, with a running total), a
-phone call (what about) and a message, set one urgency, send. One request row
+money (one or more lines, each a USD amount, a reason of at most 16 characters and how
+soon, with a running total), a phone call (what about, how soon) and a message (what, how soon), send. One request row
 (`kinds text[]`, `money_items jsonb`), one email.
 The row lands in `requests` and a trigger emails the owner. Not a project: it is not
 in `data/projects.js`, not in `sitemap.xml`, `noindex` in a meta tag and a Netlify
@@ -382,17 +382,29 @@ header, and not `Disallow`ed in `robots.txt`.
   `supabase/README.md`.
 - **The database stamps who sent it.** `user_id`, `sender_email` and `sender_name` are
   column defaults read from the JWT, and the insert grant covers only
-  `kinds, urgency, money_items, topic, body`, a CHECK ties each kind to its fields, and
+  `kinds, urgency, money_items, topic, body, message_urgency`, a CHECK ties each kind to its fields, and
   `public.money_items_ok()` checks every money line's shape. The client never sends identity fields;
   keep it that way. Anon has no grant on `requests`. Family read their own rows only.
-- **Email is fire-and-forget**, same contract as IRL: `private.notify_request()` hands
-  the row id to `supabase/functions/request-email/index.ts`, swallows every error, and
-  the function always answers 200. One email, to the owner, `Reply-To` the sender.
-  Subject lines triage themselves: `[Urgent] Mummy needs $60.00 — groceries, bus fare · wants a call — the boiler`.
+- **Delivery is scheduled, per thing.** An insert trigger splits the request into
+  `deliveries` rows (one per money line, one for the call, one for the message), each
+  with a `due_at`: urgent → now, soon → next 7pm Pacific, whenever → next Tue/Thu 7pm
+  Pacific; the message has `message_urgency`. `private.dispatch_due()` (called by the trigger, and every
+  minute by a pg_cron job `mummy-dispatch`) claims due rows and hands their ids to
+  `supabase/functions/request-email/index.ts`, which sends one digest per urgency and
+  marks them sent; unsent claims are retried after ten minutes. Same fire-and-forget
+  contract as IRL: errors swallowed, function always answers 200. The "Gets sent …"
+  note under each How soon control states this schedule — keep the two in step.
+  Subject lines triage themselves: an urgent email is titled **"Madre is caliente"**
+  (the owner's choice, 2026-10-09); the 7pm and Tue/Thu digests read
+  `[Today] Mummy needs $60.00 — groceries, bus fare · wants a call — the boiler`.
 - **Design:** house dark tokens, `styles/mummy.css` scoped to `html[data-site="mummy"]`,
   never `irl.css` (its controls hang off `--ember`). Volt once per visible view (Sign in,
-  Request, Send, the tick). Urgency is a three-up `aria-pressed` segmented control
-  (Whenever / Soon / Urgent, default Soon) carried by fill + weight, never colour alone.
+  Request, Send, the tick). "How soon?" is a three-up `aria-pressed` segmented control
+  (Whenever / Soon / Urgent, default Soon) carried by fill + weight, never colour alone;
+  one per money line, one in the call card and one in the message card (the `urgency`
+  column is the call's, `message_urgency` the message's, each money line carries its own
+  in `money_items`). The email's subject prefix is the most
+  pressing of them.
   View swaps move focus to the new `<h1>`. No `consent.js`, `mediago.js` or analytics —
   a private signed-in page tracks nothing, and `/privacy/` does not list it.
 
