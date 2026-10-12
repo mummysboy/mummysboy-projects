@@ -178,6 +178,23 @@
   to = "/gig/invite/index.html"
   status = 200
 
+# App links for the Gig app: these two files let iOS and Android open /gig/p/* (shared Gig
+# profiles, the proxy rule below) straight in the app when it's installed. iOS reads the AASA
+# without an extension, so its JSON type is set here. They only take effect in Gig store
+# builds that list mummysboy.com (applinks:mummysboy.com / the mummysboy.com intent filter);
+# assetlinks.json carries the same signing-cert fingerprint as the Gig backend's copy.
+[[headers]]
+  for = "/.well-known/apple-app-site-association"
+  [headers.values]
+    Content-Type = "application/json"
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/.well-known/assetlinks.json"
+  [headers.values]
+    Content-Type = "application/json"
+    Cache-Control = "public, max-age=3600"
+
 # Shared Gig profiles: /gig/p/ID is the link the app shares when someone shares a profile
 # (mobile/src/utils/share.ts in the Gig repo). A 200 to an absolute URL is a proxy: Netlify
 # fetches the Gig backend's GET /profile/ID and serves it here, so the address bar and every

@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "WXSYGAF6R3.com.rightimagedigital.gig",
+        "appIDs": ["WXSYGAF6R3.com.rightimagedigital.gig"],
+        "paths": ["/gig/p/*"],
+        "components": [{ "/": "/gig/p/*", "comment": "Shared Gig profiles open in the Gig app" }]
+      }
+    ]
+  }
+}

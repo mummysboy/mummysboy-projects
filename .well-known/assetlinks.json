@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.rightimagedigital.gig",
+      "sha256_cert_fingerprints": [
+        "54:4A:47:0D:B6:C1:3A:A7:AE:6C:3F:77:86:9E:9D:38:1B:8E:B6:1C:DE:BE:C3:38:D1:F1:62:F2:3E:FB:1D:43"
+      ]
+    }
+  }
+]
