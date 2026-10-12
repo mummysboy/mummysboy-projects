@@ -178,6 +178,19 @@
   to = "/gig/invite/index.html"
   status = 200
 
+# Shared Gig profiles: /gig/p/ID is the link the app shares when someone shares a profile
+# (mobile/src/utils/share.ts in the Gig repo). A 200 to an absolute URL is a proxy: Netlify
+# fetches the Gig backend's GET /profile/ID and serves it here, so the address bar and every
+# link preview say mummysboy.com. The page has to be server-rendered (crawlers don't run JS,
+# and the preview needs the person's name and photo), so it lives in the Gig repo at
+# backend/src/profileSharePage.ts: change it there, not here. /gig/p/ID/photo (the preview
+# image route) rides the same rule.
+[[redirects]]
+  from = "/gig/p/*"
+  to = "https://backend-production-9a98f.up.railway.app/profile/:splat"
+  status = 200
+  force = true
+
 # /gig/vid/ was the video-hero page for a day (2026-10-09) before it became /gig/; the
 # folder now holds only that page's media. Send the old page URL home.
 [[redirects]]

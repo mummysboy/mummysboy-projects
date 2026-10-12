@@ -286,7 +286,7 @@ Email campaigns land people on a desktop, where a store badge can't install anyt
 
 `qr.js` is verified against `node-qrcode`: matrices are bit-identical at the declared mask across versions 1–10, and jsQR decodes the rasterized output back to the exact input. If you change it, re-run that check before shipping — a silently wrong QR looks fine and scans as nothing.
 
-The Railway backend (`https://backend-production-9a98f.up.railway.app`) is the **only external service the hub calls** — reached from both `android-access.js` (`/android-access`) and `gig-analytics.js` (`/landing-event`). Both depend on that backend's CORS allowing this origin.
+The Railway backend (`https://backend-production-9a98f.up.railway.app`) is the **only external service the hub calls** — reached from both `android-access.js` (`/android-access`) and `gig-analytics.js` (`/landing-event`). Both depend on that backend's CORS allowing this origin. One path is the backend's outright: `netlify.toml` proxies `/gig/p/*` (shared Gig profiles, the link the app sends) to its `GET /profile/:id` page, which is rendered and maintained in the Gig repo (`backend/src/profileSharePage.ts`) — there is no file for it here.
 
 ### Gig landing variants (campaign pages)
 
