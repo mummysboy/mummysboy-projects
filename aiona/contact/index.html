@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact · Aiona · Iona Hirsch</title>
+  <meta name="description" content="Tell Iona Hirsch about your company and where you think AI could help.">
+  <!-- Pre-launch: kept out of search while hosted at mummysboy.com/aiona. Remove at launch. -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contact · Aiona">
+  <meta property="og:description" content="Tell me about your company and where you think AI could help.">
+  <meta name="theme-color" content="#f5f0e8">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/contact.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="top">
+    <div class="wrap top__bar">
+      <a class="brand" href="../" aria-label="Aiona, home"><span class="brand__ai">ai</span>ona</a>
+      <nav class="nav" aria-label="Main">
+        <a href="../#approach">Approach</a>
+        <a href="../blog/">Blog</a>
+        <a class="nav__cta" href="./" aria-current="page">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap contact__grid">
+    <div class="contact__intro">
+      <p class="eyebrow">Contact</p>
+      <h1 class="display">Let’s talk.</h1>
+      <p class="lede">Tell me a little about your company and where you think AI could help. I read every message myself and reply by email.</p>
+      <h2>Useful to include</h2>
+      <ul class="ticks">
+        <li>What the company does, and roughly how big the team is</li>
+        <li>The team or process you have in mind</li>
+        <li>Anything you have already tried</li>
+        <li>Any timing you are working to</li>
+      </ul>
+    </div>
+
+    <!-- Netlify Forms: the form must stay in this static HTML so Netlify can detect it
+         at deploy. Without JS it posts to thanks/; contact.js sends it in place. -->
+    <form class="form" name="inquiry" method="POST" action="thanks/" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="inquiry">
+      <p class="hp" aria-hidden="true">
+        <label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label>
+      </p>
+      <div class="field">
+        <label for="f-name">Your name</label>
+        <input id="f-name" name="name" type="text" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="f-email">Work email</label>
+        <input id="f-email" name="email" type="email" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="f-company">Company <span class="opt">(optional)</span></label>
+        <input id="f-company" name="company" type="text" autocomplete="organization">
+      </div>
+      <div class="field">
+        <label for="f-message">What are you working on?</label>
+        <textarea id="f-message" name="message" rows="6" required aria-describedby="f-message-hint"></textarea>
+        <p class="hint" id="f-message-hint">A few lines is plenty.</p>
+      </div>
+      <button class="btn" type="submit">Send inquiry</button>
+      <p class="form__status" role="status" aria-live="polite"></p>
+    </form>
+
+    <div class="form form--done" id="form-done" hidden>
+      <h2 class="section-title" tabindex="-1">Thank you.</h2>
+      <p class="lede">Your message is with me. I will reply by email.</p>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__bar">
+      <p>© 2026 Iona Hirsch</p>
+      <nav aria-label="Footer">
+        <a href="../#approach">Approach</a>
+        <a href="../blog/">Blog</a>
+        <a href="./">Contact</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

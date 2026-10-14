@@ -180,6 +180,7 @@ mummysboy/
 │   └── admin/index.html  # private phone-first ops console (noindex)
 ├── mummy/index.html      # private family request page (sign in → Request → money/call/message; noindex)
 ├── pundy/index.html      # the owner's dashboard of those requests (admin sign-in; noindex)
+├── aiona/                # client site (Iona Hirsch) — self-contained, its own rules; see "Aiona" below
 ├── privacy/index.html    # the WEBSITE's privacy notice (pixel, analytics, IRL sign-ups)
 ├── qrewards/index.html   # registry-driven placeholder route
 ├── scripts/
@@ -448,6 +449,18 @@ this month, this year or all time, in Pacific time. The other write is `requests
 `styles/mummy.css` (the light, large-type look — that sheet is scoped to both sites) and
 adds `styles/pundy.css` for the list. Private like `/mummy/`: noindex meta + Netlify
 header, not in the sitemap, not Disallowed, no consent/analytics scripts.
+
+## Aiona — a client site (`/aiona/`)
+
+Iona Hirsch's AI-consultancy site (2026-10-13), hosted here only until it moves to its
+own domain. It is **not one of the hub's projects** and **none of the hub's rules
+apply to it**: not in `data/projects.js` or `sitemap.xml`, none of `styles/` or
+`scripts/`, no consent/pixel/analytics scripts, and its own design (warm paper,
+terracotta, Instrument Serif + Inter) in `aiona/assets/site.css`. Everything it needs
+lives inside `aiona/` and every path is relative, so moving it is a copy of the folder.
+Noindex (meta on every page + the Netlify header) until launch. The contact form is
+Netlify Forms (`inquiry`). Its own guide, including how to add a blog post and the launch
+checklist, is `~/Desktop/aiona/CLAUDE.md`.
 
 ## Conventions
 

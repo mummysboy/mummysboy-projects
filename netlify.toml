@@ -129,6 +129,19 @@
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 
+# /aiona/ is a client site (Iona Hirsch's AI consultancy) hosted here until it moves to
+# its own domain. Kept out of search until then so the new domain doesn't launch as a
+# duplicate; every page carries the same noindex meta. Remove both at launch.
+[[headers]]
+  for = "/aiona/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/aiona/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
 # supabase/ holds the database definition, not part of the published site. The
 # root is published as-is, so serve nothing from that path — this also keeps a
 # future seed file or local env dropped in there from being fetchable.
