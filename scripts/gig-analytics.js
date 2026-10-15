@@ -14,6 +14,24 @@ const VARIANT = (window.__gigVariant || document.documentElement.dataset.variant
 // Per-link source/campaign id from the URL: ?id= (or ?ref / ?utm_source / ?utm_campaign), or
 // a /gig/id=VALUE path. Sanitized to a short code and persisted for the whole visit (so a tap
 // 30s after landing is still credited to the link the visitor arrived on).
+// An invitation link with no ?id= is tagged with who sent it: "invite-CODE" (the sharer's
+// referral code, which the moderation dashboard resolves to the person) or, for a link that
+// carries only a name, "invite-Name". Same link forms gig-invite.js reads.
+function readInviteSrc() {
+  if (VARIANT !== "invite") return null;
+  const q = new URLSearchParams(location.search);
+  const p = location.pathname;
+  const code =
+    (p.match(/\/gig\/invite=[^/]+\/([A-Za-z0-9]{3,12})\/?$/i) || [])[1] ||
+    (p.match(/\/gig\/invite\/([A-Za-z0-9]{3,12})\/?$/i) || [])[1] ||
+    q.get("code");
+  if (code) return "invite-" + code.toUpperCase();
+  let name = (p.match(/\/gig\/invite=([^/]+)/i) || [])[1] || q.get("from");
+  if (!name) return null;
+  try { name = decodeURIComponent(name); } catch { /* keep the raw value */ }
+  return "invite-" + name.trim().split(/\s+/)[0];
+}
+
 function readSrcId() {
   try {
     const q = new URLSearchParams(location.search);
@@ -22,6 +40,7 @@ function readSrcId() {
       const m = location.pathname.match(/\/id=([^/]+)/i); // /gig/id=56
       if (m) raw = decodeURIComponent(m[1]);
     }
+    if (!raw) raw = readInviteSrc();
     const clean = raw ? raw.replace(/[^A-Za-z0-9._-]/g, "").slice(0, 40) : null;
     if (clean) sessionStorage.setItem("@gig_src_id", clean);
     return clean || sessionStorage.getItem("@gig_src_id");
