@@ -105,7 +105,20 @@ function readClickId() {
     return null;
   }
 }
-const CLICK_ID = readClickId();
+// Read at beacon time, not at load: an ad click id (gclid, fbclid, …) identifies a paid
+// click, which is advertising measurement. Where the banner is opt-in (UK/EEA/CH, and
+// until consent.js has settled the region) it is read only once the visitor has accepted;
+// in the US it is read unless they opted out. The page view itself is counted either way,
+// without an identifier. A page that doesn't load consent.js keeps the old behaviour.
+function currentClickId() {
+  try {
+    const c = window.mbConsent;
+    if (c && !c.allowed()) return null;
+  } catch {
+    return null;
+  }
+  return readClickId();
+}
 
 // Session id — one random value shared by every beacon this page load emits, so a visit can
 // be read as a visit. Without it each row is independent and the only way to ask "did THIS
@@ -180,7 +193,7 @@ function track(type, label) {
       variant: VARIANT,
       srcId: SRC_ID || null,
       os: OS,
-      clickId: CLICK_ID || null,
+      clickId: currentClickId() || null,
       sessionId: SESSION_ID,
     });
     // keepalive lets the request survive a navigation (e.g. the iOS link opening the App

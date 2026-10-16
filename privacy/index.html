@@ -64,7 +64,7 @@
           <p class="eyebrow">/ notice</p>
           <h1 class="article__title">Privacy</h1>
           <p class="article__meta">
-            <time datetime="2026-10-15">Last updated October 15, 2026</time>
+            <time datetime="2026-10-16">Last updated October 16, 2026</time>
           </p>
           <p class="article__dek">
             What this website collects, why, and how to switch it off. Plain
@@ -167,15 +167,27 @@
             whether the page works: a page view, which buttons get tapped, how
             far down people scroll, and when they leave. Each event carries the
             page path, the page you arrived from, which version of the page you
-            were shown, a campaign code from the link you clicked, and whether
-            your device is an iPhone, an Android, or a computer.
+            were shown, a campaign code from the link you clicked, whether
+            your device is an iPhone, an Android, or a computer, a random id
+            that groups the events of one page load (it is not stored in your
+            browser and changes on every load), and, if you arrived from an
+            advert, the click id the ad network put in the link (for example
+            <code>gclid</code> or <code>fbclid</code>), which lets us check
+            that the network billed us for a real visit. Our server also
+            derives an approximate location (country, region and city) from
+            your IP address and stores that with the event; the IP address
+            itself is not stored.
           </p>
           <p>
             This is first-party — it goes to our server, not to an advertising
             network, and it is not used to build a profile of you or to target
             advertising. It does not include your name or email address, even
             if you give them to us in a form below. As with any web request, our server
-            sees your IP address.
+            sees your IP address. Events are stored one per event, not only as
+            totals, and are deleted automatically after 24 months. Where consent
+            is required (the UK, EEA and Switzerland), the ad click id is read
+            only after you accept the banner; the page view itself is counted
+            either way, without any identifier.
           </p>
 
           <h2>Live show sign-ups</h2>
@@ -267,6 +279,11 @@
               advert. Cleared when you close the tab.
             </li>
             <li>
+              <strong>An ad click id</strong> — if an advert's link carried one,
+              for the same reason and for the same length of time. Where consent
+              is required it is kept only after you accept.
+            </li>
+            <li>
               <strong>MediaGo's cookies</strong> — only if you have allowed
               advertising measurement.
             </li>
@@ -320,8 +337,8 @@
 
           <h2>How long we keep things</h2>
           <p>
-            Analytics events are kept in aggregate for as long as they are useful
-            for judging a campaign. Show sign-ups are kept until the show has
+            Analytics events are kept for up to 24 months and then deleted
+            automatically. Show sign-ups are kept until the show has
             happened and any follow-up is done, then deleted — or sooner, if you
             ask. Affiliate applications are kept while we review them and, if
             you join, for as long as you are in the program; we delete the rest
