@@ -322,6 +322,9 @@
             aria-labelledby="applyHeading"
           >
             <input type="hidden" name="form-name" value="gig-affiliate" />
+            <!-- Netlify uses a "subject" field as the notification email's subject line, so these
+                 don't arrive under a site-wide notification's subject (it read "New Aiona inquiry"). -->
+            <input type="hidden" name="subject" value="New Gig affiliate application" />
             <input type="hidden" name="source" id="applySource" value="" />
             <p class="sr-only" aria-hidden="true">
               <label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
