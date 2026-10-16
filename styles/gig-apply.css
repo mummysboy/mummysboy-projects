@@ -1,0 +1,484 @@
+/* ===== Gig affiliate application (gig/partnerships/) =====
+   The page is /gig/'s `vid` page: it gets the dark tokens, video hero, pitch-* cards
+   and footer from gig-ad.css through html:is(…, [data-variant="partners"]). This sheet
+   only adds the hero's Apply button and the form, scoped to that page. Classes start
+   with "apply", never "affiliate", "partner" or "ad", which EasyList hides. (No slash
+   after an asterisk in this comment: that pair ends a CSS comment early.)
+
+   AA (dark tokens, computed on --surface #141417 / --ink #0b0b0d): input borders use
+   --steel (#8a95a3, 4.5:1 on --surface), not --hairline, because the border is what
+   identifies a control (1.4.11). Selected pills flip to --silver-bright fill with --ink
+   text (14:1) AND show a tick, so state is not colour alone (1.4.1). Volt appears once
+   per view: the hero's Apply button, then the submit button. */
+
+/* ---- Hero CTA: drawn like the store badges (44px, 8px radius), in volt ---- */
+html[data-variant="partners"] .apply-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px; /* the store badges' height, so the hero row lines up */
+  padding: 0 1.5rem;
+  border-radius: 10px;
+  background: var(--volt);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.0625rem;
+  text-decoration: none;
+  transition: background-color 160ms ease;
+}
+
+html[data-variant="partners"] .apply-cta:hover {
+  background: var(--volt-dim);
+}
+
+html[data-variant="partners"] .pitch-vid .apply-cta:focus-visible {
+  outline-color: var(--silver-bright);
+}
+
+/* Store badges side by side on every width; the pair drops below Apply as a unit. */
+html[data-variant="partners"] .apply-badges {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 0.75rem;
+}
+
+/* ---- Sections ---- */
+/* The deal: four stat tiles (2×2 on phones' wider sizes, 4 across from 960px). The
+   numbers are words here ("RevShare", "Net 7"), so they run smaller than /gig/'s. */
+html[data-variant="partners"] .apply-deal .pitch-stats {
+  margin-top: 1.5rem;
+}
+
+html[data-variant="partners"] .apply-deal .pitch-stat__num {
+  min-width: 6.5rem;
+  font-size: 2rem;
+}
+
+@media (min-width: 640px) {
+  html[data-variant="partners"] .apply-deal .pitch-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  html[data-variant="partners"] .apply-deal .pitch-stat__num {
+    font-size: 2.75rem;
+  }
+}
+
+@media (min-width: 960px) {
+  html[data-variant="partners"] .apply-deal .pitch-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+html[data-variant="partners"] .apply-deal__note {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: var(--steel);
+}
+
+html[data-variant="partners"] .apply-card__text {
+  margin-top: 1.1rem;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--silver);
+}
+
+html[data-variant="partners"] .apply-code {
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+  background: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  color: var(--silver-bright);
+}
+
+html[data-variant="partners"] .apply {
+  margin-top: 4.5rem;
+  padding-bottom: 5rem;
+  scroll-margin-top: 1.5rem;
+}
+
+html[data-variant="partners"] .apply__lede {
+  max-width: 34rem;
+  margin-top: 0.75rem;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--silver);
+}
+
+/* ---- The landers: compact rows inside /gig/'s compare toggle (pitch-cmp) ---- */
+html[data-variant="partners"] .apply-landers__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+html[data-variant="partners"] .apply-landers__list > li {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+html[data-variant="partners"] .apply-landers__list > li:last-child {
+  border-bottom: 0;
+}
+
+@media (min-width: 680px) {
+  html[data-variant="partners"] .apply-landers__list > li {
+    grid-template-columns: 11rem 15rem 1fr;
+    align-items: baseline;
+    gap: 1rem;
+  }
+}
+
+html[data-variant="partners"] .apply-landers__link {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--silver-bright);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+html[data-variant="partners"] .apply-landers__path {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--steel);
+  overflow-wrap: anywhere;
+}
+
+html[data-variant="partners"] .apply-landers__text {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--silver);
+}
+
+/* ---- The form card: a pitch-card at full width ---- */
+html[data-variant="partners"] .apply__form {
+  margin-top: 1.5rem;
+  padding: 1.5rem 1.25rem;
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+
+@media (min-width: 680px) {
+  html[data-variant="partners"] .apply__form {
+    padding: 2.5rem;
+  }
+}
+
+html[data-variant="partners"] .apply__group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+html[data-variant="partners"] .apply__group + .apply__group {
+  margin-top: 2.25rem;
+  padding-top: 2.25rem;
+  border-top: 1px solid var(--hairline);
+}
+
+html[data-variant="partners"] .apply__legend {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.375rem;
+  letter-spacing: -0.01em;
+  color: var(--silver-bright);
+}
+
+html[data-variant="partners"] .apply__step {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+}
+
+html[data-variant="partners"] .apply__grid {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 680px) {
+  html[data-variant="partners"] .apply__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem 1.5rem;
+  }
+
+  html[data-variant="partners"] .apply__field--wide {
+    grid-column: 1 / -1;
+  }
+}
+
+html[data-variant="partners"] .apply__label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--silver-bright);
+}
+
+html[data-variant="partners"] .apply__opt {
+  margin-left: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--steel);
+}
+
+html[data-variant="partners"] .apply__hint {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--steel);
+}
+
+html[data-variant="partners"] .apply__group > .apply__hint {
+  margin-top: 0.6rem;
+}
+
+/* ---- Text inputs ---- */
+html[data-variant="partners"] .apply__input {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.7rem 0.9rem;
+  background: var(--ink);
+  border: 1px solid var(--steel);
+  border-radius: 10px;
+  color: var(--silver-bright);
+  font-family: var(--font-sans);
+  font-size: 1rem; /* 16px: iOS Safari zooms into anything smaller on focus */
+  transition: border-color 160ms ease;
+}
+
+html[data-variant="partners"] .apply__input::placeholder {
+  color: var(--steel);
+}
+
+html[data-variant="partners"] .apply__input:hover {
+  border-color: var(--silver);
+}
+
+html[data-variant="partners"] .apply__input:focus {
+  border-color: var(--silver-bright);
+}
+
+html[data-variant="partners"] textarea.apply__input {
+  min-height: 9rem;
+  resize: vertical;
+}
+
+html[data-variant="partners"] .apply__select {
+  appearance: none;
+  padding-right: 2.5rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--silver) 50%),
+    linear-gradient(135deg, var(--silver) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.25rem) 50%,
+    calc(100% - 0.9rem) 50%;
+  background-size: 0.35rem 0.35rem;
+  background-repeat: no-repeat;
+}
+
+html[data-variant="partners"] .apply__select option {
+  background: var(--surface);
+  color: var(--silver-bright);
+}
+
+/* ---- Choice pills (radio + checkbox) ----
+   The real input stays in the label (opacity 0, full size) so it keeps its native
+   keyboard and screen-reader behaviour; the span draws the pill. */
+html[data-variant="partners"] .apply__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+html[data-variant="partners"] .apply__field .apply__pills {
+  margin-top: 0;
+}
+
+html[data-variant="partners"] .apply__pill {
+  position: relative;
+  cursor: pointer;
+}
+
+html[data-variant="partners"] .apply__pill input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+html[data-variant="partners"] .apply__pill span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 1.1rem;
+  border: 1px solid var(--steel);
+  border-radius: 999px;
+  color: var(--silver);
+  font-size: 0.9375rem;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+html[data-variant="partners"] .apply__pill:hover span {
+  border-color: var(--silver);
+  color: var(--silver-bright);
+}
+
+html[data-variant="partners"] .apply__pill input:checked + span {
+  border-color: var(--silver-bright);
+  background: var(--silver-bright);
+  color: var(--ink);
+}
+
+/* The tick: shape, so a selected pill doesn't rely on colour alone. */
+html[data-variant="partners"] .apply__pill input:checked + span::before {
+  content: "";
+  width: 0.35rem;
+  height: 0.65rem;
+  margin: -0.2rem 0.1rem 0 -0.15rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+html[data-variant="partners"] .apply__pill input:focus-visible + span {
+  outline: 2px solid var(--volt);
+  outline-offset: 3px;
+}
+
+/* ---- Consent + submit ---- */
+html[data-variant="partners"] .apply__consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 2.25rem;
+  padding-top: 2.25rem;
+  border-top: 1px solid var(--hairline);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--silver);
+  cursor: pointer;
+}
+
+html[data-variant="partners"] .apply__consent input {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0.1rem 0 0;
+  accent-color: var(--silver-bright);
+  cursor: pointer;
+}
+
+html[data-variant="partners"] .apply__link {
+  color: var(--silver-bright);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+html[data-variant="partners"] .apply__submit {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 1.5rem;
+  border: 0;
+  border-radius: 10px;
+  background: var(--volt);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.0625rem;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+@media (min-width: 680px) {
+  html[data-variant="partners"] .apply__submit {
+    width: auto;
+    padding: 0 2.5rem;
+  }
+}
+
+html[data-variant="partners"] .apply__submit:hover {
+  background: var(--volt-dim);
+}
+
+html[data-variant="partners"] .apply__submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+html[data-variant="partners"] .apply__status {
+  min-height: 1.25rem;
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+  color: var(--silver);
+}
+
+html[data-variant="partners"] .apply__status[data-state="error"] {
+  color: var(--silver-bright);
+  font-weight: 500;
+}
+
+/* Arrival cue after the Apply-now glide (gig-apply.js adds .is-arrived): the card's
+   hairline ring brightens, then settles back. A ring, not a glow (house rule 3). */
+html[data-variant="partners"] .apply__form.is-arrived {
+  animation: apply-arrive 1200ms ease-out;
+}
+
+@keyframes apply-arrive {
+  0%,
+  35% {
+    box-shadow: inset 0 0 0 1px var(--silver-bright);
+  }
+  100% {
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+}
+
+/* ---- Done state ---- */
+html[data-variant="partners"] .apply__done-title {
+  margin-top: 0.6rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.75rem;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--silver-bright);
+}
+
+html[data-variant="partners"] .apply__done-title:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-variant="partners"] .apply-cta,
+  html[data-variant="partners"] .apply__input,
+  html[data-variant="partners"] .apply__pill span,
+  html[data-variant="partners"] .apply__submit {
+    transition: none;
+  }
+
+  html[data-variant="partners"] .apply__form.is-arrived {
+    animation: none;
+  }
+}

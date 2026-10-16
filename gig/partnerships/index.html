@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en" data-variant="partners">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Gig affiliate program application. Built on /gig/'s page (the `vid` arm): the
+         same video hero, dark tokens and pitch-* sections, via the shared
+         html:is(…, [data-variant="partners"]) selectors in gig-ad.css. `partners` is a
+         style hook, not an A/B arm: no gig-analytics.js here, so it never reaches the
+         landing dashboard. Kept out of search + the sitemap. -->
+    <title>Gig affiliate program · Up to $150 CPA, paid net 7</title>
+    <meta
+      name="description"
+      content="Gig affiliate program: up to $150 CPA or competitive RevShare, paid net 7, 30-day cookie. All GEOs, every traffic source except adult."
+    />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href="https://mummysboy.com/gig/partnerships/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#0b0b0d" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Gig" />
+    <meta property="og:url" content="https://mummysboy.com/gig/partnerships/" />
+    <meta property="og:title" content="Finally, an affiliate program you’ll be proud to promote." />
+    <meta
+      property="og:description"
+      content="Up to $150 CPA or competitive RevShare, paid net 7, 30-day cookie. All GEOs, every traffic source except adult."
+    />
+    <!-- Link preview: the card made for this page (1200×630, the hero's dog-walk still under
+         the scrim, the headline and the deal). Built from the site's own fonts and footage;
+         scrapers cache OG images hard, so a new version gets a new name (share-partners-2.jpg). -->
+    <meta property="og:image" content="https://mummysboy.com/gig/partnerships/share-partners-1.jpg" />
+    <meta property="og:image:secure_url" content="https://mummysboy.com/gig/partnerships/share-partners-1.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Finally, an affiliate program you’ll be proud to promote. Up to $150 CPA, RevShare, net 7, 30-day cookie, all GEOs." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Gig affiliate program: up to $150 CPA" />
+    <meta
+      name="twitter:description"
+      content="Up to $150 CPA or competitive RevShare, paid net 7, 30-day cookie. All GEOs, every traffic source except adult."
+    />
+    <meta name="twitter:image" content="https://mummysboy.com/gig/partnerships/share-partners-1.jpg" />
+    <meta name="twitter:image:alt" content="Finally, an affiliate program you’ll be proud to promote. Up to $150 CPA, RevShare, net 7, 30-day cookie, all GEOs." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <link rel="stylesheet" href="/styles/tokens.css" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/styles/gig-additions.css?v=4" />
+    <link rel="stylesheet" href="/styles/gig-ad.css?v=9" />
+    <!-- Class names are apply-* (never affiliate-*/partner-*/ad-*): EasyList hides those. -->
+    <link rel="stylesheet" href="/styles/gig-apply.css?v=13" />
+    <script src="/scripts/consent.js"></script>
+    <script src="/scripts/mediago.js"></script>
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="bar">
+        <a class="mark" href="/">mummysboy</a>
+        <span class="bar__meta">est. 1990</span>
+      </div>
+    </header>
+
+    <!-- The pitch is the DEAL, not the app (owner, 2026-10-15). Deal facts come from the owner:
+         up to $150 CPA, competitive RevShare, net 7, 30-day cookie, all GEOs, every traffic source except
+         adult. Everything else claimed here is a shipped fact (free on both stores, 18
+         languages, the demo, the landers, ?id= tagging, the desktop QR), plus two more owner
+         commitments: full integration with the affiliate's tracking platform, and test
+         conversions during onboarding. Never add conversion rates or EPCs without the owner
+         confirming them. Single-level
+         only: no sub-affiliate or recruiting pitch (Teams is Gig's only multi-level program). -->
+    <main class="pitch">
+      <!-- ===================== HERO: /gig/'s video loop ===================== -->
+      <div class="pitch-inner pitch-top">
+        <article class="hero pitch-vid">
+          <div class="hero__media pitch-vid__media">
+            <video
+              class="pitch-vid__video"
+              data-hero-video
+              data-src-portrait="/gig/vid/hero-loop-2.mp4"
+              data-poster-portrait="/gig/vid/hero-poster-2.jpg"
+              data-src-wide="/gig/vid/hero-loop-wide-2.mp4"
+              data-poster-wide="/gig/vid/hero-poster-wide-2.jpg"
+              autoplay
+              muted
+              loop
+              playsinline
+              disablepictureinpicture
+              disableremoteplayback
+              preload="auto"
+              aria-hidden="true"
+              tabindex="-1"
+            ></video>
+            <script>
+              (function () {
+                var v = document.currentScript.previousElementSibling;
+                var wide = window.matchMedia("(min-width: 760px) and (orientation: landscape)").matches;
+                v.poster = wide ? v.dataset.posterWide : v.dataset.posterPortrait;
+                v.src = wide ? v.dataset.srcWide : v.dataset.srcPortrait;
+              })();
+            </script>
+            <div class="pitch-vid__scrim" aria-hidden="true"></div>
+          </div>
+
+          <div class="hero__copy pitch-vid__copy">
+            <div class="project__head">
+              <img class="app-icon" src="/gig/shots/app-icon-black.jpg" alt="Gig app icon" width="104" height="104" />
+            </div>
+
+            <p class="eyebrow">/ gig · affiliate program</p>
+
+            <h1 class="title metal">Finally, an affiliate program you&rsquo;ll be proud to promote.</h1>
+
+            <dl class="couplet">
+              <div>
+                <dt>The deal</dt>
+                <dd>CPA up to $150, or competitive RevShare. Paid net 7. 30-day cookie.</dd>
+              </div>
+              <div>
+                <dt>The traffic</dt>
+                <dd>All GEOs. Every traffic source except adult.</dd>
+              </div>
+            </dl>
+
+            <p class="readout">One offer. Two audiences. Free to install.</p>
+
+            <div class="cta-row">
+              <a class="apply-cta" href="#apply">Apply now</a>
+              <!-- Store badges stay so anyone who'd rather just get the app can (owner). The pair
+                   wraps as one unit, so the two never split across lines. -->
+              <span class="apply-badges">
+                <a class="store-badge" href="https://apps.apple.com/app/id6758136203">
+                  <img src="/gig/assets/app-store-badge.svg" alt="Download Gig on the App Store" height="44" />
+                </a>
+                <a class="store-badge" href="https://play.google.com/store/apps/details?id=com.rightimagedigital.gig">
+                  <img src="/gig/assets/google-play-badge.png" alt="Get it on Google Play" height="44" />
+                </a>
+              </span>
+            </div>
+
+            <p class="sr-only">Scenes of someone replacing a ceiling light bulb, someone mopping a kitchen floor, someone wiping a window, and a person walking two dogs on a trail.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="pitch-inner">
+        <!-- ===================== THE DEAL ===================== -->
+        <section class="apply-deal" data-reveal aria-labelledby="deal-heading">
+          <h2 class="pitch-h2" id="deal-heading">The deal.</h2>
+          <ul class="pitch-stats apply-deal__stats">
+            <li class="pitch-stat">
+              <span class="pitch-stat__num">$150</span>
+              <span class="pitch-stat__label">CPA, at the top end</span>
+            </li>
+            <li class="pitch-stat">
+              <span class="pitch-stat__num">RevShare</span>
+              <span class="pitch-stat__label">competitive, if you&rsquo;d rather share the upside</span>
+            </li>
+            <li class="pitch-stat">
+              <span class="pitch-stat__num">Net 7</span>
+              <span class="pitch-stat__label">payment terms</span>
+            </li>
+            <li class="pitch-stat">
+              <span class="pitch-stat__num">30 days</span>
+              <span class="pitch-stat__label">cookie window</span>
+            </li>
+          </ul>
+          <p class="apply-deal__note">Your payout by GEO and conversion is set out in the terms you get on approval.</p>
+        </section>
+
+        <!-- ===================== TRAFFIC ===================== -->
+        <section class="pitch-sides" data-reveal aria-labelledby="traffic-heading">
+          <h2 class="pitch-h2" id="traffic-heading">Bring any traffic but one.</h2>
+          <div class="pitch-cards">
+            <div class="pitch-card">
+              <p class="pitch-card__kicker">Accepted</p>
+              <h3 class="pitch-card__title">Every source, every GEO.</h3>
+              <ul class="pitch-checks">
+                <li>Paid social, search and native.</li>
+                <li>Display, push and email.</li>
+                <li>Creators, influencers and content sites.</li>
+                <li>Mobile and desktop: desktop visitors get a QR code that opens the page on their phone.</li>
+              </ul>
+            </div>
+            <div class="pitch-card">
+              <p class="pitch-card__kicker">Not accepted</p>
+              <h3 class="pitch-card__title">Adult traffic.</h3>
+              <p class="apply-card__text">That&rsquo;s the only exclusion. Anything else is covered in the terms you get on approval.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== WHY IT CONVERTS ===================== -->
+        <section class="pitch-sides" data-reveal aria-labelledby="converts-heading">
+          <h2 class="pitch-h2" id="converts-heading">An easy offer to run.</h2>
+          <div class="pitch-cards">
+            <div class="pitch-card">
+              <p class="pitch-card__kicker">The offer</p>
+              <h3 class="pitch-card__title">Nothing between the click and the install.</h3>
+              <ul class="pitch-checks">
+                <li>Free to download, free to join, free to hire or list.</li>
+                <li>Live on the App Store and Google Play.</li>
+                <li>The app runs in 18 languages, so non-English GEOs land in their own.</li>
+              </ul>
+            </div>
+            <div class="pitch-card">
+              <p class="pitch-card__kicker">The audience</p>
+              <h3 class="pitch-card__title">Everyone is a customer or a pro.</h3>
+              <ul class="pitch-checks">
+                <li>People who need help: say the job in a sentence, get matched.</li>
+                <li>People who offer it: keep 100% of what they earn, with zero commission.</li>
+                <li>Cleaning, moving, handyman, tutoring, pet care, beauty and more.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== TOOLS ===================== -->
+        <section class="pitch-sides" data-reveal aria-labelledby="tools-heading">
+          <h2 class="pitch-h2" id="tools-heading">Built for running it.</h2>
+          <div class="pitch-cards">
+            <div class="pitch-card">
+              <p class="pitch-card__kicker">Landers</p>
+              <h3 class="pitch-card__title">A page for every angle.</h3>
+              <ul class="pitch-checks">
+                <li>Separate pages for pros and for customers, plus the main page.</li>
+                <li>A live demo of the real app in the browser, no install, to pre-sell.</li>
+                <li>Add <code class="apply-code">?id=</code> to any page and every view and store tap from it carries your ID.</li>
+              </ul>
+            </div>
+            <div class="pitch-card">
+              <p class="pitch-card__kicker">Tracking and support</p>
+              <h3 class="pitch-card__title">Plugged into your tracker.</h3>
+              <ul class="pitch-checks">
+                <li>Full integration with your tracking platform.</li>
+                <li>Test conversions during onboarding, so tracking is proven before you send traffic.</li>
+                <li>You deal with the Gig team directly, not a queue.</li>
+                <li>Video, app preview and screenshots for your creative, on request.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Every Gig landing page an approved partner's link can point to, tucked into
+               /gig/'s compare-style <details> toggle for the few who want it. Text only, no
+               thumbnails (owner's call). Links open in a new tab so a half-filled form survives.
+               Keep in step with CLAUDE.md → Gig landing variants. -->
+          <details class="pitch-cmp apply-landers">
+            <summary class="pitch-cmp__toggle">
+              See the landers
+              <svg class="pitch-cmp__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="pitch-cmp__panel">
+              <ul class="apply-landers__list">
+                <li>
+                  <a class="apply-landers__link" href="/gig/" target="_blank" rel="noopener">The main page<span class="sr-only"> (opens in a new tab)</span></a>
+                  <span class="apply-landers__path">mummysboy.com/gig/</span>
+                  <span class="apply-landers__text">For everyone: what Gig is, both sides of the job.</span>
+                </li>
+                <li>
+                  <a class="apply-landers__link" href="/gig/pro/" target="_blank" rel="noopener">For pros<span class="sr-only"> (opens in a new tab)</span></a>
+                  <span class="apply-landers__path">mummysboy.com/gig/pro/</span>
+                  <span class="apply-landers__text">For people who offer a service and want to keep 100%.</span>
+                </li>
+                <li>
+                  <a class="apply-landers__link" href="/gig/hire/" target="_blank" rel="noopener">For customers<span class="sr-only"> (opens in a new tab)</span></a>
+                  <span class="apply-landers__path">mummysboy.com/gig/hire/</span>
+                  <span class="apply-landers__text">For people who need help: say it in a sentence, get matched.</span>
+                </li>
+                <li>
+                  <a class="apply-landers__link" href="/gig/invite/" target="_blank" rel="noopener">Personal invite<span class="sr-only"> (opens in a new tab)</span></a>
+                  <span class="apply-landers__path">mummysboy.com/gig/invite/</span>
+                  <span class="apply-landers__text">Your name on the card, inviting people to join you on Gig.</span>
+                </li>
+                <li>
+                  <a class="apply-landers__link" href="/gig/demo/" target="_blank" rel="noopener">Live demo<span class="sr-only"> (opens in a new tab)</span></a>
+                  <span class="apply-landers__path">mummysboy.com/gig/demo/</span>
+                  <span class="apply-landers__text">The real app in the browser. Nothing to install.</span>
+                </li>
+                <li>
+                  <a class="apply-landers__link" href="/gig/compare/" target="_blank" rel="noopener">Gig vs. other apps<span class="sr-only"> (opens in a new tab)</span></a>
+                  <span class="apply-landers__path">mummysboy.com/gig/compare/</span>
+                  <span class="apply-landers__text">What TaskRabbit, Thumbtack and others take, side by side.</span>
+                </li>
+              </ul>
+            </div>
+          </details>
+        </section>
+
+        <!-- ===================== APPLICATION ===================== -->
+        <section class="apply" id="apply" aria-labelledby="applyHeading">
+          <div class="apply__head">
+            <h2 class="pitch-h2" id="applyHeading">Apply.</h2>
+            <p class="apply__lede">Two minutes. We reply by email within a few business days with your terms, then set up tracking and run test conversions with you.</p>
+          </div>
+
+          <!-- Netlify Forms: the form must stay in this static HTML so Netlify detects it at
+               deploy. Without JS it posts to thanks/; gig-apply.js sends it in place.
+               /privacy/#partners lists these fields: change both together. -->
+          <form
+            class="apply__form"
+            id="applyForm"
+            name="gig-affiliate"
+            method="POST"
+            action="/gig/partnerships/thanks/"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
+            aria-labelledby="applyHeading"
+          >
+            <input type="hidden" name="form-name" value="gig-affiliate" />
+            <input type="hidden" name="source" id="applySource" value="" />
+            <p class="sr-only" aria-hidden="true">
+              <label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+            </p>
+
+            <fieldset class="apply__group">
+              <legend class="apply__legend"><span class="apply__step">01</span> About you</legend>
+              <div class="apply__grid">
+                <div class="apply__field">
+                  <label class="apply__label" for="a-name">Full name</label>
+                  <input class="apply__input" id="a-name" name="name" type="text" autocomplete="name" required />
+                </div>
+                <div class="apply__field">
+                  <label class="apply__label" for="a-email">Email</label>
+                  <input class="apply__input" id="a-email" name="email" type="email" autocomplete="email" required />
+                </div>
+                <div class="apply__field">
+                  <label class="apply__label" for="a-org">Company <span class="apply__opt">optional</span></label>
+                  <input class="apply__input" id="a-org" name="company" type="text" autocomplete="organization" />
+                </div>
+                <div class="apply__field">
+                  <label class="apply__label" for="a-link">Website or main profile</label>
+                  <input class="apply__input" id="a-link" name="website" type="text" autocomplete="url" placeholder="yoursite.com or @handle" required />
+                </div>
+                <div class="apply__field apply__field--wide">
+                  <label class="apply__label" for="a-im">Telegram, Skype or WhatsApp <span class="apply__opt">optional</span></label>
+                  <input class="apply__input" id="a-im" name="messenger" type="text" placeholder="@handle or number" />
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="apply__group">
+              <legend class="apply__legend"><span class="apply__step">02</span> You are</legend>
+              <div class="apply__pills">
+                <label class="apply__pill"><input type="radio" name="partner_type" value="Affiliate / media buyer" required /><span>Affiliate or media buyer</span></label>
+                <label class="apply__pill"><input type="radio" name="partner_type" value="Network" /><span>Network</span></label>
+                <label class="apply__pill"><input type="radio" name="partner_type" value="Publisher / content site" /><span>Publisher or content site</span></label>
+                <label class="apply__pill"><input type="radio" name="partner_type" value="Creator / influencer" /><span>Creator or influencer</span></label>
+                <label class="apply__pill"><input type="radio" name="partner_type" value="Agency" /><span>Agency</span></label>
+                <label class="apply__pill"><input type="radio" name="partner_type" value="Other" /><span>Something else</span></label>
+              </div>
+            </fieldset>
+
+            <fieldset class="apply__group" aria-describedby="a-sources-hint">
+              <legend class="apply__legend"><span class="apply__step">03</span> Traffic sources</legend>
+              <p class="apply__hint" id="a-sources-hint">Pick all you&rsquo;d run.</p>
+              <div class="apply__pills">
+                <label class="apply__pill"><input type="checkbox" name="traffic_sources[]" value="Paid social" /><span>Paid social</span></label>
+                <label class="apply__pill"><input type="checkbox" name="traffic_sources[]" value="Search" /><span>Search</span></label>
+                <label class="apply__pill"><input type="checkbox" name="traffic_sources[]" value="Native" /><span>Native</span></label>
+                <label class="apply__pill"><input type="checkbox" name="traffic_sources[]" value="Display" /><span>Display</span></label>
+                <label class="apply__pill"><input type="checkbox" name="traffic_sources[]" value="Push" /><span>Push</span></label>
+                <label class="apply__pill"><input type="checkbox" name="traffic_sources[]" value="Email" /><span>Email</span></label>
+                <label class="apply__pill"><input type="checkbox" name="traffic_sources[]" value="SEO / content" /><span>SEO / content</span></label>
+                <label class="apply__pill"><input type="checkbox" name="traffic_sources[]" value="Influencer" /><span>Influencer</span></label>
+                <label class="apply__pill"><input type="checkbox" name="traffic_sources[]" value="Other" /><span>Other</span></label>
+              </div>
+            </fieldset>
+
+            <fieldset class="apply__group">
+              <legend class="apply__legend"><span class="apply__step">04</span> Volume and payout</legend>
+              <div class="apply__grid">
+                <div class="apply__field">
+                  <label class="apply__label" for="a-geos">Main GEOs</label>
+                  <input class="apply__input" id="a-geos" name="geos" type="text" placeholder="US, UK, BR…" required />
+                </div>
+                <div class="apply__field">
+                  <label class="apply__label" for="a-volume">Monthly clicks you could send</label>
+                  <select class="apply__input apply__select" id="a-volume" name="monthly_volume" required>
+                    <option value="">Choose one</option>
+                    <option>Under 10,000</option>
+                    <option>10,000 to 100,000</option>
+                    <option>100,000 to 1 million</option>
+                    <option>Over 1 million</option>
+                    <option>Not sure yet</option>
+                  </select>
+                </div>
+                <div class="apply__field apply__field--wide">
+                  <span class="apply__label" id="a-model">Payout model</span>
+                  <div class="apply__pills" role="radiogroup" aria-labelledby="a-model">
+                <label class="apply__pill"><input type="radio" name="payout_model" value="CPA" required /><span>CPA</span></label>
+                <label class="apply__pill"><input type="radio" name="payout_model" value="RevShare" /><span>RevShare</span></label>
+                <label class="apply__pill"><input type="radio" name="payout_model" value="Not sure" /><span>Let&rsquo;s talk</span></label>
+                  </div>
+                </div>
+                <div class="apply__field apply__field--wide">
+                  <label class="apply__label" for="a-tracker">Tracking platform you use <span class="apply__opt">optional</span></label>
+                  <input class="apply__input" id="a-tracker" name="tracker" type="text" placeholder="Everflow, Voluum, Binom, your own…" />
+                </div>
+                <div class="apply__field apply__field--wide">
+                  <label class="apply__label" for="a-notes">Anything else? <span class="apply__opt">optional</span></label>
+                  <textarea class="apply__input" id="a-notes" name="notes" rows="4" maxlength="2000" placeholder="Verticals you run, results on similar offers, how you&rsquo;d run Gig."></textarea>
+                </div>
+              </div>
+            </fieldset>
+
+            <label class="apply__consent">
+              <input type="checkbox" name="consent" value="Yes" required />
+              <span>
+                You can email me about this application and the program. See our
+                <a class="apply__link" href="/privacy/#partners">privacy notice</a>.
+              </span>
+            </label>
+
+            <button class="apply__submit" type="submit">Send application</button>
+            <p class="apply__status" id="applyStatus" role="status" aria-live="polite"></p>
+          </form>
+
+          <div class="apply__form apply__done" id="applyDone" hidden>
+            <p class="pitch-card__kicker">Received</p>
+            <h3 class="apply__done-title" tabindex="-1">Thanks, we have your application.</h3>
+            <p class="apply__lede">We&rsquo;ll reply by email within a few business days with your terms and links.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="bar">
+        <span class="bar__meta">© 1990</span>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="/gig/">Gig</a>
+          <a href="/privacy/">Privacy</a>
+          <a href="https://backend-production-9a98f.up.railway.app/terms" target="_blank" rel="noopener">Terms</a>
+          <a href="mailto:support@rightimagedigital.com">Support</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script type="module" src="/scripts/reveal.js"></script>
+    <script type="module" src="/scripts/gig-vid.js"></script>
+    <script type="module" src="/scripts/gig-apply.js"></script>
+  </body>
+</html>

@@ -63,6 +63,12 @@
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 
+# The affiliate page's link-preview card: same stable-name rule (share-partners-2.jpg on change).
+[[headers]]
+  for = "/gig/partnerships/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
 [[headers]]
   for = "/gig/invite/people/*"
   [headers.values]
