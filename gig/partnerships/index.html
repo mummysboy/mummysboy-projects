@@ -6,9 +6,11 @@
 
     <!-- Gig affiliate program application. Built on /gig/'s page (the `vid` arm): the
          same video hero, dark tokens and pitch-* sections, via the shared
-         html:is(…, [data-variant="partners"]) selectors in gig-ad.css. `partners` is a
-         style hook, not an A/B arm: no gig-analytics.js here, so it never reaches the
-         landing dashboard. Kept out of search + the sitemap. -->
+         html:is(…, [data-variant="partners"]) selectors in gig-ad.css. `partners` is not
+         an A/B arm: gig-analytics.js beacons it as variant "partners", which the moderation
+         dashboard counts apart from /gig/ (its own Partnerships panel), plus the form steps
+         gig-apply.js sends (apply_cta / apply_start / apply_submit / apply_error). Kept out
+         of search + the sitemap. -->
     <title>Gig affiliate program · Up to $150 CPA, paid net 7</title>
     <meta
       name="description"
@@ -71,7 +73,7 @@
   <body>
     <header class="masthead">
       <div class="bar">
-        <a class="mark" href="/">mummysboy</a>
+        <a class="mark" href="/" data-exit="wordmark">mummysboy</a>
         <span class="bar__meta">est. 1990</span>
       </div>
     </header>
@@ -87,7 +89,7 @@
     <main class="pitch">
       <!-- ===================== HERO: /gig/'s video loop ===================== -->
       <div class="pitch-inner pitch-top">
-        <article class="hero pitch-vid">
+        <article class="hero pitch-vid" data-section="hero">
           <div class="hero__media pitch-vid__media">
             <video
               class="pitch-vid__video"
@@ -139,7 +141,7 @@
 
             <p class="readout">One offer. Two audiences. Free to install.</p>
 
-            <div class="cta-row">
+            <div class="cta-row" data-pos="hero">
               <a class="apply-cta" href="#apply">Apply now</a>
               <!-- Store badges stay so anyone who'd rather just get the app can (owner). The pair
                    wraps as one unit, so the two never split across lines. -->
@@ -160,7 +162,7 @@
 
       <div class="pitch-inner">
         <!-- ===================== THE DEAL ===================== -->
-        <section class="apply-deal" data-reveal aria-labelledby="deal-heading">
+        <section class="apply-deal" data-section="deal" data-reveal aria-labelledby="deal-heading">
           <h2 class="pitch-h2" id="deal-heading">The deal.</h2>
           <ul class="pitch-stats apply-deal__stats">
             <li class="pitch-stat">
@@ -184,7 +186,7 @@
         </section>
 
         <!-- ===================== TRAFFIC ===================== -->
-        <section class="pitch-sides" data-reveal aria-labelledby="traffic-heading">
+        <section class="pitch-sides" data-section="traffic" data-reveal aria-labelledby="traffic-heading">
           <h2 class="pitch-h2" id="traffic-heading">Bring any traffic but one.</h2>
           <div class="pitch-cards">
             <div class="pitch-card">
@@ -206,7 +208,7 @@
         </section>
 
         <!-- ===================== WHY IT CONVERTS ===================== -->
-        <section class="pitch-sides" data-reveal aria-labelledby="converts-heading">
+        <section class="pitch-sides" data-section="converts" data-reveal aria-labelledby="converts-heading">
           <h2 class="pitch-h2" id="converts-heading">An easy offer to run.</h2>
           <div class="pitch-cards">
             <div class="pitch-card">
@@ -231,7 +233,7 @@
         </section>
 
         <!-- ===================== TOOLS ===================== -->
-        <section class="pitch-sides" data-reveal aria-labelledby="tools-heading">
+        <section class="pitch-sides" data-section="tools" data-reveal aria-labelledby="tools-heading">
           <h2 class="pitch-h2" id="tools-heading">Built for running it.</h2>
           <div class="pitch-cards">
             <div class="pitch-card">
@@ -267,32 +269,32 @@
             <div class="pitch-cmp__panel">
               <ul class="apply-landers__list">
                 <li>
-                  <a class="apply-landers__link" href="/gig/" target="_blank" rel="noopener">The main page<span class="sr-only"> (opens in a new tab)</span></a>
+                  <a class="apply-landers__link" href="/gig/" data-exit="lander-gig" target="_blank" rel="noopener">The main page<span class="sr-only"> (opens in a new tab)</span></a>
                   <span class="apply-landers__path">mummysboy.com/gig/</span>
                   <span class="apply-landers__text">For everyone: what Gig is, both sides of the job.</span>
                 </li>
                 <li>
-                  <a class="apply-landers__link" href="/gig/pro/" target="_blank" rel="noopener">For pros<span class="sr-only"> (opens in a new tab)</span></a>
+                  <a class="apply-landers__link" href="/gig/pro/" data-exit="lander-pro" target="_blank" rel="noopener">For pros<span class="sr-only"> (opens in a new tab)</span></a>
                   <span class="apply-landers__path">mummysboy.com/gig/pro/</span>
                   <span class="apply-landers__text">For people who offer a service and want to keep 100%.</span>
                 </li>
                 <li>
-                  <a class="apply-landers__link" href="/gig/hire/" target="_blank" rel="noopener">For customers<span class="sr-only"> (opens in a new tab)</span></a>
+                  <a class="apply-landers__link" href="/gig/hire/" data-exit="lander-hire" target="_blank" rel="noopener">For customers<span class="sr-only"> (opens in a new tab)</span></a>
                   <span class="apply-landers__path">mummysboy.com/gig/hire/</span>
                   <span class="apply-landers__text">For people who need help: say it in a sentence, get matched.</span>
                 </li>
                 <li>
-                  <a class="apply-landers__link" href="/gig/invite/" target="_blank" rel="noopener">Personal invite<span class="sr-only"> (opens in a new tab)</span></a>
+                  <a class="apply-landers__link" href="/gig/invite/" data-exit="lander-invite" target="_blank" rel="noopener">Personal invite<span class="sr-only"> (opens in a new tab)</span></a>
                   <span class="apply-landers__path">mummysboy.com/gig/invite/</span>
                   <span class="apply-landers__text">Your name on the card, inviting people to join you on Gig.</span>
                 </li>
                 <li>
-                  <a class="apply-landers__link" href="/gig/demo/" target="_blank" rel="noopener">Live demo<span class="sr-only"> (opens in a new tab)</span></a>
+                  <a class="apply-landers__link" href="/gig/demo/" data-exit="lander-demo" target="_blank" rel="noopener">Live demo<span class="sr-only"> (opens in a new tab)</span></a>
                   <span class="apply-landers__path">mummysboy.com/gig/demo/</span>
                   <span class="apply-landers__text">The real app in the browser. Nothing to install.</span>
                 </li>
                 <li>
-                  <a class="apply-landers__link" href="/gig/compare/" target="_blank" rel="noopener">Gig vs. other apps<span class="sr-only"> (opens in a new tab)</span></a>
+                  <a class="apply-landers__link" href="/gig/compare/" data-exit="lander-compare" target="_blank" rel="noopener">Gig vs. other apps<span class="sr-only"> (opens in a new tab)</span></a>
                   <span class="apply-landers__path">mummysboy.com/gig/compare/</span>
                   <span class="apply-landers__text">What TaskRabbit, Thumbtack and others take, side by side.</span>
                 </li>
@@ -302,7 +304,7 @@
         </section>
 
         <!-- ===================== APPLICATION ===================== -->
-        <section class="apply" id="apply" aria-labelledby="applyHeading">
+        <section class="apply" id="apply" data-section="apply" aria-labelledby="applyHeading">
           <div class="apply__head">
             <h2 class="pitch-h2" id="applyHeading">Apply.</h2>
             <p class="apply__lede">Two minutes. We reply by email within a few business days with your terms, then set up tracking and run test conversions with you.</p>
@@ -425,7 +427,7 @@
               <input type="checkbox" name="consent" value="Yes" required />
               <span>
                 You can email me about this application and the program. See our
-                <a class="apply__link" href="/privacy/#partners">privacy notice</a>.
+                <a class="apply__link" href="/privacy/#partners" data-exit="privacy-form">privacy notice</a>.
               </span>
             </label>
 
@@ -442,14 +444,14 @@
       </div>
     </main>
 
-    <footer class="footer">
+    <footer class="footer" data-section="footer">
       <div class="bar">
         <span class="bar__meta">© 1990</span>
         <nav class="footer-links" aria-label="Footer">
-          <a href="/gig/">Gig</a>
-          <a href="/privacy/">Privacy</a>
-          <a href="https://backend-production-9a98f.up.railway.app/terms" target="_blank" rel="noopener">Terms</a>
-          <a href="mailto:support@rightimagedigital.com">Support</a>
+          <a href="/gig/" data-exit="gig">Gig</a>
+          <a href="/privacy/" data-exit="privacy">Privacy</a>
+          <a href="https://backend-production-9a98f.up.railway.app/terms" target="_blank" rel="noopener" data-exit="terms">Terms</a>
+          <a href="mailto:support@rightimagedigital.com" data-exit="support">Support</a>
         </nav>
       </div>
     </footer>
@@ -457,5 +459,6 @@
     <script type="module" src="/scripts/reveal.js"></script>
     <script type="module" src="/scripts/gig-vid.js"></script>
     <script type="module" src="/scripts/gig-apply.js"></script>
+    <script type="module" src="/scripts/gig-analytics.js"></script>
   </body>
 </html>
